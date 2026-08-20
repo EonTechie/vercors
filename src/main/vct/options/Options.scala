@@ -98,6 +98,11 @@ case object Options {
       opt[Unit]("verify").action((_, c) => c.copy(mode = Mode.Verify)).text(
         "Enable verification mode: instruct VerCors to verify the given files (default)"
       ),
+
+      opt[Unit]("robustness")
+        .action((_, c) => c.copy(mode = Mode.Robustness))
+        .text("Enable robustness transformation mode"),
+
       opt[Unit]("more").abbr("m").action((_, c) => c.copy(more = true))
         .text("Always print the maximum amount of information about errors."),
       opt[Language]("lang").valueName(ReadLanguage.valueName)
@@ -131,6 +136,10 @@ case object Options {
       opt[Path]("trace-col-in")
         .action((p, c) => c.copy(outputIntermediatePrograms = Some(p))).text(
           "Writes all intermediate ASTs, labeled by pass, to a given folder"
+        ),
+      opt[Path]("trace-tree-in")
+        .action((p, c) => c.copy(outputTree = Some(p))).text(
+          "Writes structural AST tree snapshots to a given folder"
         ),
       opt[String]("backend-option").unbounded().keyName("<option>,...")
         .action((opt, c) => c.copy(backendFlags = c.backendFlags :+ opt))
@@ -184,6 +193,12 @@ case object Options {
         .action((_, c) => c.copy(devAbruptExc = true)).text(
           "Encode all abrupt control flow using exception, even when not necessary"
         ),
+      opt[Unit]("dev-add-if-one").maybeHidden()
+        .action((_, c) => c.copy(devAddIfOne = true))
+        .text("Enable the experimental AddIfOne rewrite"),
+      opt[Unit]("dev-add-if-zero").maybeHidden()
+        .action((_, c) => c.copy(devAddIfZero = true))
+        .text("Enable the experimental AddIfZero rewrite"),
       opt[Unit]("dev-no-sat").maybeHidden()
         .action((_, c) => c.copy(devCheckSat = false))
         .text("Do not check the satisfiability of contracts in the input"),
@@ -491,6 +506,7 @@ case class Options(
     outputAfterPass: Map[String, PathOrStd] = Map.empty,
     outputBeforePass: Map[String, PathOrStd] = Map.empty,
     outputIntermediatePrograms: Option[Path] = None,
+    outputTree: Option[Path] = None,
     backendFlags: Seq[String] = Nil,
     proverConfigArgs: Map[String, String] = Map.empty,
     skipBackend: Boolean = false,
@@ -526,6 +542,8 @@ case class Options(
     devParserReportAmbiguities: Boolean = false,
     devParserReportContextSensitivities: Boolean = false,
     devAbruptExc: Boolean = false,
+    devAddIfOne: Boolean = false,
+    devAddIfZero: Boolean = false,
     devCheckSat: Boolean = true,
     devSimplifyDebugIn: Seq[String] = Nil,
     devSimplifyDebugMatch: Boolean = false,

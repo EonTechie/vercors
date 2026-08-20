@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 import scopt.OParser
 import vct.col.ast.Node
 import vct.debug.CrashReport
-import vct.main.modes.{CFG, Compile, Patcher, VeSUV, Verify, VeyMont}
+import vct.main.modes.{CFG, Compile, Patcher, Robustness, VeSUV, Verify, VeyMont}
 import vct.main.stages.Transformation
 import vct.options.Options
 import vct.options.types.Mode
@@ -106,6 +106,7 @@ case object Main extends LazyLogging {
   def runMode(mode: Mode, options: Options): Int =
     mode match {
       case Mode.Verify => Verify.runOptions(options)
+      case Mode.Robustness => Robustness.runOptions(options)
       case Mode.HelpVerifyPasses =>
         logger.info("Available passes:")
         Transformation.ofOptions(options).passes.foreach { pass =>
