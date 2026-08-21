@@ -1,77 +1,81 @@
 package vct.col.rewrite
 
-import scala.util.Random
-
 import vct.col.ast._
-import RewriteHelpers._
 import vct.col.origin.{Origin, PanicBlame}
 
+trait CStatementPassBuilder {
+
+  def key: String
+
+  def desc: String
+
+  def applyX[G <: Generation](): CStatementPass[G]
+}
+
+trait CStatementPass[G <: Generation] {
+
+  def dispatch(
+                program: Program[G]
+              ): Program[G]
+}
+
 case object AddIfZero
-  extends CSourceRewriterBuilder {
+  extends CStatementPassBuilder {
 
   override def key: String =
     "addIfZero"
 
   override def desc: String =
     "Wrap a C source statement in the else branch of if (0)."
+
+  override def applyX[
+    G <: Generation
+  ](): CStatementPass[G] =
+    AddIfZero[G]()
 }
 
 case class AddIfZero[
-  Pre <: Generation
-]() extends CSourceRewriter[Pre] {
+  G <: Generation
+]() extends CStatementPass[G] {
 
   private var selected:
-    Option[CStatementSites.Site[Pre]] =
+    Option[CStatementSites.Site[G]] =
     None
 
   private def cInt(
                     value: BigInt,
                     origin: Origin,
-                  ): CIntegerValue[Post] = {
+                  ): CIntegerValue[G] = {
 
     implicit val o: Origin =
       origin
 
-    CIntegerValue[Post](
+    CIntegerValue[G](
       value,
-      CPrimitiveType[Post](
+      CPrimitiveType[G](
         Seq(
-          CInt[Post]()
+          CInt[G]()
         )
       )
     )
   }
 
-  /*
-   * CToCol represents a real C compound:
-   *
-   *     { ... }
-   *
-   * as:
-   *
-   *     Scope(Nil, Block(...))
-   *
-   * Use the same shape for generated braces.
-   */
   private def asSourceCompound(
-                                stat: Statement[Post],
+                                stat: Statement[G],
                                 origin: Origin,
-                              ): Statement[Post] =
+                              ): Statement[G] =
     stat match {
 
-      // Already a source compound.
       case scope @ Scope(
         Nil,
         Block(_)
       ) =>
         scope
 
-        // Any non-compound source statement must be put inside
-        // braces, matching SemTransformers add_necessities.
       case other =>
-        Scope[Post](
+        Scope[G](
           Nil,
-          Block[Post](
+          Block[G](
             Seq(other)
           )(origin)
         )(origin)
@@ -79,11 +83,11 @@ case class AddIfZero[
 
   private def deadBranch(
                           origin: Origin
-                        ): Statement[Post] = {
+                        ): Statement[G] = {
 
     val assertion =
-      Assert[Post](
-        BooleanValue[Post](
+      Assert[G](
+        BooleanValue[G](
           false
         )(origin)
       )(
@@ -98,12 +102,245 @@ case class AddIfZero[
     )
   }
 
+  private def transformedTarget(
+                                 stat: Statement[G]
+                               ): Statement[G] = {
+
+    Branch[G](
+      Seq(
+        (
+          cInt(
+            BigInt(0),
+            stat.o,
+          ),
+          deadBranch(stat.o),
+        ),
+        (
+          BooleanValue[G](
+            true
+          )(stat.o),
+          asSourceCompound(
+            stat,
+            stat.o,
+          ),
+        ),
+      )
+    )(stat.o)
+  }
+
+  private def rewriteStatement(
+                                stat: Statement[G]
+                              ): Statement[G] = {
+
+    selected match {
+
+      case Some(site)
+        if site.target eq stat =>
+
+        transformedTarget(stat)
+
+      case _ =>
+
+        stat match {
+
+          case block @ Block(statements) =>
+
+            val rewritten =
+              statements.map(
+                rewriteStatement
+              )
+
+            val changed =
+              rewritten
+                .zip(statements)
+                .exists {
+                  case (a, b) =>
+                    !(a eq b)
+                }
+
+            if (changed)
+              Block[G](
+                rewritten
+              )(block.o)
+            else
+              block
+
+          case scope @ Scope(
+            locals,
+            body
+          ) =>
+
+            val rewrittenBody =
+              rewriteStatement(body)
+
+            if (rewrittenBody eq body)
+              scope
+            else
+              Scope[G](
+                locals,
+                rewrittenBody,
+              )(scope.o)
+
+          case branch @ Branch(branches) =>
+
+            val rewritten =
+              branches.map {
+                case (condition, body) =>
+                  (
+                    condition,
+                    rewriteStatement(body),
+                  )
+              }
+
+            val changed =
+              rewritten
+                .zip(branches)
+                .exists {
+                  case (
+                    (_, newBody),
+                    (_, oldBody),
+                  ) =>
+                    !(newBody eq oldBody)
+                }
+
+            if (changed)
+              Branch[G](
+                rewritten
+              )(branch.o)
+            else
+              branch
+
+          case loop @ Loop(
+            init,
+            cond,
+            update,
+            contract,
+            body,
+          ) =>
+
+            /*
+             * IMPORTANT:
+             * We intentionally rewrite only the loop body.
+             * for-init and for-update are not source
+             * transformation sites for AddIfZero.
+             */
+            val rewrittenBody =
+              rewriteStatement(body)
+
+            if (rewrittenBody eq body)
+              loop
+            else
+              Loop[G](
+                init,
+                cond,
+                update,
+                contract,
+                rewrittenBody,
+              )(loop.o)
+
+          case label @ Label(
+            decl,
+            inner,
+            contract,
+          ) =>
+
+            val rewrittenInner =
+              rewriteStatement(inner)
+
+            if (rewrittenInner eq inner)
+              label
+            else
+              Label[G](
+                decl,
+                rewrittenInner,
+                contract,
+              )(label.o)
+
+          case other =>
+            other
+        }
+    }
+  }
+
+  private def rewriteGlobal(
+                             decl: GlobalDeclaration[G]
+                           ): GlobalDeclaration[G] =
+    decl match {
+
+      case unit: CTranslationUnit[G] =>
+
+        val rewrittenDecls =
+          unit.declarations.map(
+            rewriteGlobal
+          )
+
+        val changed =
+          rewrittenDecls
+            .zip(unit.declarations)
+            .exists {
+              case (a, b) =>
+                !(a eq b)
+            }
+
+        if (changed)
+          new CTranslationUnit[G](
+            rewrittenDecls
+          )(unit.o)
+        else
+          unit
+
+      case function:
+        CFunctionDefinition[G] =>
+
+        val rewrittenBody =
+          rewriteStatement(
+            function.body
+          )
+
+        if (
+          rewrittenBody eq
+            function.body
+        ) {
+          function
+        } else {
+
+          val rewrittenFunction =
+            new CFunctionDefinition[G](
+              function.contract,
+              function.specs,
+              function.declarator,
+              rewrittenBody,
+            )(
+              function.blame
+            )(
+              function.o
+            )
+
+          rewrittenFunction.ref =
+            function.ref
+
+          rewrittenFunction
+        }
+
+      case other =>
+        /*
+         * struct, typedef, global variables etc.
+         * are returned EXACTLY as they are.
+         */
+        other
+    }
+
   override def dispatch(
-                         program: Program[Pre]
-                       ): Program[Post] = {
+                         program: Program[G]
+                       ): Program[G] = {
+    println("[DEBUG] CStatementSites.collect BASLIYOR")
 
     val candidates =
-      CStatementSites.collect(program)
+      CStatementSites.collect(
+        program
+      )
+
+    println("[DEBUG] CStatementSites.collect BITTI")
 
     println(
       s"[AddIfZero] candidate count = ${candidates.size}"
@@ -111,7 +348,6 @@ case class AddIfZero[
 
     candidates.zipWithIndex.foreach {
       case (site, index) =>
-
         println(
           s"[AddIfZero] candidate $index" +
             s" | function=${site.functionName}" +
@@ -121,85 +357,62 @@ case class AddIfZero[
         )
     }
 
-    selected =
-      if (candidates.nonEmpty) {
-
-        val selectedIndex =
-          sys.env
-            .get("ADD_IF_ZERO_SITE")
-            .map(_.toInt)
-            .getOrElse(
-              Random.nextInt(candidates.size)
-            )
-
-        if (
-          selectedIndex < 0 ||
-            selectedIndex >= candidates.size
-        ) {
-          throw new IllegalArgumentException(
-            s"Invalid AddIfZero site index: $selectedIndex. " +
-              s"Valid range: 0..${candidates.size - 1}"
-          )
-        }
-
-        val site =
-          candidates(selectedIndex)
-
-        println(
-          s"[AddIfZero] SELECTED INDEX = $selectedIndex"
-        )
-
-        println(
-          s"[AddIfZero] SELECTED" +
-            s" | function=${site.functionName}" +
-            s" | role=${site.role.label}" +
-            s" | path=${site.path}" +
-            s" | kind=${site.description}"
-        )
-
-        Some(site)
-      } else {
-        None
-      }
-
-    program.rewriteDefault()
-  }
-
-  override def dispatch(
-                         stat: Statement[Pre]
-                       ): Statement[Post] = {
-
-    selected match {
-
-      case Some(site)
-        if site.target eq stat =>
-
-        val rewrittenOriginal =
-          stat.rewriteDefault()
-
-        Branch[Post](
-          Seq(
-            (
-              cInt(
-                BigInt(0),
-                stat.o,
-              ),
-              deadBranch(stat.o),
-            ),
-            (
-              BooleanValue[Post](
-                true
-              )(stat.o),
-              asSourceCompound(
-                rewrittenOriginal,
-                stat.o,
-              ),
-            ),
-          )
-        )(stat.o)
-
-      case _ =>
-        stat.rewriteDefault()
+    if (candidates.isEmpty) {
+      selected = None
+      return program
     }
+
+    val selectedIndex =
+      sys.env
+        .get("ADD_IF_ZERO_SITE")
+        .map(_.toInt)
+        .getOrElse(
+          throw new IllegalArgumentException(
+            "ADD_IF_ZERO_SITE must be specified"
+          )
+        )
+
+    if (
+      selectedIndex < 0 ||
+        selectedIndex >= candidates.size
+    ) {
+      throw new IllegalArgumentException(
+        s"Invalid AddIfZero site index: $selectedIndex. " +
+          s"Valid range: 0..${candidates.size - 1}"
+      )
+    }
+
+    val site =
+      candidates(
+        selectedIndex
+      )
+
+    selected =
+      Some(site)
+
+    println(
+      s"[AddIfZero] SELECTED INDEX = $selectedIndex"
+    )
+
+    println(
+      s"[AddIfZero] SELECTED" +
+        s" | function=${site.functionName}" +
+        s" | role=${site.role.label}" +
+        s" | path=${site.path}" +
+        s" | kind=${site.description}"
+    )
+
+    val rewrittenDeclarations =
+      program.declarations.map(
+        rewriteGlobal
+      )
+
+    Program[G](
+      rewrittenDeclarations
+    )(
+      program.blame
+    )(
+      program.o
+    )
   }
 }

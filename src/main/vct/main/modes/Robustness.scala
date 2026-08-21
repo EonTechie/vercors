@@ -7,7 +7,6 @@ import vct.col.print.Ctx
 import vct.col.rewrite.{
   AddIfZero,
   InitialGeneration,
-  Rewritten,
 }
 
 import vct.main.Main.{EXIT_CODE_ERROR, EXIT_CODE_SUCCESS}
@@ -30,8 +29,13 @@ case object Robustness extends LazyLogging {
 
     logger.info("Robustness mode started")
 
-    val collector = BlameCollector()
-    val blameProvider = ConstantBlameProvider(collector)
+    val collector =
+      BlameCollector()
+
+    val blameProvider =
+      ConstantBlameProvider(
+        collector
+      )
 
     val stages =
       Parsing
@@ -40,13 +44,17 @@ case object Robustness extends LazyLogging {
           blameProvider,
         )
         .thenRun(
-          CSourceTransformation[InitialGeneration](
+          CSourceTransformation[
+            InitialGeneration
+          ](
             blameProvider,
             AddIfZero,
           )
         )
         .thenRun(
-          Resolution.ofOptions[Rewritten[InitialGeneration]](
+          Resolution.ofOptions[
+            InitialGeneration
+          ](
             options,
             blameProvider,
           )
@@ -64,18 +72,26 @@ case object Robustness extends LazyLogging {
           )
         )
 
-    stages.run(options.inputs) match {
+    stages.run(
+      options.inputs
+    ) match {
 
       case Left(err: UserError) =>
-        logger.error(err.text)
+        logger.error(
+          err.text
+        )
         EXIT_CODE_ERROR
 
       case Left(err: SystemError) =>
         throw err
 
       case Right(_) =>
-        logger.info("Robustness transformation completed")
-        logger.info("Output written to robustness-transformed.c")
+        logger.info(
+          "Robustness transformation completed"
+        )
+        logger.info(
+          "Output written to robustness-transformed.c"
+        )
         EXIT_CODE_SUCCESS
     }
   }

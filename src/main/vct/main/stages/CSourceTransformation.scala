@@ -6,9 +6,8 @@ import vct.col.ast.Program
 import vct.col.origin.FileSpanningOrigin
 import vct.col.print.Ctx
 import vct.col.rewrite.{
-  CSourceRewriterBuilder,
+  CStatementPassBuilder,
   Generation,
-  Rewritten,
 }
 
 import vct.parsers.ParseResult
@@ -21,10 +20,10 @@ case class CSourceTransformation[
   G <: Generation
 ](
    blameProvider: BlameProvider,
-   pass: CSourceRewriterBuilder,
+   pass: CStatementPassBuilder,
  ) extends Stage[
   ParseResult[G],
-  ParseResult[Rewritten[G]],
+  ParseResult[G],
 ] {
 
   override def friendlyName: String =
@@ -35,10 +34,12 @@ case class CSourceTransformation[
 
   override def run(
                     in: ParseResult[G]
-                  ): ParseResult[Rewritten[G]] = {
+                  ): ParseResult[G] = {
 
     implicit val o =
       FileSpanningOrigin
+
+    println("[DEBUG] PROGRAM OLUSTURMA BASLIYOR")
 
     val program =
       Program[G](
@@ -47,21 +48,17 @@ case class CSourceTransformation[
         blameProvider()
       )
 
+    println("[DEBUG] PROGRAM OLUSTURMA BITTI")
+
+    println("[DEBUG] ADDIFZERO DISPATCH BASLIYOR")
+
     val rewritten =
       pass
-        .apply[G]()
+        .applyX[G]()
         .dispatch(program)
 
-    /*
-     * IMPORTANT:
-     *
-     * Write the transformed program HERE,
-     * before Resolution converts CFunctionDefinition
-     * into generic Procedure nodes.
-     *
-     * CFunctionDefinition's C printer preserves
-     * requires / ensures / context_everywhere.
-     */
+    println("[DEBUG] ADDIFZERO DISPATCH BITTI")
+
     val outputPath =
       Paths.get(
         "robustness-source.c"
@@ -87,7 +84,7 @@ case class CSourceTransformation[
     }
 
     println(
-      "[Robustness] pre-resolution transformed C written to robustness-source.c"
+      "[Robustness] transformed C written to robustness-source.c"
     )
 
     ParseResult(
