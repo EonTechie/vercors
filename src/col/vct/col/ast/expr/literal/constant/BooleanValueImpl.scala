@@ -28,11 +28,24 @@ trait BooleanValueImpl[G] extends BooleanValueOps[G] {
     )
   override def precedence: Int = Precedence.ATOMIC
   override def layout(implicit ctx: Ctx): Doc =
-    Text(
-      orderedLayoutFixture.collect {
-        case e @ SharedLayoutElement(_) => e;
-        case e @ DedicatedLayoutElement(r, _) if r.toString == value.toString =>
-          e
-      }.map(_.textualData).mkString("")
-    )
+    ctx.syntax match {
+      case Ctx.C if !ctx.inSpec =>
+        // Adjusted for robustness mode: executable C conditions must be
+        // printed as C integer booleans, while specifications keep true/false.
+        Text(
+          if (value)
+            "1"
+          else
+            "0"
+        )
+      case _ =>
+        Text(
+          orderedLayoutFixture.collect {
+            case e @ SharedLayoutElement(_) => e;
+            case e @ DedicatedLayoutElement(r, _)
+                if r.toString == value.toString =>
+              e
+          }.map(_.textualData).mkString("")
+        )
+    }
 }

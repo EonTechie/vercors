@@ -2,6 +2,7 @@ package vct.col.ast.`type`
 
 import vct.col.ast.node.NodeImpl
 import vct.col.ast.{
+  ByValueClass,
   Class,
   InstanceField,
   TByReferenceClass,
@@ -40,14 +41,33 @@ trait TClassImpl[G] extends NodeImpl[G] {
             .decl.typeArgs.length} type arguments",
       ))
 
+  private def layoutCName(implicit ctx: Ctx): Doc =
+    cls.decl match {
+      case _: ByValueClass[G] =>
+        // Adjusted for robustness mode: by-value classes originate from C
+        // structs, so references to them must be emitted as `struct T`.
+        Text("struct") <+> ctx.name(cls)
+      case _ => Text(ctx.name(cls))
+    }
+
   override def layout(implicit ctx: Ctx): Doc =
-    Group(
-      Text(ctx.name(cls)) <>
-        (if (typeArgs.nonEmpty)
-           Text("<") <> Doc.args(typeArgs) <> ">"
-         else
-           Empty)
-    )
+    ctx.syntax match {
+      case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP => Group(layoutCName)
+      case _ =>
+        Group(
+          Text(ctx.name(cls)) <>
+            (if (typeArgs.nonEmpty)
+               Text("<") <> Doc.args(typeArgs) <> ">"
+             else
+               Empty)
+        )
+    }
+
+  override def layoutSplitDeclarator(implicit ctx: Ctx): (Doc, Doc) =
+    ctx.syntax match {
+      case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP => (layoutCName, Empty)
+      case _ => (layout, Empty)
+    }
 
   def typeEnv: Map[Variable[G], Type[G]] = cls.decl.typeArgs.zip(typeArgs).toMap
 

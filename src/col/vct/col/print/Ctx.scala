@@ -23,6 +23,25 @@ case class Ctx(
     names: Map[Declaration[_], String] = Map.empty,
     inSpec: Boolean = false,
 ) {
+  private def usesCIdentifiers: Boolean =
+    syntax match {
+      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL => true
+      case _ => false
+    }
+
+  private def cIdentifier(name: String): String = {
+    val sanitized =
+      name.map {
+        case c if c.isLetterOrDigit || c == '_' => c
+        case _ => '_'
+      }.mkString
+
+    if (sanitized.isEmpty || sanitized.head.isDigit)
+      "_" + sanitized
+    else
+      sanitized
+  }
+
   def namesIn[G](node: Node[G]): Ctx =
     copy(names = {
       val namer = Namer[G](syntax)
@@ -35,10 +54,18 @@ case class Ctx(
       decl,
       s"${decl.o.getPreferredNameOrElse().ucamel}_${decl.hashCode()}",
     )
-    if ((inSpec || syntax == Ctx.PVL) && Keywords.SPEC.contains(name))
-      "`" + name + "`"
+    // Adjusted for robustness mode: post-resolution C output can synthesize
+    // names from type layouts, so keep them valid C identifiers.
+    val printableName =
+      if (usesCIdentifiers)
+        cIdentifier(name)
+      else
+        name
+
+    if ((inSpec || syntax == Ctx.PVL) && Keywords.SPEC.contains(printableName))
+      "`" + printableName + "`"
     else
-      name
+      printableName
   }
 
   def name(ref: Ref[_, _ <: Declaration[_]]): String =

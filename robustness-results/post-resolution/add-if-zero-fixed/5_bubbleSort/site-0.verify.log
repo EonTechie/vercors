@@ -1,0 +1,10 @@
+[INFO] Start: VerCors (at 21:10:32)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier site-0.c:11-:11: 'ensures (\forall int i; 0 <= i && i <= length - 2 ==> arr[i] <= arr[i + 1]);' contains no triggers
+[WARN] The quantifier site-0.c:22-:22: '        loop_invariant (\forall int k; n - i <= k && k < n - 1 ==> arr[k] <= arr[k + 1]);' contains no triggers
+[WARN] The quantifier site-0.c:23-:23: '        loop_invariant (\forall int g, int h; 0 <= g && g < n - i && n - i <= h && h < n ==> arr[g] <= arr[h]);' contains no triggers
+[WARN] The quantifier site-0.c:29-:29: '            loop_invariant (\forall int k; n - i <= k && k < n - 1 ==> arr[k] <= arr[k + 1]);' contains no triggers
+[WARN] The quantifier site-0.c:30-:30: '            loop_invariant (\forall int g, int h; 0 <= g && g < n - i && n - i <= h && h < n ==> arr[g] <= arr[h]);' contains no triggers
+[WARN] The quantifier site-0.c:31-:31: '            loop_invariant (\forall int k; 0 <= k && k < j ==> arr[k] <= arr[j]);' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 21:11:03, duration: 00:00:30)

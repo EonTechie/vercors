@@ -24,11 +24,16 @@ trait ProcedureImpl[G] extends ProcedureOps[G] {
 
   def layoutC(implicit ctx: Ctx): Doc = {
     val (spec, decl) = returnType.layoutSplitDeclarator
-    Group(spec <+> decl <> ctx.name(this) <> "(" <> Doc.args(args) <> ")") <>
-      (if (body.nonEmpty)
-         Text(" ") <> body.get.layoutAsBlock
-       else
-         Text(";"))
+    Doc.stack(Seq(
+      // Adjusted for robustness mode: post-resolution Procedure nodes must keep
+      // their function contracts when emitted as C mutants.
+      contract,
+      Group(spec <+> decl <> ctx.name(this) <> "(" <> Doc.args(args) <> ")") <>
+        (if (body.nonEmpty)
+           Text(" ") <> body.get.layoutAsBlock
+         else
+           Text(";")),
+    ))
   }
 
   def layoutModifiers(implicit ctx: Ctx): Seq[Doc] =

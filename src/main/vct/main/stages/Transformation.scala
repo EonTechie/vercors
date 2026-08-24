@@ -375,172 +375,174 @@ case class SilverTransformation(
     unsetTarget: Boolean = true,
 ) extends Transformation(
       onPassEvent,
-  (if (devAddIfOne) Seq[RewriterBuilder](AddIfOne) else Seq.empty) ++
-    Seq(
+      Seq[RewriterBuilder](AddIfOne).filter(_ => devAddIfOne) ++
+        // Adjusted for robustness mode: let AddIfZero run through the normal
+        // post-resolution transformation stage instead of a C-source rewrite.
+        Seq[RewriterBuilder](AddIfZero).filter(_ => devAddIfZero) ++ Seq(
           CTypeConversions.withArg(checkIntegerBounds, unsetTarget),
-        EncodeBoundsChecks,
-        // Replace leftover SYCL types
-        ReplaceSYCLTypes,
-        TypeQualifierCoercion,
-        MakeUniqueMethodCopies,
-        // Inline pallas-specifications
-        InlinePallasWrappers,
-        ResolvePallasPredicates,
-        InlinePallasPermLets,
-        ResolvePallasQuantifiers,
-        // BIP transformations
-        ComputeBipGlue,
-        InstantiateBipSynchronizations,
-        EncodeBipPermissions,
-        EncodeBip.withArg(bipResults),
+          EncodeBoundsChecks,
+          // Replace leftover SYCL types
+          ReplaceSYCLTypes,
+          TypeQualifierCoercion,
+          MakeUniqueMethodCopies,
+          // Inline pallas-specifications
+          InlinePallasWrappers,
+          ResolvePallasPredicates,
+          InlinePallasPermLets,
+          ResolvePallasQuantifiers,
+          // BIP transformations
+          ComputeBipGlue,
+          InstantiateBipSynchronizations,
+          EncodeBipPermissions,
+          EncodeBip.withArg(bipResults),
 
-        // Remove the java.lang.Object -> java.lang.Object inheritance loop
-        NoSupportSelfLoop,
+          // Remove the java.lang.Object -> java.lang.Object inheritance loop
+          NoSupportSelfLoop,
 
-        // Delete stuff that may be declared unsupported at a later stage
-        FilterSpecIgnore,
+          // Delete stuff that may be declared unsupported at a later stage
+          FilterSpecIgnore,
 
-        // Disambiguate AST
-        // Make sure Disambiguate comes after CFloatIntCoercion, so CInts are gone
-        Disambiguate, // Resolve overloaded operators (+, subscript, etc.)
-        DisambiguateLocation, // Resolve location type
-        DisambiguatePredicateExpression,
+          // Disambiguate AST
+          // Make sure Disambiguate comes after CFloatIntCoercion, so CInts are gone
+          Disambiguate, // Resolve overloaded operators (+, subscript, etc.)
+          DisambiguateLocation, // Resolve location type
+          DisambiguatePredicateExpression,
 
-        // VeyMont choreography encoding
-        BranchToIfElse,
-        GenerateSingleOwnerPermissions.withArg(generatePermissions),
-        InferEndpointContexts,
-        StratifyExpressions,
-        StratifyUnpointedExpressions,
-        DeduplicateChorGuards,
-        EncodeChorBranchUnanimity.withArg(veymontBranchUnanimity),
-        EncodeEndpointInequalities,
-        EncodeChannels,
-        EncodePermissionStratification
-          .withArg(veymontPermissionStratificationMode),
-        EncodeChoreography,
-        // All VeyMont nodes should now be gone
+          // VeyMont choreography encoding
+          BranchToIfElse,
+          GenerateSingleOwnerPermissions.withArg(generatePermissions),
+          InferEndpointContexts,
+          StratifyExpressions,
+          StratifyUnpointedExpressions,
+          DeduplicateChorGuards,
+          EncodeChorBranchUnanimity.withArg(veymontBranchUnanimity),
+          EncodeEndpointInequalities,
+          EncodeChannels,
+          EncodePermissionStratification
+            .withArg(veymontPermissionStratificationMode),
+          EncodeChoreography,
+          // All VeyMont nodes should now be gone
 
-        // Desugar high-level COL constructs
-        EncodeRangedFor,
-        EncodeString, // Encode spec string as seq<int>
-        EncodeChar,
-        CollectLocalDeclarations, // all decls in Scope
-        VariableToPointer, // should happen before ParBlockEncoder so it can distinguish between variables which can and can't altered in a parallel block
-        DesugarPermissionOperators, // no PointsTo, \pointer, etc.
-        ReadToValue, // resolve wildcard into fractional permission
-        TrivialAddrOf,
-        DesugarCoalescingOperators, // no ?.
-        PinCollectionTypes, // no anonymous sequences, sets, etc.
-        QuantifySubscriptAny, // no arr[*]
-        IterationContractToParBlock,
-        PropagateContextEverywhere, // inline context_everywhere into loop invariants
-        EncodeArrayValues, // maybe don't target shift lemmas on generated function for \values
-        EncodePointerArrays,
-        GivenYieldsToArgs,
-        CheckProcessAlgebra,
-        EncodeCurrentThread,
-        EncodeIntrinsicLock,
-        EncodeForkJoin,
-        // PureMethodsToFunctions should be before InlineApplicables since InlineApplicables treats functions and methods differently
-        PureMethodsToFunctions,
-        InlineApplicables,
-        InlineTrivialLets,
-        RefuteToInvertedAssert,
-        ExplicitResourceValues,
-        EncodeResourceValues,
-        EncodeAssuming,
-        EncodePointerComparison, // Assumes no context_everywhere
+          // Desugar high-level COL constructs
+          EncodeRangedFor,
+          EncodeString, // Encode spec string as seq<int>
+          EncodeChar,
+          CollectLocalDeclarations, // all decls in Scope
+          VariableToPointer, // should happen before ParBlockEncoder so it can distinguish between variables which can and can't altered in a parallel block
+          DesugarPermissionOperators, // no PointsTo, \pointer, etc.
+          ReadToValue, // resolve wildcard into fractional permission
+          TrivialAddrOf,
+          DesugarCoalescingOperators, // no ?.
+          PinCollectionTypes, // no anonymous sequences, sets, etc.
+          QuantifySubscriptAny, // no arr[*]
+          IterationContractToParBlock,
+          PropagateContextEverywhere, // inline context_everywhere into loop invariants
+          EncodeArrayValues, // maybe don't target shift lemmas on generated function for \values
+          EncodePointerArrays,
+          GivenYieldsToArgs,
+          CheckProcessAlgebra,
+          EncodeCurrentThread,
+          EncodeIntrinsicLock,
+          EncodeForkJoin,
+          // PureMethodsToFunctions should be before InlineApplicables since InlineApplicables treats functions and methods differently
+          PureMethodsToFunctions,
+          InlineApplicables,
+          InlineTrivialLets,
+          RefuteToInvertedAssert,
+          ExplicitResourceValues,
+          EncodeResourceValues,
+          EncodeAssuming,
+          EncodePointerComparison, // Assumes no context_everywhere
 
-        // Encode parallel blocks
-        EncodeSendRecv,
-        ParBlockEncoder,
+          // Encode parallel blocks
+          EncodeSendRecv,
+          ParBlockEncoder,
 
-        // Extract explicitly extracted code sections, which ban continue/break/return/goto outside them.
-        SpecifyImplicitLabels,
-        EncodeExtract,
+          // Extract explicitly extracted code sections, which ban continue/break/return/goto outside them.
+          SpecifyImplicitLabels,
+          EncodeExtract,
 
-        // Encode exceptional behaviour (no more continue/break/return/try/throw)
-        SwitchToGoto,
-        ContinueToBreak,
-        EncodeBreakReturn,
-      ) ++ simplifyBeforeRelations ++ Seq(
-        SimplifyQuantifiedRelations,
-        // We extract quantifier patterns before simplifying nested ones
-        ExtractInlineQuantifierPatterns,
-        SimplifyNestedQuantifiers,
-        TupledQuantifiers,
-      ) ++ simplifyAfterRelations ++ Seq(
-        UntupledQuantifiers,
+          // Encode exceptional behaviour (no more continue/break/return/try/throw)
+          SwitchToGoto,
+          ContinueToBreak,
+          EncodeBreakReturn,
+        ) ++ simplifyBeforeRelations ++ Seq(
+          SimplifyQuantifiedRelations,
+          // We extract quantifier patterns before simplifying nested ones
+          ExtractInlineQuantifierPatterns,
+          SimplifyNestedQuantifiers,
+          TupledQuantifiers,
+        ) ++ simplifyAfterRelations ++ Seq(
+          UntupledQuantifiers,
 
-        // Resolve scale before encoding proof helpers, for easier access to annotation info.
-        ResolveScale,
-        // Encode proof helpers
-        EncodeProofHelpers.withArg(inferHeapContextIntoFrame),
-        ImportSetCompat.withArg(adtImporter),
+          // Resolve scale before encoding proof helpers, for easier access to annotation info.
+          ResolveScale,
+          // Encode proof helpers
+          EncodeProofHelpers.withArg(inferHeapContextIntoFrame),
+          ImportSetCompat.withArg(adtImporter),
 
-        // Make final fields constant functions. Explicitly before ResolveExpressionSideEffects, because that pass will
-        // flatten out functions in the rhs of assignments, making it harder to detect final field assignments where the
-        // value is pure and therefore be put in the contract of the constant function.
-        ConstantifyFinalFields,
-        EncodeByValueClassUsage,
-        LowerHeapVariables,
-        // Resolve side effects including method invocations, for encodetrythrowsignals.
-        ResolveExpressionSideChecks,
-        ResolveExpressionSideEffects,
-        EncodeTryThrowSignals,
-        MonomorphizeClass,
-        // No more classes
-        ClassToRef,
-        HeapVariableToRef,
-        CheckContractSatisfiability.withArg(checkSat),
-        DesugarCollectionOperators,
-        EncodeNdIndex,
-        EncodeBitVectors.withArg(opaqueBitwiseOperators),
-        // Translate internal types to domains
-        ImportVector.withArg(adtImporter),
-        // After ImportVector, but before SmtlibToProverTypes
-        FloatToRat,
-        SmtlibToProverTypes,
-        EnumToDomain,
-        ImportArray.withArg(adtImporter),
-        ImportConstPointer.withArg(adtImporter),
-        EncodeIntegerPointerCast,
-        ImportPointer.withArg(adtImporter),
-        ImportMapCompat.withArg(adtImporter),
-        ImportEither.withArg(adtImporter),
-        ImportTuple.withArg(adtImporter),
-        ImportOption.withArg(adtImporter),
-        ImportFrac.withArg(adtImporter),
-        ImportNothing.withArg(adtImporter),
-        ImportVoid.withArg(adtImporter),
-        ImportNull.withArg(adtImporter),
-        ImportAny.withArg(adtImporter),
-        ImportViperOrder.withArg(adtImporter),
-        EncodeRange.withArg(adtImporter),
+          // Make final fields constant functions. Explicitly before ResolveExpressionSideEffects, because that pass will
+          // flatten out functions in the rhs of assignments, making it harder to detect final field assignments where the
+          // value is pure and therefore be put in the contract of the constant function.
+          ConstantifyFinalFields,
+          EncodeByValueClassUsage,
+          LowerHeapVariables,
+          // Resolve side effects including method invocations, for encodetrythrowsignals.
+          ResolveExpressionSideChecks,
+          ResolveExpressionSideEffects,
+          EncodeTryThrowSignals,
+          MonomorphizeClass,
+          // No more classes
+          ClassToRef,
+          HeapVariableToRef,
+          CheckContractSatisfiability.withArg(checkSat),
+          DesugarCollectionOperators,
+          EncodeNdIndex,
+          EncodeBitVectors.withArg(opaqueBitwiseOperators),
+          // Translate internal types to domains
+          ImportVector.withArg(adtImporter),
+          // After ImportVector, but before SmtlibToProverTypes
+          FloatToRat,
+          SmtlibToProverTypes,
+          EnumToDomain,
+          ImportArray.withArg(adtImporter),
+          ImportConstPointer.withArg(adtImporter),
+          EncodeIntegerPointerCast,
+          ImportPointer.withArg(adtImporter),
+          ImportMapCompat.withArg(adtImporter),
+          ImportEither.withArg(adtImporter),
+          ImportTuple.withArg(adtImporter),
+          ImportOption.withArg(adtImporter),
+          ImportFrac.withArg(adtImporter),
+          ImportNothing.withArg(adtImporter),
+          ImportVoid.withArg(adtImporter),
+          ImportNull.withArg(adtImporter),
+          ImportAny.withArg(adtImporter),
+          ImportViperOrder.withArg(adtImporter),
+          EncodeRange.withArg(adtImporter),
 
-        // After Disambiguate and  ImportVector
-        TruncDivMod,
+          // After Disambiguate and  ImportVector
+          TruncDivMod,
 
-        // All locations with a value should now be SilverField
-        EncodeForPermWithValue,
-        EncodeAutoValue,
-        ExtractInlineQuantifierPatterns,
-        MonomorphizeContractApplicables,
+          // All locations with a value should now be SilverField
+          EncodeForPermWithValue,
+          EncodeAutoValue,
+          ExtractInlineQuantifierPatterns,
+          MonomorphizeContractApplicables,
 
-        // Silver compat (basically no new nodes)
-        FinalizeArguments,
-        ExplicitADTTypeArgs,
-        ForLoopToWhileLoop,
-        BranchToIfElse,
-        EvaluationTargetDummy,
+          // Silver compat (basically no new nodes)
+          FinalizeArguments,
+          ExplicitADTTypeArgs,
+          ForLoopToWhileLoop,
+          BranchToIfElse,
+          EvaluationTargetDummy,
 
-        // Final translation to rigid silver nodes
-        SilverIntRatCoercion,
-        // PB TODO: PinSilverNodes has now become a collection of Silver oddities, it should be more structured / split out.
-        PinSilverNodes,
-        Explode.withArg(splitVerificationByProcedure),
-      ),
+          // Final translation to rigid silver nodes
+          SilverIntRatCoercion,
+          // PB TODO: PinSilverNodes has now become a collection of Silver oddities, it should be more structured / split out.
+          PinSilverNodes,
+          Explode.withArg(splitVerificationByProcedure),
+        ),
       optimizeUnsafe = optimizeUnsafe,
     )
 

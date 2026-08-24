@@ -1,6 +1,7 @@
 package vct.col.ast.declaration.global
 
 import vct.col.ast.{
+  ByValueClass,
   Class,
   ClassDeclaration,
   Declaration,
@@ -89,9 +90,20 @@ trait ClassImpl[G] extends Declarator[G] {
            )) <+> "{"
     ) <>> Doc.stack2(decls) <+/> "}"
 
+  def layoutC(implicit ctx: Ctx): Doc =
+    this match {
+      case _: ByValueClass[G] =>
+        // Adjusted for robustness mode: resolved C structs are represented as
+        // by-value classes, but generated mutants must be valid C source.
+        Text("struct") <+> ctx.name(this) <+> "{" <>> Doc.stack2(decls) <+/>
+          "};"
+      case _ => layoutPvl
+    }
+
   override def layout(implicit ctx: Ctx): Doc =
     ctx.syntax match {
       case Ctx.Java => layoutJava
+      case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP => layoutC
       case _ => layoutPvl
     }
 
