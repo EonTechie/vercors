@@ -1,21 +1,40 @@
 package vct.col.rewrite
 
+// ArrayBuffer = içine sonradan eleman ekleyebildiğimiz liste.
+// Biz candidate site’ları buldukça buna ekliyoruz.
 import scala.collection.mutable.ArrayBuffer
 
 import vct.col.ast._
-import vct.col.resolve.lang.C
+//VerCors AST sınıflarını kullanabilmek için:
+/*
+Statement
+Branch
+Loop
+Return
+Eval
+Scope
+Block
+...
+ */
 
+import vct.col.resolve.lang.C
+// C fonksiyonunun adını AST’den çıkarmak için kullanılıyor.
+
+// Tek bir CStatementSites nesnesi var. CStatementSites.collect(program) : Bu dosyanın içindeki fonksiyonları buradan çağırıyoruz:
 object CStatementSites {
 
-  sealed trait Role {
-    def label: String
+  // Bir candidate statement'ın programdaki görevi/konumu ne? Bunu temsil ediyor.
+  sealed trait Role { // trait, ortak özellik tanımlamak için kullanılıyor.
+    def label: String   // Burada her Role bir yazı etiketi vermek zorunda.
   }
 
+  // Bir statement bir block’un içindeyse:
   final case class BlockItem(index: Int) extends Role {
     override def label: String =
-      s"BLOCK_ITEM[$index]"
+      s"BLOCK_ITEM[$index]" // s"..." Scala'da string içine değişken koymak demek:
   }
 
+  // Bu da ifin hangi kolunda olduğumuzu söylüyor.
   final case class BranchArm(index: Int) extends Role {
     override def label: String =
       if (index == 0)
@@ -24,22 +43,30 @@ object CStatementSites {
         s"IF_ELSE[$index]"
   }
 
+  // Candidate loop'un body’siyse: LOOP_BODY   //etiketini veriyoruz.
   case object LoopBody extends Role {
     override def label: String =
       "LOOP_BODY"
   }
 
   final case class Site[G](
-                            functionName: String,
-                            path: String,
-                            role: Role,
+                            functionName: String,  // hangi fonksiyon?
+                            path: String,  // AST içinde nerede?
+                            role: Role, // ne tür pozisyon?
                             target: Statement[G],
                           ) {
-
-    def description: String =
-      describe(target)
+/*
+def description: String =  Candidate hakkında okunabilir açıklama üretir.
+ExpressionStatement
+IfStatement
+LoopStatement
+ */
+    def description: String =  // Candidate hakkında okunabilir açıklama üretir.
+      describe(target)   // asıl AST statement nesnesi.  -> AddIfZero daha sonra tam olarak bunu değiştirecek.
   }
 
+  // Bu fonksiyon bazı özel fonksiyonlara transformation uygulanmasını engelliyor.
+  // Çünkü bunlar test/verification altyapısının özel fonksiyonları.
   private def blacklistedFunction(name: String): Boolean =
     name == "reach_error" ||
       name == "abort" ||
@@ -55,24 +82,34 @@ object CStatementSites {
    *
    * We only accept shapes that CToCol produces for ordinary
    * executable C source statements.
+   *
+   *
+   * Sorusu:
+   *
+   * Bu statement candidate olabilir mi?
+   *
+   * Sonuç:
+   *
+   * true  → candidate olabilir
+   * false → olamaz
    */
   private def selectable[G](
                              stat: Statement[G]
                            ): Boolean =
-    stat match {
+    stat match {  // Statement’ın türüne bakıyoruz. Nesnenin kendisiyle ilgilenmiyorum, sadece türünün Return olup olmadığına bakıyorum.
 
       // Supervisor requirement:
-      // Return is never an AddIfOne/AddIfZero location.
+      // Return is never an AddIfOne/AddIfZero location. - return is a type here
       case _: Return[G] =>
         false
 
         // SemTransformers add_if1 explicitly excludes Decl.
-      case _: CDeclarationStatement[G] =>
+      case _: CDeclarationStatement[G] =>  // mesela int x;
         false
 
         // VerCors specification/internal statements must not become
         // C source transformation locations.
-      case _: NonExecutableStatement[G] =>
+      case _: NonExecutableStatement[G] =>  // VerCors annotation/specification gibi source C statement olmayan şeyler candidate değil.
         false
 
         // C expression statement:
@@ -80,7 +117,7 @@ object CStatementSites {
         // foo();
         // i++;
       case _: Eval[G] =>
-        true
+        true  // candidate.
 
         // C if statement.
       case _: Branch[G] =>
@@ -102,10 +139,35 @@ object CStatementSites {
         Loop(_, _, _, _, _)
       ) =>
         true
+/*
+Loop
+case Scope(
+  Nil,
+  Loop(_, _, _, _, _)
+) =>
+  true
 
+C'deki:
+
+while (...)
+
+veya:
+
+for (...)
+
+VerCors'ta Scope + Loop olarak temsil ediliyor.
+
+Candidate.
+
+Buradaki _:
+
+Bu alanın değeriyle ilgilenmiyorum.
+ */
         // Named C goto.
       case _: CGoto[G] =>
         true
+
+
 
         // These remain ordinary source statements.
       case _: Break[G] =>
@@ -125,13 +187,29 @@ object CStatementSites {
       case _ =>
         false
     }
+/*
+Scope(Nil, Block(_)) -> = “locals listesi boş olan ve gövdesi Block olan Scope”.
+Çünkü VerCors’un C parser’ından gelen şu C kodu:
 
-  private def describe[G](
+{
+    x++;
+    y++;
+}
+
+bizim burada ilgilendiğimiz parsed C AST biçiminde kabaca:
+
+Scope
+├── locals = []
+└── Block
+    ├── x++
+    └── y++
+ */
+  private def describe[G]( // Sadece candidate'ı terminalde daha anlaşılır göstermek için açıklıyor.
                            stat: Statement[G]
                          ): String =
     stat match {
 
-      case Scope(Nil, Block(stats)) =>
+      case Scope(Nil, Block(stats)) => // Block içinde 3 statement varsa: Block içinde 3 statement varsa:
         s"CompoundStatement(items=${stats.size})"
 
       case Scope(
@@ -169,13 +247,30 @@ object CStatementSites {
         other.getClass.getSimpleName
     }
 
+
+/*
+Şimdi asıl candidate toplama başlıyor:
+
+def collect[G](
+  program: Program[G]
+): Seq[Site[G]] = {
+
+Girdi:
+
+bütün program AST
+
+Çıktı:
+
+candidate Site listesi
+ */
   def collect[G](
                   program: Program[G]
                 ): Seq[Site[G]] = {
 
     val result =
       ArrayBuffer.empty[Site[G]]
-
+// Başlangıçta boş candidate listesi: []
+// Bir statement bulduğumuzda bu fonksiyona gönderiyoruz.
     def add(
              functionName: String,
              path: String,
@@ -202,6 +297,8 @@ object CStatementSites {
      * It explicitly follows exactly the structural statement
      * positions corresponding to SemTransformers FindStatements.
      */
+
+    // AST'nin statement yapısında aşağı doğru gez ve candidate noktaları bul. Sadece bizim açıkça belirlediğimiz yapıları takip ediyor.
     def descend(
                  functionName: String,
                  path: String,
@@ -228,7 +325,7 @@ object CStatementSites {
             case (child, index) =>
 
               val childPath =
-                s"$path.block[$index]"
+                s"$path.block[$index]"  // absolute.body.block[0] mesela
 
               add(
                 functionName,
@@ -252,13 +349,13 @@ object CStatementSites {
            */
         case Scope(
           Nil,
-          loop @ Loop(_, _, _, _, _)
+          loop @ Loop(_, _, _, _, _)  // Bunun Loop olduğunu kontrol et ve aynı nesneye loop adını ver.
         ) =>
 
           descend(
             functionName,
             s"$path.loop",
-            loop,
+            loop,  // loop'un içine giriyoruz.
           )
 
           /*
@@ -270,13 +367,16 @@ object CStatementSites {
            * Conditions are NOT traversed as statement locations.
            */
         case Branch(branches) =>
+          // Bir if gördük.
+          //
+          //Önce if'in doğrudan body'lerini candidate olarak kaydediyoruz.
 
           // First register the direct arms.
           // This mirrors FindStatements ordering.
-          branches.zipWithIndex.foreach {
-            case ((_, body), index) =>
+          branches.zipWithIndex.foreach { // Önce if'in doğrudan body'lerini candidate olarak kaydediyoruz.
+            case ((_, body), index) =>  // (condition, body) Ama condition ile ilgilenmiyoruz:  -> body'yi alıyoruz.
 
-              add(
+              add(  // if'in body’sini candidate yapmaya çalışıyor.
                 functionName,
                 s"$path.branch[$index]",
                 BranchArm(index),
@@ -294,7 +394,19 @@ object CStatementSites {
                 body,
               )
           }
+/*
+Neden iki kere?
 
+İlk tur:
+
+Doğrudan branch bodylerini candidate listesine ekle.
+
+İkinci tur:
+
+Branch bodylerinin içine gir ve içerideki candidate’ları da bul.
+
+Bu ordering SemTransformers davranışını taklidi.
+ */
           /*
            * LOOP:
            *
@@ -316,14 +428,14 @@ object CStatementSites {
           val bodyPath =
             s"$path.body"
 
-          add(
+          add(  // oop body’sini candidate yapıyor.
             functionName,
             bodyPath,
             LoopBody,
             body,
           )
 
-          descend(
+          descend( // body'nin içine de giriyor.
             functionName,
             bodyPath,
             body,
@@ -335,6 +447,12 @@ object CStatementSites {
            *
            * But structures nested below it may still contain legal
            * sites.
+           */
+
+          /*
+          Label'ın kendisini candidate yapmıyoruz.
+
+          Ama içindeki statement yapısında candidate olabilir.
            */
         case Label(_, inner, _) =>
 
@@ -351,7 +469,7 @@ object CStatementSites {
            * Crucially: we do NOT recursively descend through arbitrary
            * Node.subnodes.
            */
-        case _ =>
+        case _ =>  // Yukarıdaki özel durumlara (Scope, Branch, Loop, Label) girmeyen diğer tüm statement türlerinde aşağı doğru gezme. HİÇBİR ŞEY YAPMA DEMEK
       }
 
     def visitGlobal(
@@ -360,9 +478,9 @@ object CStatementSites {
       decl match {
 
         case unit: CTranslationUnit[G] =>
-          unit.declarations.foreach(visitGlobal)
+          unit.declarations.foreach(visitGlobal)  // C dosyasının içindeki bütün declaration'ları tek tek gez.
 
-        case function: CFunctionDefinition[G] =>
+        case function: CFunctionDefinition[G] =>  // diyelim Bir C fonksiyonu bulduk. Fonksiyon adını çıkar:
 
           val functionName =
             C
@@ -371,7 +489,7 @@ object CStatementSites {
               )
               .name
 
-          if (!blacklistedFunction(functionName)) {
+          if (!blacklistedFunction(functionName)) {  // adı çıkarılan fonksiyon üzerindena blacklist kontrolü:
 
             /*
              * The function body itself is NOT a FindStatements
@@ -382,16 +500,39 @@ object CStatementSites {
              */
             descend(
               functionName,
-              s"$functionName.body",
+              s"$functionName.body",  // Fonksiyon body’sinin içine gir ve candidate ara. Fonksiyon body’sinin tamamını candidate yapmıyor. Sadece içine giriyor.
               function.body,
             )
           }
-
-        case _ =>
+// Bu bizim daha önce crash probleminden kaçınmak için istediğimiz davranış.
+        case _ =>  // Diğer globaller Struct, typedef, global variable vs.
       }
 
-    program.declarations.foreach(visitGlobal)
+    program.declarations.foreach(visitGlobal)  // Burada gerçek tarama başlıyor: Programdaki her global declaration'ı ziyaret et.
 
-    result.toSeq
+    result.toSeq  // ArrayBufferdaki candidate'ları normal bir Seq olarak döndürüyor.
   }
 }
+
+/*Program
+│
+├── struct                 ❌ geç
+│
+├── global variable        ❌ geç
+│
+└── function
+      │
+      └── body
+           │
+           ├── declaration ❌
+           ├── assignment  ✅ candidate
+           ├── if          ✅ candidate
+           │    ├── true body ✅
+           │    └── false body ✅
+           │
+           ├── loop        ✅
+           │    └── body   ✅
+           │
+           └── return      ❌
+ */
+

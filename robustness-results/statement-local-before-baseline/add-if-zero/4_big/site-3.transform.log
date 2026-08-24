@@ -1,0 +1,19 @@
+[INFO] Robustness mode started
+[DEBUG] PROGRAM OLUSTURMA BASLIYOR
+[DEBUG] PROGRAM OLUSTURMA BITTI
+[DEBUG] ADDIFZERO DISPATCH BASLIYOR
+[DEBUG] CStatementSites.collect BASLIYOR
+[DEBUG] CStatementSites.collect BITTI
+[AddIfZero] candidate count = 5
+[AddIfZero] candidate 0 | function=isBiggest | role=BLOCK_ITEM[2] | path=isBiggest.body.block[2] | kind=LoopStatement(init=Eval, cond=AmbiguousLess, update=Eval, body=Scope)
+[AddIfZero] candidate 1 | function=isBiggest | role=LOOP_BODY | path=isBiggest.body.block[2].loop.body | kind=CompoundStatement(items=1)
+[AddIfZero] candidate 2 | function=isBiggest | role=BLOCK_ITEM[0] | path=isBiggest.body.block[2].loop.body.block[0] | kind=IfStatement(arms=1)
+[AddIfZero] candidate 3 | function=isBiggest | role=IF_TRUE | path=isBiggest.body.block[2].loop.body.block[0].branch[0] | kind=CompoundStatement(items=1)
+[AddIfZero] candidate 4 | function=isBiggest | role=BLOCK_ITEM[0] | path=isBiggest.body.block[2].loop.body.block[0].branch[0].block[0] | kind=ExpressionStatement(expr=PreAssignExpression)
+[AddIfZero] SELECTED INDEX = 3
+[AddIfZero] SELECTED | function=isBiggest | role=IF_TRUE | path=isBiggest.body.block[2].loop.body.block[0].branch[0] | kind=CompoundStatement(items=1)
+[DEBUG] ADDIFZERO DISPATCH BITTI
+[Robustness] transformed C written to robustness-source.c
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

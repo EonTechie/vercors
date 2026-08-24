@@ -1,0 +1,18 @@
+[INFO] Robustness mode started
+[DEBUG] PROGRAM OLUSTURMA BASLIYOR
+[DEBUG] PROGRAM OLUSTURMA BITTI
+[DEBUG] ADDIFZERO DISPATCH BASLIYOR
+[DEBUG] CStatementSites.collect BASLIYOR
+[DEBUG] CStatementSites.collect BITTI
+[AddIfZero] candidate count = 4
+[AddIfZero] candidate 0 | function=mult_add | role=BLOCK_ITEM[2] | path=mult_add.body.block[2] | kind=LoopStatement(init=Block, cond=AmbiguousLess, update=Block, body=Scope)
+[AddIfZero] candidate 1 | function=mult_add | role=LOOP_BODY | path=mult_add.body.block[2].loop.body | kind=CompoundStatement(items=2)
+[AddIfZero] candidate 2 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[2].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression)
+[AddIfZero] candidate 3 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[2].loop.body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression)
+[AddIfZero] SELECTED INDEX = 3
+[AddIfZero] SELECTED | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[2].loop.body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression)
+[DEBUG] ADDIFZERO DISPATCH BITTI
+[Robustness] transformed C written to robustness-source.c
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

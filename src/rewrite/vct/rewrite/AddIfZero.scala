@@ -1,26 +1,54 @@
+// Akış: candidate'ları bul → bir site seç → AST'yi dolaş → seçilen statement'ı if(0)...else{original} ile değiştir.
 package vct.col.rewrite
 
+// VerCors'un AST kütüphanesi.  -> Bu package içinden ihtiyacım olan bütün isimleri erişilebilir yap.
 import vct.col.ast._
+/*
+Program
+Statement
+Branch
+Loop
+Scope
+Block
+Assert
+...
+ */
+
+
+
 import vct.col.origin.{Origin, PanicBlame}
 
+
+// trait : Bir şablon/interface gibi.
+// Bizim statement transformation'larımızın builder'ları şu üç şeyi sağlasın.
 trait CStatementPassBuilder {
 
+  // Scala fonksiyon imzası.  -> Bunu kullanan transformation kendi key değerini yazmak zorunda.
   def key: String
 
+  // Transformation açıklaması döndürecek.
   def desc: String
 
   def applyX[G <: Generation](): CStatementPass[G]
 }
-
+// G herhangi bir tip olamaz. VerCors'un Generation ailesinden bir tip olmalı.
 trait CStatementPass[G <: Generation] {
+// Gerçek statement transformation'ı şu metodu sağlamalı.
+
 
   def dispatch(
                 program: Program[G]
-              ): Program[G]
+              ): Program[G]  // Program → VerCors AST tipi.
 }
+/*
+def metodAdi(
+  parametreAdi: ParametreTipi
+): DonusTipi
+ */
+
 
 case object AddIfZero
-  extends CStatementPassBuilder {
+  extends CStatementPassBuilder {  // dediğimiz için AddIfZero şunları implement etmek zorunda: key, desc , applyX
 
   override def key: String =
     "addIfZero"

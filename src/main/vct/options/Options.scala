@@ -103,6 +103,10 @@ case object Options {
         .action((_, c) => c.copy(mode = Mode.Robustness))
         .text("Enable robustness transformation mode"),
 
+      opt[Int]("robustness-repeat")
+        .action((amount, c) => c.copy(robustnessRepeat = amount))
+        .text("Number of times to apply the robustness transformation"),
+
       opt[Unit]("more").abbr("m").action((_, c) => c.copy(more = true))
         .text("Always print the maximum amount of information about errors."),
       opt[Language]("lang").valueName(ReadLanguage.valueName)
@@ -488,6 +492,7 @@ case class Options(
     help: Boolean = false,
     showHidden: Boolean = false,
     mode: Mode = Mode.Verify,
+    robustnessRepeat: Int = 1,
     inputs: Seq[PathOrStd] = Nil,
     logLevels: Seq[(String, Verbosity)] = Seq(
       ("vct", Verbosity.Info),
