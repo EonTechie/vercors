@@ -1,0 +1,639 @@
+
+========================================================================
+TRANSFORM DEBUG LOG
+========================================================================
+log_file: ..\UPDATED_EXAMPLES\C\patterns\if0error\5_bubbleSort_transform.log
+source_file: ..\UPDATED_EXAMPLES\C\5_bubbleSort.c
+mode: implement_all_list
+selected_transforms: ['if0error']
+
+========================================================================
+SEED SOURCE
+========================================================================
+(lines numbered 1..37)
+
+  1 | /*@
+  2 |   requires length >= 0;
+  3 | 
+  4 |   context_everywhere arr != NULL;
+  5 |   context_everywhere \pointer(arr, length, write);
+  6 | 
+  7 |   ensures
+  8 |     (\forall int i;
+  9 |       0 <= i && i <= length - 2;
+ 10 |       arr[i] <= arr[i + 1]);
+ 11 | @*/
+ 12 | void bubbleSort(int arr[], int length)
+ 13 | {
+ 14 |     int n = length;
+ 15 | 
+ 16 |     //@ loop_invariant 0 <= i && i <= n;
+ 17 |     //@ loop_invariant (\forall int k; n - i <= k && k < n - 1; arr[k] <= arr[k + 1]);
+ 18 |     //@ loop_invariant (\forall int g, int h; 0 <= g && g < n - i && n - i <= h && h < n; arr[g] <= arr[h]);
+ 19 | 
+ 20 |     for (int i = 0; i < n - 1; i++)
+ 21 |     {
+ 22 |         //@ loop_invariant 0 <= j && j <= n - 1 - i;
+ 23 |         //@ loop_invariant (\forall int k; n - i <= k && k < n - 1; arr[k] <= arr[k + 1]);
+ 24 |         //@ loop_invariant (\forall int g, int h; 0 <= g && g < n - i && n - i <= h && h < n; arr[g] <= arr[h]);
+ 25 |         //@ loop_invariant (\forall int k; 0 <= k && k < j; arr[k] <= arr[j]);
+ 26 | 
+ 27 |         for (int j = 0; j < n - 1 - i; j++)
+ 28 |         {
+ 29 |             if (arr[j] > arr[j + 1])
+ 30 |             {
+ 31 |                 int temp = arr[j];
+ 32 |                 arr[j] = arr[j + 1];
+ 33 |                 arr[j + 1] = temp;
+ 34 |             }
+ 35 |         }
+ 36 |     }
+ 37 | }
+
+========================================================================
+PARSED AST (before site scan)
+========================================================================
+
+------------------------------------------------------------------------
+AST (parsed from seed)
+------------------------------------------------------------------------
+└── root: FileAST
+    └── ext[0]: FuncDef decl='bubbleSort'
+        ├── decl: Decl name='bubbleSort'
+        │   └── type: FuncDecl
+        │       ├── args: ParamList
+        │       │   ├── params[0]: Decl name='arr'
+        │       │   │   └── type: ArrayDecl
+        │       │   │       └── type: TypeDecl
+        │       │   │           └── type: IdentifierType
+        │       │   └── params[1]: Decl name='length'
+        │       │       └── type: TypeDecl
+        │       │           └── type: IdentifierType
+        │       └── type: TypeDecl
+        │           └── type: IdentifierType
+        └── body: Compound
+            ├── block_items[0]: Decl name='n'
+            │   ├── type: TypeDecl
+            │   │   └── type: IdentifierType
+            │   └── init: ID name='length'
+            └── block_items[1]: For
+                ├── init: DeclList
+                │   └── decls[0]: Decl name='i'
+                │       ├── type: TypeDecl
+                │       │   └── type: IdentifierType
+                │       └── init: Constant int='0'
+                ├── cond: BinaryOp op='<'
+                │   ├── left: ID name='i'
+                │   └── right: BinaryOp op='-'
+                │       ├── left: ID name='n'
+                │       └── right: Constant int='1'
+                ├── next: UnaryOp op='p++'
+                │   └── expr: ID name='i'
+                └── stmt: Compound
+                    └── block_items[0]: For
+                        ├── init: DeclList
+                        │   └── decls[0]: Decl name='j'
+                        │       ├── type: TypeDecl
+                        │       │   └── type: IdentifierType
+                        │       └── init: Constant int='0'
+                        ├── cond: BinaryOp op='<'
+                        │   ├── left: ID name='j'
+                        │   └── right: BinaryOp op='-'
+                        │       ├── left: BinaryOp op='-'
+                        │       │   ├── left: ID name='n'
+                        │       │   └── right: Constant int='1'
+                        │       └── right: ID name='i'
+                        ├── next: UnaryOp op='p++'
+                        │   └── expr: ID name='j'
+                        └── stmt: Compound
+                            └── block_items[0]: If
+                                ├── cond: BinaryOp op='>'
+                                │   ├── left: ArrayRef
+                                │   │   ├── name: ID name='arr'
+                                │   │   └── subscript: ID name='j'
+                                │   └── right: ArrayRef
+                                │       ├── name: ID name='arr'
+                                │       └── subscript: BinaryOp op='+'
+                                │           ├── left: ID name='j'
+                                │           └── right: Constant int='1'
+                                └── iftrue: Compound
+                                    ├── block_items[0]: Decl name='temp'
+                                    │   ├── type: TypeDecl
+                                    │   │   └── type: IdentifierType
+                                    │   └── init: ArrayRef
+                                    │       ├── name: ID name='arr'
+                                    │       └── subscript: ID name='j'
+                                    ├── block_items[1]: Assignment
+                                    │   ├── lvalue: ArrayRef
+                                    │   │   ├── name: ID name='arr'
+                                    │   │   └── subscript: ID name='j'
+                                    │   └── rvalue: ArrayRef
+                                    │       ├── name: ID name='arr'
+                                    │       └── subscript: BinaryOp op='+'
+                                    │           ├── left: ID name='j'
+                                    │           └── right: Constant int='1'
+                                    └── block_items[2]: Assignment
+                                        ├── lvalue: ArrayRef
+                                        │   ├── name: ID name='arr'
+                                        │   └── subscript: BinaryOp op='+'
+                                        │       ├── left: ID name='j'
+                                        │       └── right: Constant int='1'
+                                        └── rvalue: ID name='temp'
+
+========================================================================
+SITE SCAN (suitability checks for every candidate)
+========================================================================
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+========================================================================
+SITE SCAN SUMMARY
+========================================================================
+transform: if0error
+applicable_site_count: 11
+  site[0] APPLICABLE -> output *_site0.*
+  site[1] APPLICABLE -> output *_site1.*
+  site[2] APPLICABLE -> output *_site2.*
+  site[3] APPLICABLE -> output *_site3.*
+  site[4] APPLICABLE -> output *_site4.*
+  site[5] APPLICABLE -> output *_site5.*
+  site[6] APPLICABLE -> output *_site6.*
+  site[7] APPLICABLE -> output *_site7.*
+  site[8] APPLICABLE -> output *_site8.*
+  site[9] APPLICABLE -> output *_site9.*
+  site[10] APPLICABLE -> output *_site10.*
+
+========================================================================
+APPLY SITES (re-parse; check spam suppressed)
+========================================================================
+APPLIED site[0] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\5_bubbleSort_site0.c
+
+========================================================================
+TRANSFORMED SOURCE (site[0])
+========================================================================
+(lines numbered 1..31)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | void bubbleSort(int arr[], int length)
+  3 | {
+  4 |   if (0)
+  5 |   {
+  6 |     __assert_fail("0", "", 3, "reach_error");
+  7 |   }
+  8 |   else
+  9 |   {
+ 10 |   }
+ 11 |   int n = length;
+ 12 |   for (int i = 0; i < (n - 1); i++)
+ 13 |   {
+ 14 |     for (int j = 0; j < ((n - 1) - i); j++)
+ 15 |     {
+ 16 |       if (arr[j] > arr[j + 1])
+ 17 |       {
+ 18 |         int temp = arr[j];
+ 19 |         arr[j] = arr[j + 1];
+ 20 |         arr[j + 1] = temp;
+ 21 |       }
+ 22 |       else
+ 23 |       {
+ 24 |       }
+ 25 |     }
+ 26 | 
+ 27 |   }
+ 28 | 
+ 29 | }
+ 30 | 
+ 31 | 
+APPLIED site[1] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\5_bubbleSort_site1.c
+
+========================================================================
+TRANSFORMED SOURCE (site[1])
+========================================================================
+(lines numbered 1..31)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | void bubbleSort(int arr[], int length)
+  3 | {
+  4 |   int n = length;
+  5 |   if (0)
+  6 |   {
+  7 |     __assert_fail("0", "", 3, "reach_error");
+  8 |   }
+  9 |   else
+ 10 |   {
+ 11 |   }
+ 12 |   for (int i = 0; i < (n - 1); i++)
+ 13 |   {
+ 14 |     for (int j = 0; j < ((n - 1) - i); j++)
+ 15 |     {
+ 16 |       if (arr[j] > arr[j + 1])
+ 17 |       {
+ 18 |         int temp = arr[j];
+ 19 |         arr[j] = arr[j + 1];
+ 20 |         arr[j + 1] = temp;
+ 21 |       }
+ 22 |       else
+ 23 |       {
+ 24 |       }
+ 25 |     }
+ 26 | 
+ 27 |   }
+ 28 | 
+ 29 | }
+ 30 | 
+ 31 | 
+APPLIED site[2] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\5_bubbleSort_site2.c
+
+========================================================================
+TRANSFORMED SOURCE (site[2])
+========================================================================
+(lines numbered 1..31)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | void bubbleSort(int arr[], int length)
+  3 | {
+  4 |   int n = length;
+  5 |   for (int i = 0; i < (n - 1); i++)
+  6 |   {
+  7 |     if (0)
+  8 |     {
+  9 |       __assert_fail("0", "", 3, "reach_error");
+ 10 |     }
+ 11 |     else
+ 12 |     {
+ 13 |     }
+ 14 |     for (int j = 0; j < ((n - 1) - i); j++)
+ 15 |     {
+ 16 |       if (arr[j] > arr[j + 1])
+ 17 |       {
+ 18 |         int temp = arr[j];
+ 19 |         arr[j] = arr[j + 1];
+ 20 |         arr[j + 1] = temp;
+ 21 |       }
+ 22 |       else
+ 23 |       {
+ 24 |       }
+ 25 |     }
+ 26 | 
+ 27 |   }
+ 28 | 
+ 29 | }
+ 30 | 
+ 31 | 
+APPLIED site[3] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\5_bubbleSort_site3.c
+
+========================================================================
+TRANSFORMED SOURCE (site[3])
+========================================================================
+(lines numbered 1..31)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | void bubbleSort(int arr[], int length)
+  3 | {
+  4 |   int n = length;
+  5 |   for (int i = 0; i < (n - 1); i++)
+  6 |   {
+  7 |     for (int j = 0; j < ((n - 1) - i); j++)
+  8 |     {
+  9 |       if (0)
+ 10 |       {
+ 11 |         __assert_fail("0", "", 3, "reach_error");
+ 12 |       }
+ 13 |       else
+ 14 |       {
+ 15 |       }
+ 16 |       if (arr[j] > arr[j + 1])
+ 17 |       {
+ 18 |         int temp = arr[j];
+ 19 |         arr[j] = arr[j + 1];
+ 20 |         arr[j + 1] = temp;
+ 21 |       }
+ 22 |       else
+ 23 |       {
+ 24 |       }
+ 25 |     }
+ 26 | 
+ 27 |   }
+ 28 | 
+ 29 | }
+ 30 | 
+ 31 | 
+APPLIED site[4] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\5_bubbleSort_site4.c
+
+========================================================================
+TRANSFORMED SOURCE (site[4])
+========================================================================
+(lines numbered 1..31)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | void bubbleSort(int arr[], int length)
+  3 | {
+  4 |   int n = length;
+  5 |   for (int i = 0; i < (n - 1); i++)
+  6 |   {
+  7 |     for (int j = 0; j < ((n - 1) - i); j++)
+  8 |     {
+  9 |       if (arr[j] > arr[j + 1])
+ 10 |       {
+ 11 |         if (0)
+ 12 |         {
+ 13 |           __assert_fail("0", "", 3, "reach_error");
+ 14 |         }
+ 15 |         else
+ 16 |         {
+ 17 |         }
+ 18 |         int temp = arr[j];
+ 19 |         arr[j] = arr[j + 1];
+ 20 |         arr[j + 1] = temp;
+ 21 |       }
+ 22 |       else
+ 23 |       {
+ 24 |       }
+ 25 |     }
+ 26 | 
+ 27 |   }
+ 28 | 
+ 29 | }
+ 30 | 
+ 31 | 
+APPLIED site[5] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\5_bubbleSort_site5.c
+
+========================================================================
+TRANSFORMED SOURCE (site[5])
+========================================================================
+(lines numbered 1..31)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | void bubbleSort(int arr[], int length)
+  3 | {
+  4 |   int n = length;
+  5 |   for (int i = 0; i < (n - 1); i++)
+  6 |   {
+  7 |     for (int j = 0; j < ((n - 1) - i); j++)
+  8 |     {
+  9 |       if (arr[j] > arr[j + 1])
+ 10 |       {
+ 11 |         int temp = arr[j];
+ 12 |         if (0)
+ 13 |         {
+ 14 |           __assert_fail("0", "", 3, "reach_error");
+ 15 |         }
+ 16 |         else
+ 17 |         {
+ 18 |         }
+ 19 |         arr[j] = arr[j + 1];
+ 20 |         arr[j + 1] = temp;
+ 21 |       }
+ 22 |       else
+ 23 |       {
+ 24 |       }
+ 25 |     }
+ 26 | 
+ 27 |   }
+ 28 | 
+ 29 | }
+ 30 | 
+ 31 | 
+APPLIED site[6] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\5_bubbleSort_site6.c
+
+========================================================================
+TRANSFORMED SOURCE (site[6])
+========================================================================
+(lines numbered 1..31)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | void bubbleSort(int arr[], int length)
+  3 | {
+  4 |   int n = length;
+  5 |   for (int i = 0; i < (n - 1); i++)
+  6 |   {
+  7 |     for (int j = 0; j < ((n - 1) - i); j++)
+  8 |     {
+  9 |       if (arr[j] > arr[j + 1])
+ 10 |       {
+ 11 |         int temp = arr[j];
+ 12 |         arr[j] = arr[j + 1];
+ 13 |         if (0)
+ 14 |         {
+ 15 |           __assert_fail("0", "", 3, "reach_error");
+ 16 |         }
+ 17 |         else
+ 18 |         {
+ 19 |         }
+ 20 |         arr[j + 1] = temp;
+ 21 |       }
+ 22 |       else
+ 23 |       {
+ 24 |       }
+ 25 |     }
+ 26 | 
+ 27 |   }
+ 28 | 
+ 29 | }
+ 30 | 
+ 31 | 
+APPLIED site[7] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\5_bubbleSort_site7.c
+
+========================================================================
+TRANSFORMED SOURCE (site[7])
+========================================================================
+(lines numbered 1..31)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | void bubbleSort(int arr[], int length)
+  3 | {
+  4 |   int n = length;
+  5 |   for (int i = 0; i < (n - 1); i++)
+  6 |   {
+  7 |     for (int j = 0; j < ((n - 1) - i); j++)
+  8 |     {
+  9 |       if (arr[j] > arr[j + 1])
+ 10 |       {
+ 11 |         int temp = arr[j];
+ 12 |         arr[j] = arr[j + 1];
+ 13 |         arr[j + 1] = temp;
+ 14 |         if (0)
+ 15 |         {
+ 16 |           __assert_fail("0", "", 3, "reach_error");
+ 17 |         }
+ 18 |         else
+ 19 |         {
+ 20 |         }
+ 21 |       }
+ 22 |       else
+ 23 |       {
+ 24 |       }
+ 25 |     }
+ 26 | 
+ 27 |   }
+ 28 | 
+ 29 | }
+ 30 | 
+ 31 | 
+APPLIED site[8] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\5_bubbleSort_site8.c
+
+========================================================================
+TRANSFORMED SOURCE (site[8])
+========================================================================
+(lines numbered 1..31)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | void bubbleSort(int arr[], int length)
+  3 | {
+  4 |   int n = length;
+  5 |   for (int i = 0; i < (n - 1); i++)
+  6 |   {
+  7 |     for (int j = 0; j < ((n - 1) - i); j++)
+  8 |     {
+  9 |       if (arr[j] > arr[j + 1])
+ 10 |       {
+ 11 |         int temp = arr[j];
+ 12 |         arr[j] = arr[j + 1];
+ 13 |         arr[j + 1] = temp;
+ 14 |       }
+ 15 |       else
+ 16 |       {
+ 17 |       }
+ 18 |       if (0)
+ 19 |       {
+ 20 |         __assert_fail("0", "", 3, "reach_error");
+ 21 |       }
+ 22 |       else
+ 23 |       {
+ 24 |       }
+ 25 |     }
+ 26 | 
+ 27 |   }
+ 28 | 
+ 29 | }
+ 30 | 
+ 31 | 
+APPLIED site[9] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\5_bubbleSort_site9.c
+
+========================================================================
+TRANSFORMED SOURCE (site[9])
+========================================================================
+(lines numbered 1..31)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | void bubbleSort(int arr[], int length)
+  3 | {
+  4 |   int n = length;
+  5 |   for (int i = 0; i < (n - 1); i++)
+  6 |   {
+  7 |     for (int j = 0; j < ((n - 1) - i); j++)
+  8 |     {
+  9 |       if (arr[j] > arr[j + 1])
+ 10 |       {
+ 11 |         int temp = arr[j];
+ 12 |         arr[j] = arr[j + 1];
+ 13 |         arr[j + 1] = temp;
+ 14 |       }
+ 15 |       else
+ 16 |       {
+ 17 |       }
+ 18 |     }
+ 19 | 
+ 20 |     if (0)
+ 21 |     {
+ 22 |       __assert_fail("0", "", 3, "reach_error");
+ 23 |     }
+ 24 |     else
+ 25 |     {
+ 26 |     }
+ 27 |   }
+ 28 | 
+ 29 | }
+ 30 | 
+ 31 | 
+APPLIED site[10] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\5_bubbleSort_site10.c
+
+========================================================================
+TRANSFORMED SOURCE (site[10])
+========================================================================
+(lines numbered 1..31)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | void bubbleSort(int arr[], int length)
+  3 | {
+  4 |   int n = length;
+  5 |   for (int i = 0; i < (n - 1); i++)
+  6 |   {
+  7 |     for (int j = 0; j < ((n - 1) - i); j++)
+  8 |     {
+  9 |       if (arr[j] > arr[j + 1])
+ 10 |       {
+ 11 |         int temp = arr[j];
+ 12 |         arr[j] = arr[j + 1];
+ 13 |         arr[j + 1] = temp;
+ 14 |       }
+ 15 |       else
+ 16 |       {
+ 17 |       }
+ 18 |     }
+ 19 | 
+ 20 |   }
+ 21 | 
+ 22 |   if (0)
+ 23 |   {
+ 24 |     __assert_fail("0", "", 3, "reach_error");
+ 25 |   }
+ 26 |   else
+ 27 |   {
+ 28 |   }
+ 29 | }
+ 30 | 
+ 31 | 

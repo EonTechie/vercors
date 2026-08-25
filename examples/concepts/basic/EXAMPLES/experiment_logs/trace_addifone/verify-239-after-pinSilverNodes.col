@@ -1,0 +1,66 @@
+adt WellFoundedOrder<t> {
+    pure boolean bounded(t v);
+    pure boolean decreasing(t v1, t v2);
+}
+
+adt IntOrder {
+    axiom (\forall int i; 0 <= i == WellFoundedOrder<int>.bounded(i));
+    axiom (\forall int i; (\forall int j; i < j == WellFoundedOrder<int>.decreasing(i, j)));
+}
+
+requires a != -2147483648;
+void absolute(int a) {
+    assert false;
+}
+
+requires a != -2147483648;
+ensures res == (0 <= a ? a : -a);
+void absolute1(int tid, int a) returns (int res) {
+    ref exc;
+    exc := null
+    int return1;
+    if (0 <= a) {
+        return1 := a
+        goto END;
+    } else {
+        if (1 != 0) {
+            int flatten;
+            flatten := -a
+            return1 := flatten
+            goto END;
+        }
+    }
+    label END;
+    
+    res := return1
+    return;
+    label BUBBLE;
+    
+    assert exc == (null);
+}
+
+void `type`() {
+    assert false;
+}
+
+decreases;
+ensures \result >= 0;
+ensures \result <= 0;
+ensures `type` == (null) ==> \result == 0;
+ensures `type` != (null) ==> \result != 0;
+pure int type1(ref `type`);
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+void subtype(int subtype, int subtype1) {
+    assert false;
+}
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+decreases;
+pure boolean subtype1(int subtype, int subtype1) = (subtype == 0 ==> true) && true;

@@ -1,0 +1,46 @@
+requires 0 <= n;
+requires n <= |xs|;
+decreases n;
+pure int prefixSum(seq<int> xs, int n) = n == 0 ? 0 : prefixSum(xs, n - 1) + xs[n - 1];
+
+decreases;
+ensures \result >= 2;
+pure int sizeof_int();
+
+requires list != null;
+requires list != null;
+requires 0 <= \pointer_block_offset(list) + length;
+requires \pointer_block_offset(list) + length <= \pointer_block_length(list);
+requires (\forall* int i; 0 <= i && i < length ==> Value(list + i));
+requires |xs| == length;
+requires (\forall int x; 0 <= x && x < length ==> xs[x] == list[x]);
+requires length >= 0;
+ensures list != null;
+ensures list != null;
+ensures 0 <= \pointer_block_offset(list) + length;
+ensures \pointer_block_offset(list) + length <= \pointer_block_length(list);
+ensures (\forall* int i; 0 <= i && i < length ==> Value(list + i));
+ensures |xs| == length;
+ensures (\forall int x; 0 <= x && x < length ==> xs[x] == list[x]);
+ensures \result == prefixSum(xs, length);
+int sumList(int tid, pointer<int> list, int length, seq<int> xs) {
+    int sum;
+    int i;
+    sum = 0;
+    i = 0;
+    decreases length - i;
+    loop_invariant list != null;
+    loop_invariant list != null;
+    loop_invariant 0 <= \pointer_block_offset(list) + length;
+    loop_invariant \pointer_block_offset(list) + length <= \pointer_block_length(list);
+    loop_invariant (\forall* int i1; 0 <= i1 && i1 < length ==> Value(list + i1));
+    loop_invariant |xs| == length;
+    loop_invariant (\forall int x; 0 <= x && x < length ==> xs[x] == list[x]);
+    loop_invariant 0 <= i;
+    loop_invariant i <= length;
+    loop_invariant sum == prefixSum(xs, i);
+    for (;i < length; i = i + 1) {
+        sum = sum + list[i];
+    }
+    return sum;
+}

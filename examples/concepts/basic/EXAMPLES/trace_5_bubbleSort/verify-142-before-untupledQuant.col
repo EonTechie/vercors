@@ -1,0 +1,92 @@
+decreases;
+ensures 2 <= \result;
+pure int sizeof_int();
+
+adt Pointer_1_array_int {
+    pure int get_dim_0_int(Pointer_1_array_int array);
+    pure NonNull<int> get_int_pointer(Pointer_1_array_int array);
+    pure Pointer_1_array_int from_int_pointer(NonNull<int> ptr);
+    axiom (\forall seq<NonNull<int>> i; get_int_pointer(from_int_pointer(i.fst)) == i.fst);
+    axiom (\forall seq<Pointer_1_array_int> i;
+        \pointer_block_length(get_int_pointer(i.fst)) - \pointer_block_offset(get_int_pointer(i.fst)) ==
+        get_dim_0_int(i.fst)
+    );
+    axiom (\forall seq<Pointer_1_array_int> i; 0 < get_dim_0_int(i.fst));
+}
+
+requires !arr.isEmpty;
+requires 0 <= \pointer_block_offset(arr.isEmpty ? null : get_int_pointer(arr.get)) + length;
+requires \pointer_block_offset(arr.isEmpty ? null : get_int_pointer(arr.get)) + length <=
+\pointer_block_length(arr.isEmpty ? null : get_int_pointer(arr.get));
+requires (\forall* seq<int> i;
+    i.fst \in {0 .. length} ==> Perm((arr.isEmpty ? null : get_int_pointer(arr.get)) + i.fst, write)
+);
+requires 0 <= length;
+ensures !arr.isEmpty;
+ensures 0 <= \pointer_block_offset(arr.isEmpty ? null : get_int_pointer(arr.get)) + length;
+ensures \pointer_block_offset(arr.isEmpty ? null : get_int_pointer(arr.get)) + length <=
+\pointer_block_length(arr.isEmpty ? null : get_int_pointer(arr.get));
+ensures (\forall* seq<int> i;
+    i.fst \in {0 .. length} ==> Perm((arr.isEmpty ? null : get_int_pointer(arr.get)) + i.fst, write)
+);
+ensures (\forall seq<int> i;
+    i.fst \in {0 .. length - 2 + 1} ==> *(get_int_pointer(arr.get) + i.fst) <= *(get_int_pointer(arr.get) + i.fst + 1)
+);
+void bubbleSort(int tid, option<Pointer_1_array_int> arr, int length) {
+    void return1;
+    int n;
+    n = length;
+    int i;
+    label LOOP;
+    
+    loop_invariant !arr.isEmpty;
+    loop_invariant 0 <= \pointer_block_offset(arr.isEmpty ? null : get_int_pointer(arr.get)) + length;
+    loop_invariant \pointer_block_offset(arr.isEmpty ? null : get_int_pointer(arr.get)) + length <=
+    \pointer_block_length(arr.isEmpty ? null : get_int_pointer(arr.get));
+    loop_invariant (\forall* seq<int> i1;
+        i1.fst \in {0 .. length} ==> Perm((arr.isEmpty ? null : get_int_pointer(arr.get)) + i1.fst, write)
+    );
+    loop_invariant i \in {0 .. n + 1};
+    loop_invariant (\forall seq<int> k;
+        k.fst \in {n - i .. n - 1} ==> *(get_int_pointer(arr.get) + k.fst) <= *(get_int_pointer(arr.get) + k.fst + 1)
+    );
+    loop_invariant (\forall seq<int, int> g_h;
+        g_h.fst \in {0 .. n - i} && n - i <= g_h.snd && g_h.snd < n ==>
+            *(get_int_pointer(arr.get) + g_h.fst) <= *(get_int_pointer(arr.get) + g_h.snd)
+    );
+    for (i = 0; i < n - 1; i = i + 1) {
+        int j;
+        label LOOP1;
+        
+        loop_invariant !arr.isEmpty;
+        loop_invariant 0 <= \pointer_block_offset(arr.isEmpty ? null : get_int_pointer(arr.get)) + length;
+        loop_invariant \pointer_block_offset(arr.isEmpty ? null : get_int_pointer(arr.get)) + length <=
+        \pointer_block_length(arr.isEmpty ? null : get_int_pointer(arr.get));
+        loop_invariant (\forall* seq<int> i1;
+            i1.fst \in {0 .. length} ==> Perm((arr.isEmpty ? null : get_int_pointer(arr.get)) + i1.fst, write)
+        );
+        loop_invariant j \in {0 .. n - 1 - i + 1};
+        loop_invariant (\forall seq<int> k;
+            k.fst \in {n - i .. n - 1} ==>
+                *(get_int_pointer(arr.get) + k.fst) <= *(get_int_pointer(arr.get) + k.fst + 1)
+        );
+        loop_invariant (\forall seq<int, int> g_h;
+            g_h.fst \in {0 .. n - i} && n - i <= g_h.snd && g_h.snd < n ==>
+                *(get_int_pointer(arr.get) + g_h.fst) <= *(get_int_pointer(arr.get) + g_h.snd)
+        );
+        loop_invariant (\forall seq<int> k;
+            k.fst \in {0 .. j} ==> *(get_int_pointer(arr.get) + k.fst) <= *(get_int_pointer(arr.get) + j)
+        );
+        for (j = 0; j < n - 1 - i; j = j + 1) {
+            if (*(get_int_pointer(arr.get) + j + 1) < *(get_int_pointer(arr.get) + j)) {
+                int temp;
+                temp = *(get_int_pointer(arr.get) + j);
+                *(get_int_pointer(arr.get) + j) = *(get_int_pointer(arr.get) + j + 1);
+                *(get_int_pointer(arr.get) + j + 1) = temp;
+            }
+        }
+    }
+    label END;
+    
+    return return1;
+}

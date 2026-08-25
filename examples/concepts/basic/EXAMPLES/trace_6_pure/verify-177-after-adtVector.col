@@ -1,0 +1,113 @@
+requires n \in {0 .. |xs| + 1};
+void prefixSum(int n, seq<int> xs) {
+    assert false;
+}
+
+requires n \in {0 .. |xs| + 1};
+decreases n;
+pure int prefixSum1(seq<int> xs, int n) = n == 0 ? 0 : prefixSum1(xs, n - 1) + xs[n - 1];
+
+void sizeof_int() {
+    assert false;
+}
+
+decreases;
+ensures 2 <= \result;
+pure int sizeof_int1();
+
+requires list != null;
+requires 0 <= \pointer_block_offset(list) + length;
+requires \pointer_block_offset(list) + length <= \pointer_block_length(list);
+requires (\forall* int i; i \in {0 .. length} ==> Value(list + i));
+requires |xs| == length;
+requires (\forall int x; x \in {0 .. length} ==> xs[x] == list[x]);
+requires 0 <= length;
+void sumList(pointer<int> list, int length, seq<int> xs) {
+    assert false;
+}
+
+requires list != null;
+requires 0 <= \pointer_block_offset(list) + length;
+requires \pointer_block_offset(list) + length <= \pointer_block_length(list);
+requires (\forall* int i; i \in {0 .. length} ==> Value(list + i));
+requires |xs| == length;
+requires (\forall int x; x \in {0 .. length} ==> xs[x] == list[x]);
+requires 0 <= length;
+ensures list != null;
+ensures 0 <= \pointer_block_offset(list) + length;
+ensures \pointer_block_offset(list) + length <= \pointer_block_length(list);
+ensures (\forall* int i; i \in {0 .. length} ==> Value(list + i));
+ensures |xs| == length;
+ensures (\forall int x; x \in {0 .. length} ==> xs[x] == list[x]);
+ensures res == prefixSum1(xs, length);
+void sumList1(int tid, pointer<int> list, int length, seq<int> xs) returns (int res) {
+    ref exc;
+    exc = null;
+    int return1;
+    int sum;
+    int i;
+    int flatten;
+    flatten = 0;
+    sum = flatten;
+    flatten;
+    int flatten;
+    flatten = 0;
+    i = flatten;
+    flatten;
+    label LOOP;
+    
+    ref excbeforeloop;
+    excbeforeloop = exc;
+    decreases length - i;
+    loop_invariant exc == excbeforeloop;
+    loop_invariant list != null;
+    loop_invariant 0 <= \pointer_block_offset(list) + length;
+    loop_invariant \pointer_block_offset(list) + length <= \pointer_block_length(list);
+    loop_invariant (\forall* int i1; i1 \in {0 .. length} ==> Value(list + i1));
+    loop_invariant |xs| == length;
+    loop_invariant (\forall int x; x \in {0 .. length} ==> xs[x] == list[x]);
+    loop_invariant i \in {0 .. length + 1};
+    loop_invariant sum == prefixSum1(xs, i);
+    for (;i < length; { int flatten; flatten = i; i = i + 1; flatten; }) {
+        int flatten;
+        flatten = sum + list[i];
+        sum = flatten;
+        flatten;
+    }
+    return1 = sum;
+    sum;
+    goto END;
+    label END;
+    
+    res = return1;
+    return;
+    label BUBBLE;
+    
+    assert exc == null;
+}
+
+void `type`() {
+    assert false;
+}
+
+decreases;
+ensures \result >= 0;
+ensures \result <= 0;
+ensures `type` == null ==> \result == 0;
+ensures `type` != null ==> \result != 0;
+pure int type1(ref `type`);
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+void subtype(int subtype, int subtype1) {
+    assert false;
+}
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+decreases;
+pure boolean subtype1(int subtype, int subtype1) = (subtype == 0 ==> true) && true;

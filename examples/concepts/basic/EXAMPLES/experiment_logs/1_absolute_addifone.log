@@ -1,0 +1,57 @@
+[INFO] Start: VerCors (at 17:04:04)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+========== COL TREE START ==========
+Program
+  Procedure
+    TCInt
+    Variable
+      TCInt
+    Scope
+      Block
+        Branch
+          AmbiguousGreaterEq
+            Local
+            CIntegerValue
+              TCInt
+          Scope
+            Block
+              Return
+                Local
+          BooleanValue
+          Scope
+            Block
+              Return
+                UMinus
+                  Local
+    ApplicableContract
+      UnitAccountedPredicate
+        AmbiguousNeq
+          Local
+          UMinus
+            CIntegerValue
+              TCInt
+          TCInt
+      UnitAccountedPredicate
+        AmbiguousEq
+          Result
+          Select
+            AmbiguousGreaterEq
+              Local
+              CIntegerValue
+                TCInt
+            Local
+            UMinus
+              Local
+          TCInt
+      BooleanValue
+      BooleanValue
+=========== COL TREE END ===========
+[AddIfOne] candidate count = 5
+[AddIfOne] candidate 0 = Branch, origin = Origin(List(PositionRange(13,20,Some((4,5))), ReadableOrigin(RWFile(/tmp/vercors-interpreted-2581778723936299163.i,false)), PositionRange(6,13,None), ReadableOrigin(Path(1_absolute.c))))
+[AddIfOne] candidate 1 = Scope, origin = Origin(List(PositionRange(14,16,Some((4,5))), ReadableOrigin(RWFile(/tmp/vercors-interpreted-2581778723936299163.i,false)), PositionRange(7,9,None), ReadableOrigin(Path(1_absolute.c))))
+[AddIfOne] candidate 2 = Scope, origin = Origin(List(PositionRange(18,20,Some((4,5))), ReadableOrigin(RWFile(/tmp/vercors-interpreted-2581778723936299163.i,false)), PositionRange(11,13,None), ReadableOrigin(Path(1_absolute.c))))
+[AddIfOne] candidate 3 = Return, origin = Origin(List(PositionRange(15,15,Some((8,17))), ReadableOrigin(RWFile(/tmp/vercors-interpreted-2581778723936299163.i,false)), PositionRange(8,8,None), ReadableOrigin(Path(1_absolute.c))))
+[AddIfOne] candidate 4 = Return, origin = Origin(List(PositionRange(19,19,Some((8,18))), ReadableOrigin(RWFile(/tmp/vercors-interpreted-2581778723936299163.i,false)), PositionRange(12,12,None), ReadableOrigin(Path(1_absolute.c))))
+[AddIfOne] SELECTED INDEX = 4
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 17:04:30, duration: 00:00:25)

@@ -1,0 +1,87 @@
+adt WellFoundedOrder<t> {
+    pure boolean bounded(t v);
+    pure boolean decreasing(t v1, t v2);
+}
+
+adt IntOrder {
+    axiom (\forall int i; 0 <= i == WellFoundedOrder<int>.bounded(i));
+    axiom (\forall int i; (\forall int j; i < j == WellFoundedOrder<int>.decreasing(i, j)));
+}
+
+requires 0 <= k;
+requires 0 <= m;
+void multAdd(int k, int m) {
+    assert false;
+}
+
+requires 0 <= k;
+requires 0 <= m;
+ensures res == k * m;
+void multAdd1(int tid, int k, int m) returns (int res) {
+    ref exc;
+    exc = null;
+    int return1;
+    int sum;
+    int remaining;
+    int flatten;
+    flatten = 0;
+    sum = flatten;
+    flatten;
+    remaining = m;
+    m;
+    label LOOP;
+    
+    ref excbeforeloop;
+    excbeforeloop = exc;
+    decreases remaining;
+    loop_invariant exc == excbeforeloop;
+    loop_invariant 0 <= remaining;
+    loop_invariant remaining < m + 1;
+    loop_invariant sum == (m - remaining) * k;
+    while (0 < remaining) {
+        int flatten;
+        flatten = sum + k;
+        sum = flatten;
+        flatten;
+        int flatten;
+        flatten = remaining;
+        remaining = remaining - 1;
+        flatten;
+    }
+    return1 = sum;
+    sum;
+    goto END;
+    label END;
+    
+    res = return1;
+    return;
+    label BUBBLE;
+    
+    assert exc == (null);
+}
+
+void `type`() {
+    assert false;
+}
+
+decreases;
+ensures \result >= 0;
+ensures \result <= 0;
+ensures `type` == (null) ==> \result == 0;
+ensures `type` != (null) ==> \result != 0;
+pure int type1(ref `type`);
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+void subtype(int subtype, int subtype1) {
+    assert false;
+}
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+decreases;
+pure boolean subtype1(int subtype, int subtype1) = (subtype == 0 ==> true) && true;

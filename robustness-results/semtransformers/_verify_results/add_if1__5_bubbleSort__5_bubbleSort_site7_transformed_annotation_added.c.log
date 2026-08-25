@@ -1,0 +1,11 @@
+[INFO] Start: VerCors (at 14:12:08)
+The quantifier 5_bubbleSort_site7_transformed_annotation_added.c:8-:10: '    (\forall int i;
+      0 <= i && i <= length - 2;
+      arr[i] <= arr[i + 1]);' contains no triggers
+[WARN] The quantifier 5_bubbleSort_site7_transformed_annotation_added.c:16-:16: '  //@ loop_invariant (\forall int k; n - i <= k && k < n - 1; arr[k] <= arr[k + 1]);' contains no triggers
+[WARN] The quantifier 5_bubbleSort_site7_transformed_annotation_added.c:17-:17: '  //@ loop_invariant (\forall int g, int h; 0 <= g && g < n - i && n - i <= h && h < n; arr[g] <= arr[h]);' contains no triggers
+[WARN] The quantifier 5_bubbleSort_site7_transformed_annotation_added.c:21-:21: '    //@ loop_invariant (\forall int k; n - i <= k && k < n - 1; arr[k] <= arr[k + 1]);' contains no triggers
+[WARN] The quantifier 5_bubbleSort_site7_transformed_annotation_added.c:22-:22: '    //@ loop_invariant (\forall int g, int h; 0 <= g && g < n - i && n - i <= h && h < n; arr[g] <= arr[h]);' contains no triggers
+[WARN] The quantifier 5_bubbleSort_site7_transformed_annotation_added.c:23-:23: '    //@ loop_invariant (\forall int k; 0 <= k && k < j; arr[k] <= arr[j]);' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 14:12:44, duration: 00:00:35)

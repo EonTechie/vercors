@@ -1,0 +1,208 @@
+
+========================================================================
+TRANSFORM DEBUG LOG
+========================================================================
+log_file: C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\5_bubbleSort\add_if1\5_bubbleSort_transform.log
+source_file: C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\5_bubbleSort.c
+mode: implement_all_list
+selected_transforms: ['add_if1']
+
+========================================================================
+PARSED AST (before site scan)
+========================================================================
+
+------------------------------------------------------------------------
+AST after remove_comments + parse
+------------------------------------------------------------------------
+└── root: FileAST
+    └── ext[0]: FuncDef decl='bubbleSort'
+        ├── decl: Decl name='bubbleSort'
+        │   └── type: FuncDecl
+        │       ├── args: ParamList
+        │       │   ├── params[0]: Decl name='arr'
+        │       │   │   └── type: ArrayDecl
+        │       │   │       └── type: TypeDecl
+        │       │   │           └── type: IdentifierType
+        │       │   └── params[1]: Decl name='length'
+        │       │       └── type: TypeDecl
+        │       │           └── type: IdentifierType
+        │       └── type: TypeDecl
+        │           └── type: IdentifierType
+        └── body: Compound
+            ├── block_items[0]: Decl name='n'
+            │   ├── type: TypeDecl
+            │   │   └── type: IdentifierType
+            │   └── init: ID name='length'
+            └── block_items[1]: For
+                ├── init: DeclList
+                │   └── decls[0]: Decl name='i'
+                │       ├── type: TypeDecl
+                │       │   └── type: IdentifierType
+                │       └── init: Constant int='0'
+                ├── cond: BinaryOp op='<'
+                │   ├── left: ID name='i'
+                │   └── right: BinaryOp op='-'
+                │       ├── left: ID name='n'
+                │       └── right: Constant int='1'
+                ├── next: UnaryOp op='p++'
+                │   └── expr: ID name='i'
+                └── stmt: Compound
+                    └── block_items[0]: For
+                        ├── init: DeclList
+                        │   └── decls[0]: Decl name='j'
+                        │       ├── type: TypeDecl
+                        │       │   └── type: IdentifierType
+                        │       └── init: Constant int='0'
+                        ├── cond: BinaryOp op='<'
+                        │   ├── left: ID name='j'
+                        │   └── right: BinaryOp op='-'
+                        │       ├── left: BinaryOp op='-'
+                        │       │   ├── left: ID name='n'
+                        │       │   └── right: Constant int='1'
+                        │       └── right: ID name='i'
+                        ├── next: UnaryOp op='p++'
+                        │   └── expr: ID name='j'
+                        └── stmt: Compound
+                            └── block_items[0]: If
+                                ├── cond: BinaryOp op='>'
+                                │   ├── left: ArrayRef
+                                │   │   ├── name: ID name='arr'
+                                │   │   └── subscript: ID name='j'
+                                │   └── right: ArrayRef
+                                │       ├── name: ID name='arr'
+                                │       └── subscript: BinaryOp op='+'
+                                │           ├── left: ID name='j'
+                                │           └── right: Constant int='1'
+                                └── iftrue: Compound
+                                    ├── block_items[0]: Decl name='temp'
+                                    │   ├── type: TypeDecl
+                                    │   │   └── type: IdentifierType
+                                    │   └── init: ArrayRef
+                                    │       ├── name: ID name='arr'
+                                    │       └── subscript: ID name='j'
+                                    ├── block_items[1]: Assignment
+                                    │   ├── lvalue: ArrayRef
+                                    │   │   ├── name: ID name='arr'
+                                    │   │   └── subscript: ID name='j'
+                                    │   └── rvalue: ArrayRef
+                                    │       ├── name: ID name='arr'
+                                    │       └── subscript: BinaryOp op='+'
+                                    │           ├── left: ID name='j'
+                                    │           └── right: Constant int='1'
+                                    └── block_items[2]: Assignment
+                                        ├── lvalue: ArrayRef
+                                        │   ├── name: ID name='arr'
+                                        │   └── subscript: BinaryOp op='+'
+                                        │       ├── left: ID name='j'
+                                        │       └── right: Constant int='1'
+                                        └── rvalue: ID name='temp'
+
+========================================================================
+SITE SCAN (suitability checks for every candidate)
+========================================================================
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: Decl @ :4:9
+  snippet: int n = length
+  [FAIL] stmt is not Decl? type=Decl
+  => APPLICABLE=False  reason: rejects Decl nodes
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: For @ :10:5
+  snippet: for (int i = 0; i < (n - 1); i++) { for (int j = 0; j < ((n - 1) - i); j++) { if (arr[j] > arr[j + 1]) { int temp = a...
+  [PASS] stmt is not Decl? type=For
+  => APPLICABLE=True  reason: wrap statement in if(1){...}
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: Compound @ :11:1
+  snippet: { for (int j = 0; j < ((n - 1) - i); j++) { if (arr[j] > arr[j + 1]) { int temp = arr[j]; arr[j] = arr[j + 1]; arr[j ...
+  [PASS] stmt is not Decl? type=Compound
+  => APPLICABLE=True  reason: wrap statement in if(1){...}
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: For @ :17:9
+  snippet: for (int j = 0; j < ((n - 1) - i); j++) { if (arr[j] > arr[j + 1]) { int temp = arr[j]; arr[j] = arr[j + 1]; arr[j + ...
+  [PASS] stmt is not Decl? type=For
+  => APPLICABLE=True  reason: wrap statement in if(1){...}
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: Compound @ :18:1
+  snippet: { if (arr[j] > arr[j + 1]) { int temp = arr[j]; arr[j] = arr[j + 1]; arr[j + 1] = temp; } }
+  [PASS] stmt is not Decl? type=Compound
+  => APPLICABLE=True  reason: wrap statement in if(1){...}
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: If @ :19:13
+  snippet: if (arr[j] > arr[j + 1]) { int temp = arr[j]; arr[j] = arr[j + 1]; arr[j + 1] = temp; }
+  [PASS] stmt is not Decl? type=If
+  => APPLICABLE=True  reason: wrap statement in if(1){...}
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: Compound @ :20:1
+  snippet: { int temp = arr[j]; arr[j] = arr[j + 1]; arr[j + 1] = temp; }
+  [PASS] stmt is not Decl? type=Compound
+  => APPLICABLE=True  reason: wrap statement in if(1){...}
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: Decl @ :21:21
+  snippet: int temp = arr[j]
+  [FAIL] stmt is not Decl? type=Decl
+  => APPLICABLE=False  reason: rejects Decl nodes
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: Assignment @ :22:17
+  snippet: arr[j] = arr[j + 1]
+  [PASS] stmt is not Decl? type=Assignment
+  => APPLICABLE=True  reason: wrap statement in if(1){...}
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: Assignment @ :23:17
+  snippet: arr[j + 1] = temp
+  [PASS] stmt is not Decl? type=Assignment
+  => APPLICABLE=True  reason: wrap statement in if(1){...}
+
+========================================================================
+SITE SCAN SUMMARY
+========================================================================
+transform: add_if1
+applicable_site_count: 8
+  site[0] APPLICABLE -> output *_site0.*
+  site[1] APPLICABLE -> output *_site1.*
+  site[2] APPLICABLE -> output *_site2.*
+  site[3] APPLICABLE -> output *_site3.*
+  site[4] APPLICABLE -> output *_site4.*
+  site[5] APPLICABLE -> output *_site5.*
+  site[6] APPLICABLE -> output *_site6.*
+  site[7] APPLICABLE -> output *_site7.*
+
+========================================================================
+APPLY SITES (re-parse; check spam suppressed)
+========================================================================
+APPLIED site[0] -> C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\5_bubbleSort\add_if1\5_bubbleSort_site0.c
+APPLIED site[1] -> C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\5_bubbleSort\add_if1\5_bubbleSort_site1.c
+APPLIED site[2] -> C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\5_bubbleSort\add_if1\5_bubbleSort_site2.c
+APPLIED site[3] -> C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\5_bubbleSort\add_if1\5_bubbleSort_site3.c
+APPLIED site[4] -> C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\5_bubbleSort\add_if1\5_bubbleSort_site4.c
+APPLIED site[5] -> C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\5_bubbleSort\add_if1\5_bubbleSort_site5.c
+APPLIED site[6] -> C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\5_bubbleSort\add_if1\5_bubbleSort_site6.c
+APPLIED site[7] -> C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\5_bubbleSort\add_if1\5_bubbleSort_site7.c

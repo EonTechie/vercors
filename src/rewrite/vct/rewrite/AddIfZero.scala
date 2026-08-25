@@ -8,11 +8,11 @@ case object AddIfZero extends RewriterBuilder {
   override def key: String = "addIfZero"
 
   override def desc: String =
-    "Wrap a statement in the else branch of if (false)."
+    "Insert a dead if (false) assertion at a C statement-list site."
 }
 
 case class AddIfZero[Pre <: Generation]() extends Rewriter[Pre] {
-  private var selected: Option[CStatementSites.Site[Pre]] = None
+  private var selected: Option[CInsertionSites.Site[Pre]] = None
 
   private def bool(value: Boolean, origin: Origin): BooleanValue[Post] =
     BooleanValue[Post](value)(origin)
@@ -34,24 +34,26 @@ case class AddIfZero[Pre <: Generation]() extends Rewriter[Pre] {
       origin,
     )
 
-  private def transformedTarget(stat: Statement[Pre]): Statement[Post] =
+  private def emptyBranch(origin: Origin): Statement[Post] =
+    Scope[Post](Nil, Block[Post](Nil)(origin))(origin)
+
+  private def insertedStatement(origin: Origin): Statement[Post] =
     Branch[Post](Seq(
-      (bool(value = false, stat.o), deadBranch(stat.o)),
-      (bool(value = true, stat.o), asCompound(stat.rewriteDefault(), stat.o)),
-    ))(stat.o)
+      (bool(value = false, origin), deadBranch(origin)),
+      (bool(value = true, origin), emptyBranch(origin)),
+    ))(origin)
 
   override def dispatch(program: Program[Pre]): Program[Post] = {
-    // Adjusted for robustness mode: collect candidates from the resolved AST
-    // and select one site by index for reproducible mutant generation.
-    val candidates = CStatementSites.collect(program)
+    // Adjusted for robustness mode: collect SemTransformers-style zero-length
+    // insertion slots from the resolved AST and select one by index.
+    val candidates = CInsertionSites.collect(program)
 
     println(s"[AddIfZero] candidate count = ${candidates.size}")
 
     candidates.zipWithIndex.foreach { case (site, index) =>
       println(
         s"[AddIfZero] candidate $index" + s" | function=${site.functionName}" +
-          s" | role=${site.role.label}" + s" | path=${site.path}" +
-          s" | kind=${site.description}"
+          s" | path=${site.path}" + s" | kind=${site.description}"
       )
     }
 
@@ -77,8 +79,7 @@ case class AddIfZero[Pre <: Generation]() extends Rewriter[Pre] {
       println(s"[AddIfZero] SELECTED INDEX = $selectedIndex")
       println(
         s"[AddIfZero] SELECTED" + s" | function=${site.functionName}" +
-          s" | role=${site.role.label}" + s" | path=${site.path}" +
-          s" | kind=${site.description}"
+          s" | path=${site.path}" + s" | kind=${site.description}"
       )
     }
 
@@ -86,8 +87,17 @@ case class AddIfZero[Pre <: Generation]() extends Rewriter[Pre] {
   }
 
   override def dispatch(stat: Statement[Pre]): Statement[Post] =
-    selected match {
-      case Some(site) if site.target eq stat => transformedTarget(stat)
+    stat match {
+      case block @ Block(statements)
+          if selected.exists(site => site.container eq block) =>
+        val site = selected.get
+        val rewritten =
+          statements.take(site.index).map(dispatch) ++
+            Seq(insertedStatement(block.o)) ++
+            statements.drop(site.index).map(dispatch)
+
+        Block[Post](rewritten)(block.o)
+
       case _ => stat.rewriteDefault()
     }
 }

@@ -1,0 +1,23 @@
+void test(int tid, int x) returns (int res) {
+    Object exc;
+    exc = null;
+    int return1;
+    {
+        if (1 != 0) {
+            int flatten;
+            flatten = x + 1;
+            x = flatten;
+            flatten;
+        }
+        return1 = x;
+        x;
+        goto END;
+    }
+    label END;
+    
+    res = return1;
+    return;
+    label BUBBLE;
+    
+    assert exc == null;
+}

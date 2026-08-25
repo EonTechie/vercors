@@ -1,0 +1,182 @@
+
+========================================================================
+TRANSFORM DEBUG LOG
+========================================================================
+log_file: ..\UPDATED_EXAMPLES\C\patterns\for2while\6_pure_transform.log
+source_file: ..\UPDATED_EXAMPLES\C\6_pure.c
+mode: implement_all_list
+selected_transforms: ['for2while']
+
+========================================================================
+SEED SOURCE
+========================================================================
+(lines numbered 1..43)
+
+  1 | /*@
+  2 |   requires 0 <= n && n <= |xs|;
+  3 |   decreases n;
+  4 | 
+  5 |   pure int prefixSum(seq<int> xs, int n) =
+  6 |       n == 0
+  7 |           ? 0
+  8 |           : prefixSum(xs, n - 1) + xs[n - 1];
+  9 | @*/
+ 10 | 
+ 11 | /*@
+ 12 |   given seq<int> xs;
+ 13 | 
+ 14 |   requires length >= 0;
+ 15 | 
+ 16 |   context_everywhere list != NULL;
+ 17 |   context_everywhere \pointer(list, length, read);
+ 18 |   context_everywhere |xs| == length;
+ 19 | 
+ 20 |   context_everywhere
+ 21 |       (\forall int x;
+ 22 |           0 <= x && x < length;
+ 23 |           xs[x] == list[x]);
+ 24 | 
+ 25 |   ensures \result == prefixSum(xs, length);
+ 26 | @*/
+ 27 | int sum_list(int *list, int length)
+ 28 | {
+ 29 |     int sum = 0;
+ 30 |     int i = 0;
+ 31 | 
+ 32 |     /*@
+ 33 |       loop_invariant 0 <= i && i <= length;
+ 34 |       loop_invariant sum == prefixSum(xs, i);
+ 35 |       decreases length - i;
+ 36 |     @*/
+ 37 |     for (; i < length; i++)
+ 38 |     {
+ 39 |         sum = sum + list[i];
+ 40 |     }
+ 41 | 
+ 42 |     return sum;
+ 43 | }
+
+========================================================================
+PARSED AST (before site scan)
+========================================================================
+
+------------------------------------------------------------------------
+AST (parsed from seed)
+------------------------------------------------------------------------
+└── root: FileAST
+    └── ext[0]: FuncDef decl='sum_list'
+        ├── decl: Decl name='sum_list'
+        │   └── type: FuncDecl
+        │       ├── args: ParamList
+        │       │   ├── params[0]: Decl name='list'
+        │       │   │   └── type: PtrDecl
+        │       │   │       └── type: TypeDecl
+        │       │   │           └── type: IdentifierType
+        │       │   └── params[1]: Decl name='length'
+        │       │       └── type: TypeDecl
+        │       │           └── type: IdentifierType
+        │       └── type: TypeDecl
+        │           └── type: IdentifierType
+        └── body: Compound
+            ├── block_items[0]: Decl name='sum'
+            │   ├── type: TypeDecl
+            │   │   └── type: IdentifierType
+            │   └── init: Constant int='0'
+            ├── block_items[1]: Decl name='i'
+            │   ├── type: TypeDecl
+            │   │   └── type: IdentifierType
+            │   └── init: Constant int='0'
+            ├── block_items[2]: For
+            │   ├── cond: BinaryOp op='<'
+            │   │   ├── left: ID name='i'
+            │   │   └── right: ID name='length'
+            │   ├── next: UnaryOp op='p++'
+            │   │   └── expr: ID name='i'
+            │   └── stmt: Compound
+            │       └── block_items[0]: Assignment
+            │           ├── lvalue: ID name='sum'
+            │           └── rvalue: BinaryOp op='+'
+            │               ├── left: ID name='sum'
+            │               └── right: ArrayRef
+            │                   ├── name: ID name='list'
+            │                   └── subscript: ID name='i'
+            └── block_items[3]: Return
+                └── expr: ID name='sum'
+
+========================================================================
+SITE SCAN (suitability checks for every candidate)
+========================================================================
+
+------------------------------------------------------------------------
+CHECK for2while
+------------------------------------------------------------------------
+  candidate_stmt: Decl @ :6:9
+  snippet: int sum = 0
+  [FAIL] node is For? type=Decl
+  => APPLICABLE=False  reason: not a For
+
+------------------------------------------------------------------------
+CHECK for2while
+------------------------------------------------------------------------
+  candidate_stmt: Decl @ :7:9
+  snippet: int i = 0
+  [FAIL] node is For? type=Decl
+  => APPLICABLE=False  reason: not a For
+
+------------------------------------------------------------------------
+CHECK for2while
+------------------------------------------------------------------------
+  candidate_stmt: For @ :10:5
+  snippet: for (; i < length; i++) { sum = sum + list[i]; }
+  [PASS] node is For? type=For
+  => APPLICABLE=True  reason: for -> while
+
+------------------------------------------------------------------------
+CHECK for2while
+------------------------------------------------------------------------
+  candidate_stmt: Assignment @ :12:9
+  snippet: sum = sum + list[i]
+  [FAIL] node is For? type=Assignment
+  => APPLICABLE=False  reason: not a For
+
+------------------------------------------------------------------------
+CHECK for2while
+------------------------------------------------------------------------
+  candidate_stmt: Return @ :15:5
+  snippet: return sum;
+  [FAIL] node is For? type=Return
+  => APPLICABLE=False  reason: not a For
+
+========================================================================
+SITE SCAN SUMMARY
+========================================================================
+transform: for2while
+applicable_site_count: 1
+  site[0] APPLICABLE -> output *_site0.*
+
+========================================================================
+APPLY SITES (re-parse; check spam suppressed)
+========================================================================
+APPLIED site[0] -> ..\UPDATED_EXAMPLES\C\patterns\for2while\6_pure_site0.c
+
+========================================================================
+TRANSFORMED SOURCE (site[0])
+========================================================================
+(lines numbered 1..16)
+
+  1 | int sum_list(int *list, int length)
+  2 | {
+  3 |   int sum = 0;
+  4 |   int i = 0;
+  5 |   while (i < length)
+  6 |   {
+  7 |     {
+  8 |       sum = sum + list[i];
+  9 |     }
+ 10 |     i++;
+ 11 |   }
+ 12 | 
+ 13 |   return sum;
+ 14 | }
+ 15 | 
+ 16 | 

@@ -1,0 +1,222 @@
+
+========================================================================
+TRANSFORM DEBUG LOG
+========================================================================
+log_file: ..\UPDATED_EXAMPLES\C\patterns\to_method\5_bubbleSort_transform.log
+source_file: ..\UPDATED_EXAMPLES\C\5_bubbleSort.c
+mode: implement_all_list
+selected_transforms: ['to_method']
+
+========================================================================
+SEED SOURCE
+========================================================================
+(lines numbered 1..37)
+
+  1 | /*@
+  2 |   requires length >= 0;
+  3 | 
+  4 |   context_everywhere arr != NULL;
+  5 |   context_everywhere \pointer(arr, length, write);
+  6 | 
+  7 |   ensures
+  8 |     (\forall int i;
+  9 |       0 <= i && i <= length - 2;
+ 10 |       arr[i] <= arr[i + 1]);
+ 11 | @*/
+ 12 | void bubbleSort(int arr[], int length)
+ 13 | {
+ 14 |     int n = length;
+ 15 | 
+ 16 |     //@ loop_invariant 0 <= i && i <= n;
+ 17 |     //@ loop_invariant (\forall int k; n - i <= k && k < n - 1; arr[k] <= arr[k + 1]);
+ 18 |     //@ loop_invariant (\forall int g, int h; 0 <= g && g < n - i && n - i <= h && h < n; arr[g] <= arr[h]);
+ 19 | 
+ 20 |     for (int i = 0; i < n - 1; i++)
+ 21 |     {
+ 22 |         //@ loop_invariant 0 <= j && j <= n - 1 - i;
+ 23 |         //@ loop_invariant (\forall int k; n - i <= k && k < n - 1; arr[k] <= arr[k + 1]);
+ 24 |         //@ loop_invariant (\forall int g, int h; 0 <= g && g < n - i && n - i <= h && h < n; arr[g] <= arr[h]);
+ 25 |         //@ loop_invariant (\forall int k; 0 <= k && k < j; arr[k] <= arr[j]);
+ 26 | 
+ 27 |         for (int j = 0; j < n - 1 - i; j++)
+ 28 |         {
+ 29 |             if (arr[j] > arr[j + 1])
+ 30 |             {
+ 31 |                 int temp = arr[j];
+ 32 |                 arr[j] = arr[j + 1];
+ 33 |                 arr[j + 1] = temp;
+ 34 |             }
+ 35 |         }
+ 36 |     }
+ 37 | }
+
+========================================================================
+PARSED AST (before site scan)
+========================================================================
+
+------------------------------------------------------------------------
+AST (parsed from seed)
+------------------------------------------------------------------------
+└── root: FileAST
+    └── ext[0]: FuncDef decl='bubbleSort'
+        ├── decl: Decl name='bubbleSort'
+        │   └── type: FuncDecl
+        │       ├── args: ParamList
+        │       │   ├── params[0]: Decl name='arr'
+        │       │   │   └── type: ArrayDecl
+        │       │   │       └── type: TypeDecl
+        │       │   │           └── type: IdentifierType
+        │       │   └── params[1]: Decl name='length'
+        │       │       └── type: TypeDecl
+        │       │           └── type: IdentifierType
+        │       └── type: TypeDecl
+        │           └── type: IdentifierType
+        └── body: Compound
+            ├── block_items[0]: Decl name='n'
+            │   ├── type: TypeDecl
+            │   │   └── type: IdentifierType
+            │   └── init: ID name='length'
+            └── block_items[1]: For
+                ├── init: DeclList
+                │   └── decls[0]: Decl name='i'
+                │       ├── type: TypeDecl
+                │       │   └── type: IdentifierType
+                │       └── init: Constant int='0'
+                ├── cond: BinaryOp op='<'
+                │   ├── left: ID name='i'
+                │   └── right: BinaryOp op='-'
+                │       ├── left: ID name='n'
+                │       └── right: Constant int='1'
+                ├── next: UnaryOp op='p++'
+                │   └── expr: ID name='i'
+                └── stmt: Compound
+                    └── block_items[0]: For
+                        ├── init: DeclList
+                        │   └── decls[0]: Decl name='j'
+                        │       ├── type: TypeDecl
+                        │       │   └── type: IdentifierType
+                        │       └── init: Constant int='0'
+                        ├── cond: BinaryOp op='<'
+                        │   ├── left: ID name='j'
+                        │   └── right: BinaryOp op='-'
+                        │       ├── left: BinaryOp op='-'
+                        │       │   ├── left: ID name='n'
+                        │       │   └── right: Constant int='1'
+                        │       └── right: ID name='i'
+                        ├── next: UnaryOp op='p++'
+                        │   └── expr: ID name='j'
+                        └── stmt: Compound
+                            └── block_items[0]: If
+                                ├── cond: BinaryOp op='>'
+                                │   ├── left: ArrayRef
+                                │   │   ├── name: ID name='arr'
+                                │   │   └── subscript: ID name='j'
+                                │   └── right: ArrayRef
+                                │       ├── name: ID name='arr'
+                                │       └── subscript: BinaryOp op='+'
+                                │           ├── left: ID name='j'
+                                │           └── right: Constant int='1'
+                                └── iftrue: Compound
+                                    ├── block_items[0]: Decl name='temp'
+                                    │   ├── type: TypeDecl
+                                    │   │   └── type: IdentifierType
+                                    │   └── init: ArrayRef
+                                    │       ├── name: ID name='arr'
+                                    │       └── subscript: ID name='j'
+                                    ├── block_items[1]: Assignment
+                                    │   ├── lvalue: ArrayRef
+                                    │   │   ├── name: ID name='arr'
+                                    │   │   └── subscript: ID name='j'
+                                    │   └── rvalue: ArrayRef
+                                    │       ├── name: ID name='arr'
+                                    │       └── subscript: BinaryOp op='+'
+                                    │           ├── left: ID name='j'
+                                    │           └── right: Constant int='1'
+                                    └── block_items[2]: Assignment
+                                        ├── lvalue: ArrayRef
+                                        │   ├── name: ID name='arr'
+                                        │   └── subscript: BinaryOp op='+'
+                                        │       ├── left: ID name='j'
+                                        │       └── right: Constant int='1'
+                                        └── rvalue: ID name='temp'
+
+========================================================================
+SITE SCAN (suitability checks for every candidate)
+========================================================================
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: Decl @ :4:9
+  snippet: int n = length
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: For @ :10:5
+  snippet: for (int i = 0; i < (n - 1); i++) { for (int j = 0; j < ((n - 1) - i); j++) { if (arr[j] > arr[j + 1]) { int temp = a...
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: Compound @ :11:1
+  snippet: { for (int j = 0; j < ((n - 1) - i); j++) { if (arr[j] > arr[j + 1]) { int temp = arr[j]; arr[j] = arr[j + 1]; arr[j ...
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: For @ :17:9
+  snippet: for (int j = 0; j < ((n - 1) - i); j++) { if (arr[j] > arr[j + 1]) { int temp = arr[j]; arr[j] = arr[j + 1]; arr[j + ...
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: Compound @ :18:1
+  snippet: { if (arr[j] > arr[j + 1]) { int temp = arr[j]; arr[j] = arr[j + 1]; arr[j + 1] = temp; } }
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: If @ :19:13
+  snippet: if (arr[j] > arr[j + 1]) { int temp = arr[j]; arr[j] = arr[j + 1]; arr[j + 1] = temp; }
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: Compound @ :20:1
+  snippet: { int temp = arr[j]; arr[j] = arr[j + 1]; arr[j + 1] = temp; }
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: Decl @ :21:21
+  snippet: int temp = arr[j]
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: Assignment @ :22:17
+  snippet: arr[j] = arr[j + 1]
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: Assignment @ :23:17
+  snippet: arr[j + 1] = temp
+  => APPLICABLE=False  reason: not applicable
+
+========================================================================
+SITE SCAN SUMMARY
+========================================================================
+transform: to_method
+applicable_site_count: 0
+no applicable locations; nothing written

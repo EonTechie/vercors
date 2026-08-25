@@ -1,0 +1,244 @@
+adt WellFoundedOrder<t> {
+    pure boolean bounded(t v);
+    pure boolean decreasing(t v1, t v2);
+}
+
+adt IntOrder {
+    axiom (\forall int i; 0 <= i == WellFoundedOrder<int>.bounded(i));
+    axiom (\forall int i; (\forall int j; i < j == WellFoundedOrder<int>.decreasing(i, j)));
+}
+
+requires 0 <= n;
+requires n < |xs| + 1;
+void prefixSum(int n, seq<int> xs) {
+    assert false;
+}
+
+requires 0 <= n;
+requires n < |xs| + 1;
+decreases n;
+pure int prefixSum1(seq<int> xs, int n) = n == 0 ? 0 : prefixSum1(xs, n - 1) + xs[n - 1];
+
+void sizeof_int() {
+    assert false;
+}
+
+decreases;
+ensures 2 <= \result;
+pure int sizeof_int1();
+
+adt PointerCastHelper {
+    
+}
+
+adt Block {
+    pure int blockLength(Block b);
+    pure ref loc(Block b, int i);
+    pure int blockAddress(Block b);
+    pure Block locInv1(ref r);
+    pure int locInv2(ref r);
+    pure Block addrInv(int address);
+    axiom (\forall Block b; Block.blockLength(b) >= 0);
+    axiom (\forall Block b, int i; Block.locInv1(Block.loc(b, i)) == b && Block.locInv2(Block.loc(b, i)) == i);
+    axiom (\forall Block b; Block.blockAddress(b) > 0);
+}
+
+adt Pointer {
+    pure Block pointerBlock(Pointer p);
+    pure int pointerOffset(Pointer p);
+    pure Pointer pointerInv(ref r);
+    pure int ptrAddress(Pointer p, int stride);
+    axiom (\forall Pointer p;
+        Pointer.pointerOffset(p) >= 0 && Pointer.pointerOffset(p) < Block.blockLength(Pointer.pointerBlock(p))
+    );
+    axiom (\forall ref r; ptrDeref(Pointer.pointerInv(r)) == r);
+    axiom (\forall Pointer p; Pointer.pointerInv(ptrDeref(p)) == p);
+    axiom (\forall Pointer p, int stride;
+        stride > 0 ==>
+            Pointer.ptrAddress(p, stride) ==
+            Block.blockAddress(Pointer.pointerBlock(p)) + Pointer.pointerOffset(p) * stride
+    );
+    axiom (\forall Pointer p, int stride; stride > 0 ==> Pointer.ptrAddress(p, stride) > 0);
+    axiom (\forall Pointer p1, Pointer p2, int stride;
+        stride > 0 &&
+        Pointer.ptrAddress(p1, stride) == Pointer.ptrAddress(p2, stride) &&
+        Pointer.pointerBlock(p1) == Pointer.pointerBlock(p2) ==>
+            p1 == p2
+    );
+    axiom ptrAddAxiom();
+    axiom ptrAddAxiom2();
+    axiom (\forall Pointer i, int i1; Pointer.ptrAddress(i, i1) <= 18446744073709551615);
+}
+
+decreases;
+pure ref ptrDeref(Pointer p) = Block.loc(Pointer.pointerBlock(p), Pointer.pointerOffset(p));
+
+requires 0 <= Pointer.pointerOffset(p) + offset;
+requires Pointer.pointerOffset(p) + offset < Block.blockLength(Pointer.pointerBlock(p));
+decreases;
+ensures offset == 0 ==> \result == p;
+ensures Pointer.pointerOffset(\result) == Pointer.pointerOffset(p) + offset;
+ensures Pointer.pointerBlock(\result) == Pointer.pointerBlock(p);
+pure Pointer ptrAdd(Pointer p, int offset);
+
+decreases;
+ensures \polarity_dependent(
+    (\forall Pointer p, int offset, int i;
+        0 <= Pointer.pointerOffset(p) + offset &&
+        Pointer.pointerOffset(p) + offset < Block.blockLength(Pointer.pointerBlock(p)) &&
+        0 <= Pointer.pointerOffset(p) + offset + i &&
+        Pointer.pointerOffset(p) + offset + i < Block.blockLength(Pointer.pointerBlock(p)) ==>
+            ptrAdd(ptrAdd(p, offset), i) == ptrAdd(p, offset + i)
+    ),
+    true
+);
+pure boolean ptrAddAxiom() = true;
+
+decreases;
+ensures (\forall Pointer p, int i, int j;
+    0 <= Pointer.pointerOffset(p) + i && Pointer.pointerOffset(p) + i < Block.blockLength(Pointer.pointerBlock(p)) &&
+    0 <= Pointer.pointerOffset(p) + j &&
+    Pointer.pointerOffset(p) + j < Block.blockLength(Pointer.pointerBlock(p)) ==>
+        i == j == ptrAdd(p, i) == ptrAdd(p, j)
+);
+pure boolean ptrAddAxiom2() = true;
+
+field Int: int
+
+adt Any {
+    
+}
+
+decreases;
+pure Any anyAs(Any t);
+
+decreases;
+ensures anyAs(\result) == t;
+pure Any asAny(Any t);
+
+adt Option<t> {
+    pure Option<t> `none`();
+    pure Option<t> some(t x);
+    pure t optionGet(Option<t> opt);
+    axiom (\forall t x; Option<t>.`none`() != Option<t>.some(x));
+    axiom (\forall t x; Option<t>.optionGet(Option<t>.some(x)) == x);
+    axiom (\forall Option<t> opt; Option<t>.some(Option<t>.optionGet(opt)) == opt);
+}
+
+requires opt != Option<Any>.`none`();
+decreases;
+ensures Option<Any>.some(\result) == opt;
+pure Any optGet(Option<Any> opt) = Option<Any>.optionGet(opt);
+
+decreases;
+ensures opt == Option<Any>.`none`() ==> \result == alt;
+ensures opt != Option<Any>.`none`() ==> \result == optGet(opt);
+pure Any optOrElse(Option<Any> opt, Any alt) = opt == Option<Any>.`none`() ? alt : optGet(opt);
+
+requires opt != Option<Pointer>.`none`();
+decreases;
+ensures Option<Pointer>.some(\result) == opt;
+pure Pointer optGet1(Option<Pointer> opt) = Option<Pointer>.optionGet(opt);
+
+requires list != Option<Pointer>.`none`();
+requires 0 <= Pointer.pointerOffset(optGet1(list)) + length;
+requires Pointer.pointerOffset(optGet1(list)) + length <= Block.blockLength(Pointer.pointerBlock(optGet1(list)));
+requires (\forall* int i; 0 <= i && i < length ==> Value(ptrDeref(ptrAdd(optGet1(list), i)).Int));
+requires |xs| == length;
+requires (\forall int x; 0 <= x && x < length ==> xs[x] == ptrDeref(ptrAdd(optGet1(list), x)).Int);
+requires 0 <= length;
+void sumList(Option<Pointer> list, int length, seq<int> xs) {
+    assert false;
+}
+
+requires list != Option<Pointer>.`none`();
+requires 0 <= Pointer.pointerOffset(optGet1(list)) + length;
+requires Pointer.pointerOffset(optGet1(list)) + length <= Block.blockLength(Pointer.pointerBlock(optGet1(list)));
+requires (\forall* int i; 0 <= i && i < length ==> Value(ptrDeref(ptrAdd(optGet1(list), i)).Int));
+requires |xs| == length;
+requires (\forall int x; 0 <= x && x < length ==> xs[x] == ptrDeref(ptrAdd(optGet1(list), x)).Int);
+requires 0 <= length;
+ensures list != Option<Pointer>.`none`();
+ensures 0 <= Pointer.pointerOffset(optGet1(list)) + length;
+ensures Pointer.pointerOffset(optGet1(list)) + length <= Block.blockLength(Pointer.pointerBlock(optGet1(list)));
+ensures (\forall* int i; 0 <= i && i < length ==> Value(ptrDeref(ptrAdd(optGet1(list), i)).Int));
+ensures |xs| == length;
+ensures (\forall int x; 0 <= x && x < length ==> xs[x] == ptrDeref(ptrAdd(optGet1(list), x)).Int);
+ensures res == prefixSum1(xs, length);
+void sumList1(int tid, Option<Pointer> list, int length, seq<int> xs) returns (int res) {
+    ref exc;
+    exc = null;
+    int return1;
+    int sum;
+    int i;
+    int flatten;
+    flatten = 0;
+    sum = flatten;
+    flatten;
+    int flatten;
+    flatten = 0;
+    i = flatten;
+    flatten;
+    label LOOP;
+    
+    ref excbeforeloop;
+    excbeforeloop = exc;
+    decreases length - i;
+    loop_invariant exc == excbeforeloop;
+    loop_invariant list != Option<Pointer>.`none`();
+    loop_invariant 0 <= Pointer.pointerOffset(optGet1(list)) + length;
+    loop_invariant Pointer.pointerOffset(optGet1(list)) + length <=
+    Block.blockLength(Pointer.pointerBlock(optGet1(list)));
+    loop_invariant (\forall* int i1; 0 <= i1 && i1 < length ==> Value(ptrDeref(ptrAdd(optGet1(list), i1)).Int));
+    loop_invariant |xs| == length;
+    loop_invariant (\forall int x; 0 <= x && x < length ==> xs[x] == ptrDeref(ptrAdd(optGet1(list), x)).Int);
+    loop_invariant 0 <= i;
+    loop_invariant i < length + 1;
+    loop_invariant sum == prefixSum1(xs, i);
+    while (i < length) {
+        int flatten;
+        flatten = sum + ptrDeref(ptrAdd(optGet1(list), i)).Int;
+        sum = flatten;
+        flatten;
+        int flatten;
+        flatten = i;
+        i = i + 1;
+        flatten;
+    }
+    return1 = sum;
+    sum;
+    goto END;
+    label END;
+    
+    res = return1;
+    return;
+    label BUBBLE;
+    
+    assert exc == (null);
+}
+
+void `type`() {
+    assert false;
+}
+
+decreases;
+ensures \result >= 0;
+ensures \result <= 0;
+ensures `type` == (null) ==> \result == 0;
+ensures `type` != (null) ==> \result != 0;
+pure int type1(ref `type`);
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+void subtype(int subtype, int subtype1) {
+    assert false;
+}
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+decreases;
+pure boolean subtype1(int subtype, int subtype1) = (subtype == 0 ==> true) && true;

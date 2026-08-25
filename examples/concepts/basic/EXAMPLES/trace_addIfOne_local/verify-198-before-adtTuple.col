@@ -1,0 +1,175 @@
+adt PointerCastHelper {
+    
+}
+
+adt Block {
+    pure int blockLength(Block b);
+    pure ref loc(Block b, int i);
+    pure int blockAddress(Block b);
+    pure Block locInv1(ref r);
+    pure int locInv2(ref r);
+    pure Block addrInv(int address);
+    axiom (\forall Block b; {: blockLength(b) :} >= 0);
+    axiom (\forall Block b, int i; locInv1({: loc(b, i) :}) == b && locInv2({: loc(b, i) :}) == i);
+    axiom (\forall Block b; {: blockAddress(b) :} > 0);
+}
+
+adt Pointer {
+    pure Block pointerBlock(Pointer p);
+    pure int pointerOffset(Pointer p);
+    pure Pointer pointerInv(ref r);
+    pure int ptrAddress(Pointer p, int stride);
+    axiom (\forall Pointer p; {: pointerOffset(p) :} >= 0 && {: pointerOffset(p) :} < blockLength(pointerBlock(p)));
+    axiom (\forall ref r; ptrDeref({: pointerInv(r) :}) == r);
+    axiom (\forall Pointer p; pointerInv({: ptrDeref(p) :}) == p);
+    axiom (\forall Pointer p, int stride;
+        stride > 0 ==> {: ptrAddress(p, stride) :} == blockAddress(pointerBlock(p)) + pointerOffset(p) * stride
+    );
+    axiom (\forall Pointer p, int stride; stride > 0 ==> {: ptrAddress(p, stride) :} > 0);
+    axiom (\forall Pointer p1, Pointer p2, int stride;
+        stride > 0 &&
+        {: ptrAddress(p1, stride) :} == {: ptrAddress(p2, stride) :} &&
+        {: pointerBlock(p1) :} == {: pointerBlock(p2) :} ==>
+            p1 == p2
+    );
+    axiom ptrAddAxiom();
+    axiom ptrAddAxiom2();
+    axiom (\forall Pointer i, int i1; ptrAddress(i, i1) <= 18446744073709551615);
+}
+
+decreases;
+pure ref ptrDeref(Pointer p) = loc(pointerBlock(p), pointerOffset(p));
+
+requires 0 <= pointerOffset(p) + offset;
+requires pointerOffset(p) + offset < blockLength(pointerBlock(p));
+decreases;
+ensures offset == 0 ==> \result == p;
+ensures pointerOffset(\result) == pointerOffset(p) + offset;
+ensures pointerBlock(\result) == pointerBlock(p);
+pure Pointer ptrAdd(Pointer p, int offset);
+
+decreases;
+ensures \polarity_dependent(
+    (\forall Pointer p, int offset, int i;
+        0 <= pointerOffset(p) + offset && pointerOffset(p) + offset < blockLength(pointerBlock(p)) &&
+        0 <= pointerOffset(p) + offset + i &&
+        pointerOffset(p) + offset + i < blockLength(pointerBlock(p)) ==>
+            {: ptrAdd(ptrAdd(p, offset), i) :} == ptrAdd(p, offset + i)
+    ),
+    true
+);
+pure boolean ptrAddAxiom() = true;
+
+decreases;
+ensures (\forall Pointer p, int i, int j;
+    0 <= pointerOffset(p) + i && pointerOffset(p) + i < blockLength(pointerBlock(p)) && 0 <= pointerOffset(p) + j &&
+    pointerOffset(p) + j < blockLength(pointerBlock(p)) ==>
+        i == j == {: ptrAdd(p, i) :} == {: ptrAdd(p, j) :}
+);
+pure boolean ptrAddAxiom2() = true;
+
+field Int: int
+
+requires arr != None;
+requires 0 <= Pointer.pointerOffset(arr.get) + length;
+requires Pointer.pointerOffset(arr.get) + length <= Block.blockLength(Pointer.pointerBlock(arr.get));
+requires (\forall* int i; i \in {0 .. length} ==> Value(ptrDeref(ptrAdd(arr.get, i)).Int));
+requires 0 < length;
+void isBiggest(option<Pointer> arr, int length) {
+    assert false;
+}
+
+requires arr != None;
+requires 0 <= Pointer.pointerOffset(arr.get) + length;
+requires Pointer.pointerOffset(arr.get) + length <= Block.blockLength(Pointer.pointerBlock(arr.get));
+requires (\forall* int i; i \in {0 .. length} ==> Value(ptrDeref(ptrAdd(arr.get, i)).Int));
+requires 0 < length;
+ensures arr != None;
+ensures 0 <= Pointer.pointerOffset(arr.get) + length;
+ensures Pointer.pointerOffset(arr.get) + length <= Block.blockLength(Pointer.pointerBlock(arr.get));
+ensures (\forall* int i; i \in {0 .. length} ==> Value(ptrDeref(ptrAdd(arr.get, i)).Int));
+ensures (\forall int x; x \in {0 .. length} ==> ptrDeref(ptrAdd(arr.get, x)).Int <= res);
+ensures (\exists int x; x \in {0 .. length} && res == ptrDeref(ptrAdd(arr.get, x)).Int);
+void isBiggest1(int tid, option<Pointer> arr, int length) returns (int res) {
+    ref exc;
+    exc = null;
+    int return1;
+    int biggest;
+    int i;
+    {
+        int flatten;
+        flatten = ptrDeref(ptrAdd(arr.get, 0)).Int;
+        biggest = flatten;
+        flatten;
+        label LOOP;
+        
+        ref excbeforeloop;
+        excbeforeloop = exc;
+        loop_invariant exc == excbeforeloop;
+        loop_invariant arr != None;
+        loop_invariant 0 <= Pointer.pointerOffset(arr.get) + length;
+        loop_invariant Pointer.pointerOffset(arr.get) + length <= Block.blockLength(Pointer.pointerBlock(arr.get));
+        loop_invariant (\forall* int i1; i1 \in {0 .. length} ==> Value(ptrDeref(ptrAdd(arr.get, i1)).Int));
+        loop_invariant i \in {1 .. length + 1};
+        loop_invariant (\forall int x; x \in {0 .. i} ==> ptrDeref(ptrAdd(arr.get, x)).Int <= biggest);
+        loop_invariant (\exists int x; x \in {0 .. i} && biggest == ptrDeref(ptrAdd(arr.get, x)).Int);
+        for (
+            {
+                int flatten;
+                flatten = 1;
+                i = flatten;
+                flatten;
+            };
+            i < length;
+            {
+                int flatten;
+                flatten = i;
+                i = i + 1;
+                flatten;
+            }
+        ) {
+            if (biggest < ptrDeref(ptrAdd(arr.get, i)).Int) {
+                int flatten;
+                flatten = ptrDeref(ptrAdd(arr.get, i)).Int;
+                biggest = flatten;
+                flatten;
+            }
+        }
+        return1 = biggest;
+        biggest;
+        goto END;
+    }
+    label END;
+    
+    res = return1;
+    return;
+    label BUBBLE;
+    
+    assert exc == null;
+}
+
+void `type`() {
+    assert false;
+}
+
+decreases;
+ensures \result >= 0;
+ensures \result <= 0;
+ensures `type` == null ==> \result == 0;
+ensures `type` != null ==> \result != 0;
+pure int type1(ref `type`);
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+void subtype(int subtype, int subtype1) {
+    assert false;
+}
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+decreases;
+pure boolean subtype1(int subtype, int subtype1) = (subtype == 0 ==> true) && true;

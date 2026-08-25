@@ -1,0 +1,29 @@
+[INFO] Start: VerCors (at 16:09:35)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier site-3.c:8-:8: '    loop_invariant (\forall int x; 0 <= x && x < i ==> biggest >= arr[x]);' contains no triggers
+======================================
+At vercors-interpreted-2302391890633217099.i
+--------------------------------------
+    8  int isBiggest(int *arr, int length) {
+    9      int biggest;
+                    [---
+   10      biggest = arr[0];
+                     ---]
+   11      int i;
+   12      /*@
+--------------------------------------
+At site-3.c
+--------------------------------------
+    1  int isBiggest(int *arr, int length) {
+    2      int biggest;
+      [-----------------------
+    3      biggest = arr[0];
+       -----------------------]
+    4      int i;
+    5      /*@
+--------------------------------------
+Pointer may be null. (https://utwente.nl/vercors#ptrNull)
+======================================
+[INFO] Done: VerCors (at 16:09:58, duration: 00:00:22)
+1 targets failed
+vercors.main.run subprocess failed

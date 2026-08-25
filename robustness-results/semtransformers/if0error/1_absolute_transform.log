@@ -1,0 +1,271 @@
+
+========================================================================
+TRANSFORM DEBUG LOG
+========================================================================
+log_file: ..\UPDATED_EXAMPLES\C\patterns\if0error\1_absolute_transform.log
+source_file: ..\UPDATED_EXAMPLES\C\1_absolute.c
+mode: implement_all_list
+selected_transforms: ['if0error']
+
+========================================================================
+SEED SOURCE
+========================================================================
+(lines numbered 1..9)
+
+  1 | //@ ensures \result == (a >= 0 ? a : -a);
+  2 | 
+  3 | int absolute(int a) {
+  4 |     if (a >= 0) {
+  5 |         return a;
+  6 |     } else {
+  7 |         return -a;
+  8 |     }
+  9 | }
+
+========================================================================
+PARSED AST (before site scan)
+========================================================================
+
+------------------------------------------------------------------------
+AST (parsed from seed)
+------------------------------------------------------------------------
+└── root: FileAST
+    └── ext[0]: FuncDef decl='absolute'
+        ├── decl: Decl name='absolute'
+        │   └── type: FuncDecl
+        │       ├── args: ParamList
+        │       │   └── params[0]: Decl name='a'
+        │       │       └── type: TypeDecl
+        │       │           └── type: IdentifierType
+        │       └── type: TypeDecl
+        │           └── type: IdentifierType
+        └── body: Compound
+            └── block_items[0]: If
+                ├── cond: BinaryOp op='>='
+                │   ├── left: ID name='a'
+                │   └── right: Constant int='0'
+                ├── iftrue: Compound
+                │   └── block_items[0]: Return
+                │       └── expr: ID name='a'
+                └── iffalse: Compound
+                    └── block_items[0]: Return
+                        └── expr: UnaryOp op='-'
+                            └── expr: ID name='a'
+
+========================================================================
+SITE SCAN (suitability checks for every candidate)
+========================================================================
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK if0error
+------------------------------------------------------------------------
+  => APPLICABLE=True  reason: returned transform
+
+========================================================================
+SITE SCAN SUMMARY
+========================================================================
+transform: if0error
+applicable_site_count: 6
+  site[0] APPLICABLE -> output *_site0.*
+  site[1] APPLICABLE -> output *_site1.*
+  site[2] APPLICABLE -> output *_site2.*
+  site[3] APPLICABLE -> output *_site3.*
+  site[4] APPLICABLE -> output *_site4.*
+  site[5] APPLICABLE -> output *_site5.*
+
+========================================================================
+APPLY SITES (re-parse; check spam suppressed)
+========================================================================
+APPLIED site[0] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\1_absolute_site0.c
+
+========================================================================
+TRANSFORMED SOURCE (site[0])
+========================================================================
+(lines numbered 1..21)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | int absolute(int a)
+  3 | {
+  4 |   if (0)
+  5 |   {
+  6 |     __assert_fail("0", "", 3, "reach_error");
+  7 |   }
+  8 |   else
+  9 |   {
+ 10 |   }
+ 11 |   if (a >= 0)
+ 12 |   {
+ 13 |     return a;
+ 14 |   }
+ 15 |   else
+ 16 |   {
+ 17 |     return -a;
+ 18 |   }
+ 19 | }
+ 20 | 
+ 21 | 
+APPLIED site[1] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\1_absolute_site1.c
+
+========================================================================
+TRANSFORMED SOURCE (site[1])
+========================================================================
+(lines numbered 1..21)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | int absolute(int a)
+  3 | {
+  4 |   if (a >= 0)
+  5 |   {
+  6 |     if (0)
+  7 |     {
+  8 |       __assert_fail("0", "", 3, "reach_error");
+  9 |     }
+ 10 |     else
+ 11 |     {
+ 12 |     }
+ 13 |     return a;
+ 14 |   }
+ 15 |   else
+ 16 |   {
+ 17 |     return -a;
+ 18 |   }
+ 19 | }
+ 20 | 
+ 21 | 
+APPLIED site[2] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\1_absolute_site2.c
+
+========================================================================
+TRANSFORMED SOURCE (site[2])
+========================================================================
+(lines numbered 1..21)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | int absolute(int a)
+  3 | {
+  4 |   if (a >= 0)
+  5 |   {
+  6 |     return a;
+  7 |     if (0)
+  8 |     {
+  9 |       __assert_fail("0", "", 3, "reach_error");
+ 10 |     }
+ 11 |     else
+ 12 |     {
+ 13 |     }
+ 14 |   }
+ 15 |   else
+ 16 |   {
+ 17 |     return -a;
+ 18 |   }
+ 19 | }
+ 20 | 
+ 21 | 
+APPLIED site[3] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\1_absolute_site3.c
+
+========================================================================
+TRANSFORMED SOURCE (site[3])
+========================================================================
+(lines numbered 1..21)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | int absolute(int a)
+  3 | {
+  4 |   if (a >= 0)
+  5 |   {
+  6 |     return a;
+  7 |   }
+  8 |   else
+  9 |   {
+ 10 |     if (0)
+ 11 |     {
+ 12 |       __assert_fail("0", "", 3, "reach_error");
+ 13 |     }
+ 14 |     else
+ 15 |     {
+ 16 |     }
+ 17 |     return -a;
+ 18 |   }
+ 19 | }
+ 20 | 
+ 21 | 
+APPLIED site[4] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\1_absolute_site4.c
+
+========================================================================
+TRANSFORMED SOURCE (site[4])
+========================================================================
+(lines numbered 1..21)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | int absolute(int a)
+  3 | {
+  4 |   if (a >= 0)
+  5 |   {
+  6 |     return a;
+  7 |   }
+  8 |   else
+  9 |   {
+ 10 |     return -a;
+ 11 |     if (0)
+ 12 |     {
+ 13 |       __assert_fail("0", "", 3, "reach_error");
+ 14 |     }
+ 15 |     else
+ 16 |     {
+ 17 |     }
+ 18 |   }
+ 19 | }
+ 20 | 
+ 21 | 
+APPLIED site[5] -> ..\UPDATED_EXAMPLES\C\patterns\if0error\1_absolute_site5.c
+
+========================================================================
+TRANSFORMED SOURCE (site[5])
+========================================================================
+(lines numbered 1..21)
+
+  1 | extern void __assert_fail(const char *, const char *, unsigned int, const char *);
+  2 | int absolute(int a)
+  3 | {
+  4 |   if (a >= 0)
+  5 |   {
+  6 |     return a;
+  7 |   }
+  8 |   else
+  9 |   {
+ 10 |     return -a;
+ 11 |   }
+ 12 |   if (0)
+ 13 |   {
+ 14 |     __assert_fail("0", "", 3, "reach_error");
+ 15 |   }
+ 16 |   else
+ 17 |   {
+ 18 |   }
+ 19 | }
+ 20 | 
+ 21 | 

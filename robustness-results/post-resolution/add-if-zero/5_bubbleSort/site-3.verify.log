@@ -1,0 +1,42 @@
+[INFO] Start: VerCors (at 16:13:56)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-2567087651944893627.i
+--------------------------------------
+   12  @*/
+   13  
+                            [---
+   14  void bubbleSort(int[] arr, int length) {
+                             ---]
+   15      int n;
+   16      n = length;
+--------------------------------------
+[1/3] Parsing failed: no viable alternative at input 'voidbubbleSort(int[]arr'
+--------------------------------------
+At vercors-interpreted-2567087651944893627.i
+--------------------------------------
+   14  void bubbleSort(int[] arr, int length) {
+   15      int n;
+            [-
+   16      n = length;
+             -]
+   17      /*@
+   18      loop_invariant 0 <= i;
+--------------------------------------
+[2/3] Parsing failed: no viable alternative at input 'n='
+--------------------------------------
+At vercors-interpreted-2567087651944893627.i
+--------------------------------------
+   21      loop_invariant (\forall int g, int h; 0 <= g && g < n - i && n - i <= h && h < n ==> arr[g] <= arr[h]);
+   22      @*/
+          [---
+   23      for ({ int i; i = 0; }; i < n - 1; i = i + 1) {
+           ---]
+   24          /*@
+   25          loop_invariant 0 <= j;
+--------------------------------------
+[3/3] Parsing failed: no viable alternative at input '/*@loop_invariant0<=i;loop_invarianti<=n;loop_invariant(\forallintk;n-i<=k&&k<n-1==>arr[k]<=arr[k+1]);loop_invariant(\forallintg,inth;0<=g&&g<n-i&&n-i<=h&&h<n==>arr[g]<=arr[h]);*/for'
+======================================
+[INFO] Done: VerCors (at 16:14:06, duration: 00:00:09)
+1 targets failed
+vercors.main.run subprocess failed

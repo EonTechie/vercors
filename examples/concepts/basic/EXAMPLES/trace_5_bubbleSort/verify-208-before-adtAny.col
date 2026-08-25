@@ -1,0 +1,296 @@
+void sizeof_int() {
+    assert false;
+}
+
+decreases;
+ensures 2 <= \result;
+pure int sizeof_int1();
+
+adt PointerCastHelper {
+    
+}
+
+adt Block {
+    pure int blockLength(Block b);
+    pure ref loc(Block b, int i);
+    pure int blockAddress(Block b);
+    pure Block locInv1(ref r);
+    pure int locInv2(ref r);
+    pure Block addrInv(int address);
+    axiom (\forall Block b; {: blockLength(b) :} >= 0);
+    axiom (\forall Block b, int i; locInv1({: loc(b, i) :}) == b && locInv2({: loc(b, i) :}) == i);
+    axiom (\forall Block b; {: blockAddress(b) :} > 0);
+}
+
+adt Pointer {
+    pure Block pointerBlock(Pointer p);
+    pure int pointerOffset(Pointer p);
+    pure Pointer pointerInv(ref r);
+    pure int ptrAddress(Pointer p, int stride);
+    axiom (\forall Pointer p; {: pointerOffset(p) :} >= 0 && {: pointerOffset(p) :} < blockLength(pointerBlock(p)));
+    axiom (\forall ref r; ptrDeref({: pointerInv(r) :}) == r);
+    axiom (\forall Pointer p; pointerInv({: ptrDeref(p) :}) == p);
+    axiom (\forall Pointer p, int stride;
+        stride > 0 ==> {: ptrAddress(p, stride) :} == blockAddress(pointerBlock(p)) + pointerOffset(p) * stride
+    );
+    axiom (\forall Pointer p, int stride; stride > 0 ==> {: ptrAddress(p, stride) :} > 0);
+    axiom (\forall Pointer p1, Pointer p2, int stride;
+        stride > 0 &&
+        {: ptrAddress(p1, stride) :} == {: ptrAddress(p2, stride) :} &&
+        {: pointerBlock(p1) :} == {: pointerBlock(p2) :} ==>
+            p1 == p2
+    );
+    axiom ptrAddAxiom();
+    axiom ptrAddAxiom2();
+    axiom (\forall Pointer i, int i1; ptrAddress(i, i1) <= 18446744073709551615);
+}
+
+decreases;
+pure ref ptrDeref(Pointer p) = loc(pointerBlock(p), pointerOffset(p));
+
+requires 0 <= pointerOffset(p) + offset;
+requires pointerOffset(p) + offset < blockLength(pointerBlock(p));
+decreases;
+ensures offset == 0 ==> \result == p;
+ensures pointerOffset(\result) == pointerOffset(p) + offset;
+ensures pointerBlock(\result) == pointerBlock(p);
+pure Pointer ptrAdd(Pointer p, int offset);
+
+decreases;
+ensures \polarity_dependent(
+    (\forall Pointer p, int offset, int i;
+        0 <= pointerOffset(p) + offset && pointerOffset(p) + offset < blockLength(pointerBlock(p)) &&
+        0 <= pointerOffset(p) + offset + i &&
+        pointerOffset(p) + offset + i < blockLength(pointerBlock(p)) ==>
+            {: ptrAdd(ptrAdd(p, offset), i) :} == ptrAdd(p, offset + i)
+    ),
+    true
+);
+pure boolean ptrAddAxiom() = true;
+
+decreases;
+ensures (\forall Pointer p, int i, int j;
+    0 <= pointerOffset(p) + i && pointerOffset(p) + i < blockLength(pointerBlock(p)) && 0 <= pointerOffset(p) + j &&
+    pointerOffset(p) + j < blockLength(pointerBlock(p)) ==>
+        i == j == {: ptrAdd(p, i) :} == {: ptrAdd(p, j) :}
+);
+pure boolean ptrAddAxiom2() = true;
+
+adt Pointer_1_array_int {
+    pure int get_dim_0_int(Pointer_1_array_int array);
+    pure Pointer get_int_pointer(Pointer_1_array_int array);
+    pure Pointer_1_array_int from_int_pointer(Pointer ptr);
+    axiom (\forall Pointer i; get_int_pointer(from_int_pointer(i)) == i);
+    axiom (\forall Pointer_1_array_int i;
+        Block.blockLength(Pointer.pointerBlock(get_int_pointer(i))) - Pointer.pointerOffset(get_int_pointer(i)) ==
+        get_dim_0_int(i)
+    );
+    axiom (\forall Pointer_1_array_int i; 0 < get_dim_0_int(i));
+}
+
+field Int: int
+
+adt Option<t> {
+    pure Option<t> `none`();
+    pure Option<t> some(t x);
+    pure t optionGet(Option<t> opt);
+    axiom (\forall t x; `none`() != {: some(x) :});
+    axiom (\forall t x; optionGet({: some(x) :}) == x);
+    axiom (\forall Option<t> opt; {: some(optionGet(opt)) :} == opt);
+}
+
+requires opt != Option<t>.`none`();
+decreases;
+ensures Option<t>.some(\result) == opt;
+pure t optGet<t>(Option<t> opt) = Option<t>.optionGet(opt);
+
+decreases;
+ensures opt == Option<t>.`none`() ==> \result == alt;
+ensures opt != Option<t>.`none`() ==> \result == optGet<t>(opt);
+pure t optOrElse<t>(Option<t> opt, t alt) = opt == Option<t>.`none`() ? alt : optGet<t>(opt);
+
+requires !(arr == Option<Pointer_1_array_int>.`none`());
+requires 0 <= Pointer.pointerOffset(get_int_pointer(optGet<Pointer_1_array_int>(arr))) + length;
+requires Pointer.pointerOffset(get_int_pointer(optGet<Pointer_1_array_int>(arr))) + length <=
+Block.blockLength(Pointer.pointerBlock(get_int_pointer(optGet<Pointer_1_array_int>(arr))));
+requires (\forall* int i;
+    i \in {0 .. length} ==> Perm(ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), i)).Int, write)
+);
+requires 0 <= length;
+void bubbleSort(Option<Pointer_1_array_int> arr, int length) {
+    assert false;
+}
+
+adt Void {
+    pure Void unit();
+    axiom (\forall Void v; true ==> unit() == v);
+}
+
+requires !(arr == Option<Pointer_1_array_int>.`none`());
+requires 0 <= Pointer.pointerOffset(get_int_pointer(optGet<Pointer_1_array_int>(arr))) + length;
+requires Pointer.pointerOffset(get_int_pointer(optGet<Pointer_1_array_int>(arr))) + length <=
+Block.blockLength(Pointer.pointerBlock(get_int_pointer(optGet<Pointer_1_array_int>(arr))));
+requires (\forall* int i;
+    i \in {0 .. length} ==> Perm(ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), i)).Int, write)
+);
+requires 0 <= length;
+ensures !(arr == Option<Pointer_1_array_int>.`none`());
+ensures 0 <= Pointer.pointerOffset(get_int_pointer(optGet<Pointer_1_array_int>(arr))) + length;
+ensures Pointer.pointerOffset(get_int_pointer(optGet<Pointer_1_array_int>(arr))) + length <=
+Block.blockLength(Pointer.pointerBlock(get_int_pointer(optGet<Pointer_1_array_int>(arr))));
+ensures (\forall* int i;
+    i \in {0 .. length} ==> Perm(ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), i)).Int, write)
+);
+ensures (\forall int i;
+    i \in {0 .. length - 2 + 1} ==>
+        ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), i)).Int <=
+        ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), i + 1)).Int
+);
+void bubbleSort1(int tid, Option<Pointer_1_array_int> arr, int length) returns (Void res) {
+    ref exc;
+    exc = null;
+    Void return1;
+    int n;
+    n = length;
+    length;
+    int i;
+    label LOOP;
+    
+    ref excbeforeloop;
+    excbeforeloop = exc;
+    loop_invariant exc == excbeforeloop;
+    loop_invariant !(arr == Option<Pointer_1_array_int>.`none`());
+    loop_invariant 0 <= Pointer.pointerOffset(get_int_pointer(optGet<Pointer_1_array_int>(arr))) + length;
+    loop_invariant Pointer.pointerOffset(get_int_pointer(optGet<Pointer_1_array_int>(arr))) + length <=
+    Block.blockLength(Pointer.pointerBlock(get_int_pointer(optGet<Pointer_1_array_int>(arr))));
+    loop_invariant (\forall* int i1;
+        i1 \in {0 .. length} ==>
+            Perm(ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), i1)).Int, write)
+    );
+    loop_invariant i \in {0 .. n + 1};
+    loop_invariant (\forall int k;
+        k \in {n - i .. n - 1} ==>
+            ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), k)).Int <=
+            ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), k + 1)).Int
+    );
+    loop_invariant (\forall int g, int h;
+        g \in {0 .. n - i} && n - i <= h && h < n ==>
+            ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), g)).Int <=
+            ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), h)).Int
+    );
+    for (
+        {
+            int flatten;
+            flatten = 0;
+            i = flatten;
+            flatten;
+        };
+        i < n - 1;
+        {
+            int flatten;
+            flatten = i;
+            i = i + 1;
+            flatten;
+        }
+    ) {
+        int j;
+        label LOOP1;
+        
+        ref excbeforeloop1;
+        excbeforeloop1 = exc;
+        loop_invariant exc == excbeforeloop1;
+        loop_invariant !(arr == Option<Pointer_1_array_int>.`none`());
+        loop_invariant 0 <= Pointer.pointerOffset(get_int_pointer(optGet<Pointer_1_array_int>(arr))) + length;
+        loop_invariant Pointer.pointerOffset(get_int_pointer(optGet<Pointer_1_array_int>(arr))) + length <=
+        Block.blockLength(Pointer.pointerBlock(get_int_pointer(optGet<Pointer_1_array_int>(arr))));
+        loop_invariant (\forall* int i1;
+            i1 \in {0 .. length} ==>
+                Perm(ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), i1)).Int, write)
+        );
+        loop_invariant j \in {0 .. n - 1 - i + 1};
+        loop_invariant (\forall int k;
+            k \in {n - i .. n - 1} ==>
+                ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), k)).Int <=
+                ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), k + 1)).Int
+        );
+        loop_invariant (\forall int g, int h;
+            g \in {0 .. n - i} && n - i <= h && h < n ==>
+                ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), g)).Int <=
+                ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), h)).Int
+        );
+        loop_invariant (\forall int k;
+            k \in {0 .. j} ==>
+                ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), k)).Int <=
+                ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), j)).Int
+        );
+        for (
+            {
+                int flatten;
+                flatten = 0;
+                j = flatten;
+                flatten;
+            };
+            j < n - 1 - i;
+            {
+                int flatten;
+                flatten = j;
+                j = j + 1;
+                flatten;
+            }
+        ) {
+            if (
+                ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), j + 1)).Int <
+                ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), j)).Int
+            ) {
+                int temp;
+                int flatten;
+                flatten = ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), j)).Int;
+                temp = flatten;
+                flatten;
+                Pointer flatten;
+                int flatten1;
+                flatten = ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), j);
+                flatten1 = ptrDeref(ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), j + 1)).Int;
+                ptrDeref(ptrAdd(flatten, 0)).Int = flatten1;
+                flatten1;
+                Pointer flatten;
+                flatten = ptrAdd(get_int_pointer(optGet<Pointer_1_array_int>(arr)), j + 1);
+                ptrDeref(ptrAdd(flatten, 0)).Int = temp;
+                temp;
+            }
+        }
+    }
+    label END;
+    
+    res = return1;
+    return;
+    label BUBBLE;
+    
+    assert exc == (null);
+}
+
+void `type`() {
+    assert false;
+}
+
+decreases;
+ensures \result >= 0;
+ensures \result <= 0;
+ensures `type` == (null) ==> \result == 0;
+ensures `type` != (null) ==> \result != 0;
+pure int type1(ref `type`);
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+void subtype(int subtype, int subtype1) {
+    assert false;
+}
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+decreases;
+pure boolean subtype1(int subtype, int subtype1) = (subtype == 0 ==> true) && true;

@@ -1,0 +1,38 @@
+requires arr != null;
+requires 0 <= \pointer_block_offset(arr) + length;
+requires \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+requires (\forall* seq<int> i; i.fst \in {0 .. length} ==> Value(arr + i.fst));
+requires 0 < length;
+ensures arr != null;
+ensures 0 <= \pointer_block_offset(arr) + length;
+ensures \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+ensures (\forall* seq<int> i; i.fst \in {0 .. length} ==> Value(arr + i.fst));
+ensures (\forall seq<int> x; x.fst \in {0 .. length} ==> arr[x.fst] <= \result);
+ensures (\exists seq<int> x; x.fst \in {0 .. length} && \result == arr[x.fst]);
+int isBiggest(int tid, pointer<int> arr, int length) {
+    int return1;
+    int biggest;
+    int i;
+    {
+        biggest = arr[0];
+        label LOOP;
+        
+        loop_invariant arr != null;
+        loop_invariant 0 <= \pointer_block_offset(arr) + length;
+        loop_invariant \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+        loop_invariant (\forall* seq<int> i1; i1.fst \in {0 .. length} ==> Value(arr + i1.fst));
+        loop_invariant i \in {1 .. length + 1};
+        loop_invariant (\forall seq<int> x; x.fst \in {0 .. i} ==> arr[x.fst] <= biggest);
+        loop_invariant (\exists seq<int> x; x.fst \in {0 .. i} && biggest == arr[x.fst]);
+        for (i = 1; i < length; i = i + 1) {
+            if (biggest < arr[i]) {
+                biggest = arr[i];
+            }
+        }
+        return1 = biggest;
+        goto END;
+    }
+    label END;
+    
+    return return1;
+}

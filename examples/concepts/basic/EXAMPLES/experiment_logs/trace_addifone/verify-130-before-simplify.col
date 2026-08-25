@@ -1,0 +1,17 @@
+requires a != -2147483648;
+ensures \result == (a >= 0 ? a : -a);
+int absolute(int tid, int a) {
+    int return1;
+    if (a >= 0) {
+        return1 = a;
+        goto END;
+    } else {
+        if (1 != 0) {
+            return1 = -a;
+            goto END;
+        }
+    }
+    label END;
+    
+    return return1;
+}

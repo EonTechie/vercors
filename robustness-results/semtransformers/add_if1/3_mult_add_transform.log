@@ -1,0 +1,223 @@
+
+========================================================================
+TRANSFORM DEBUG LOG
+========================================================================
+log_file: ..\UPDATED_EXAMPLES\C\patterns\add_if1\3_mult_add_transform.log
+source_file: ..\UPDATED_EXAMPLES\C\3_mult_add.c
+mode: implement_all_list
+selected_transforms: ['add_if1']
+
+========================================================================
+SEED SOURCE
+========================================================================
+(lines numbered 1..16)
+
+  1 | /*@
+  2 |   requires k >= 0 && m >= 0;
+  3 |   ensures \result == k * m;
+  4 |   decreases k;
+  5 | @*/
+  6 | int mult_add(int k, int m)
+  7 | {
+  8 |     if (m == 0 || k == 0)
+  9 |     {
+ 10 |         return 0;
+ 11 |     }
+ 12 |     else
+ 13 |     {
+ 14 |         return m + mult_add(k - 1, m);
+ 15 |     }
+ 16 | }
+
+========================================================================
+PARSED AST (before site scan)
+========================================================================
+
+------------------------------------------------------------------------
+AST (parsed from seed)
+------------------------------------------------------------------------
+└── root: FileAST
+    └── ext[0]: FuncDef decl='mult_add'
+        ├── decl: Decl name='mult_add'
+        │   └── type: FuncDecl
+        │       ├── args: ParamList
+        │       │   ├── params[0]: Decl name='k'
+        │       │   │   └── type: TypeDecl
+        │       │   │       └── type: IdentifierType
+        │       │   └── params[1]: Decl name='m'
+        │       │       └── type: TypeDecl
+        │       │           └── type: IdentifierType
+        │       └── type: TypeDecl
+        │           └── type: IdentifierType
+        └── body: Compound
+            └── block_items[0]: If
+                ├── cond: BinaryOp op='||'
+                │   ├── left: BinaryOp op='=='
+                │   │   ├── left: ID name='m'
+                │   │   └── right: Constant int='0'
+                │   └── right: BinaryOp op='=='
+                │       ├── left: ID name='k'
+                │       └── right: Constant int='0'
+                ├── iftrue: Compound
+                │   └── block_items[0]: Return
+                │       └── expr: Constant int='0'
+                └── iffalse: Compound
+                    └── block_items[0]: Return
+                        └── expr: BinaryOp op='+'
+                            ├── left: ID name='m'
+                            └── right: FuncCall
+                                ├── name: ID name='mult_add'
+                                └── args: ExprList
+                                    ├── exprs[0]: BinaryOp op='-'
+                                    │   ├── left: ID name='k'
+                                    │   └── right: Constant int='1'
+                                    └── exprs[1]: ID name='m'
+
+========================================================================
+SITE SCAN (suitability checks for every candidate)
+========================================================================
+
+========================================================================
+SITE SCAN SUMMARY
+========================================================================
+transform: add_if1
+applicable_site_count: 5
+  site[0] APPLICABLE -> output *_site0.*
+  site[1] APPLICABLE -> output *_site1.*
+  site[2] APPLICABLE -> output *_site2.*
+  site[3] APPLICABLE -> output *_site3.*
+  site[4] APPLICABLE -> output *_site4.*
+
+========================================================================
+APPLY SITES (re-parse; check spam suppressed)
+========================================================================
+APPLIED site[0] -> ..\UPDATED_EXAMPLES\C\patterns\add_if1\3_mult_add_site0.c
+
+========================================================================
+TRANSFORMED SOURCE (site[0])
+========================================================================
+(lines numbered 1..19)
+
+  1 | int mult_add(int k, int m)
+  2 | {
+  3 |   if (1)
+  4 |   {
+  5 |     if ((m == 0) || (k == 0))
+  6 |     {
+  7 |       return 0;
+  8 |     }
+  9 |     else
+ 10 |     {
+ 11 |       return m + mult_add(k - 1, m);
+ 12 |     }
+ 13 |   }
+ 14 |   else
+ 15 |   {
+ 16 |   }
+ 17 | }
+ 18 | 
+ 19 | 
+APPLIED site[1] -> ..\UPDATED_EXAMPLES\C\patterns\add_if1\3_mult_add_site1.c
+
+========================================================================
+TRANSFORMED SOURCE (site[1])
+========================================================================
+(lines numbered 1..19)
+
+  1 | int mult_add(int k, int m)
+  2 | {
+  3 |   if ((m == 0) || (k == 0))
+  4 |   {
+  5 |     if (1)
+  6 |     {
+  7 |       return 0;
+  8 |     }
+  9 |     else
+ 10 |     {
+ 11 |     }
+ 12 |   }
+ 13 |   else
+ 14 |   {
+ 15 |     return m + mult_add(k - 1, m);
+ 16 |   }
+ 17 | }
+ 18 | 
+ 19 | 
+APPLIED site[2] -> ..\UPDATED_EXAMPLES\C\patterns\add_if1\3_mult_add_site2.c
+
+========================================================================
+TRANSFORMED SOURCE (site[2])
+========================================================================
+(lines numbered 1..19)
+
+  1 | int mult_add(int k, int m)
+  2 | {
+  3 |   if ((m == 0) || (k == 0))
+  4 |   {
+  5 |     return 0;
+  6 |   }
+  7 |   else
+  8 |   {
+  9 |     if (1)
+ 10 |     {
+ 11 |       return m + mult_add(k - 1, m);
+ 12 |     }
+ 13 |     else
+ 14 |     {
+ 15 |     }
+ 16 |   }
+ 17 | }
+ 18 | 
+ 19 | 
+APPLIED site[3] -> ..\UPDATED_EXAMPLES\C\patterns\add_if1\3_mult_add_site3.c
+
+========================================================================
+TRANSFORMED SOURCE (site[3])
+========================================================================
+(lines numbered 1..19)
+
+  1 | int mult_add(int k, int m)
+  2 | {
+  3 |   if ((m == 0) || (k == 0))
+  4 |   {
+  5 |     if (1)
+  6 |     {
+  7 |       return 0;
+  8 |     }
+  9 |     else
+ 10 |     {
+ 11 |     }
+ 12 |   }
+ 13 |   else
+ 14 |   {
+ 15 |     return m + mult_add(k - 1, m);
+ 16 |   }
+ 17 | }
+ 18 | 
+ 19 | 
+APPLIED site[4] -> ..\UPDATED_EXAMPLES\C\patterns\add_if1\3_mult_add_site4.c
+
+========================================================================
+TRANSFORMED SOURCE (site[4])
+========================================================================
+(lines numbered 1..19)
+
+  1 | int mult_add(int k, int m)
+  2 | {
+  3 |   if ((m == 0) || (k == 0))
+  4 |   {
+  5 |     return 0;
+  6 |   }
+  7 |   else
+  8 |   {
+  9 |     if (1)
+ 10 |     {
+ 11 |       return m + mult_add(k - 1, m);
+ 12 |     }
+ 13 |     else
+ 14 |     {
+ 15 |     }
+ 16 |   }
+ 17 | }
+ 18 | 
+ 19 | 

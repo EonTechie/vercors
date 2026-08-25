@@ -1,0 +1,88 @@
+
+========================================================================
+TRANSFORM DEBUG LOG
+========================================================================
+log_file: ..\UPDATED_EXAMPLES\C\patterns\for2while\1_absolute_transform.log
+source_file: ..\UPDATED_EXAMPLES\C\1_absolute.c
+mode: implement_all_list
+selected_transforms: ['for2while']
+
+========================================================================
+SEED SOURCE
+========================================================================
+(lines numbered 1..9)
+
+  1 | //@ ensures \result == (a >= 0 ? a : -a);
+  2 | 
+  3 | int absolute(int a) {
+  4 |     if (a >= 0) {
+  5 |         return a;
+  6 |     } else {
+  7 |         return -a;
+  8 |     }
+  9 | }
+
+========================================================================
+PARSED AST (before site scan)
+========================================================================
+
+------------------------------------------------------------------------
+AST (parsed from seed)
+------------------------------------------------------------------------
+└── root: FileAST
+    └── ext[0]: FuncDef decl='absolute'
+        ├── decl: Decl name='absolute'
+        │   └── type: FuncDecl
+        │       ├── args: ParamList
+        │       │   └── params[0]: Decl name='a'
+        │       │       └── type: TypeDecl
+        │       │           └── type: IdentifierType
+        │       └── type: TypeDecl
+        │           └── type: IdentifierType
+        └── body: Compound
+            └── block_items[0]: If
+                ├── cond: BinaryOp op='>='
+                │   ├── left: ID name='a'
+                │   └── right: Constant int='0'
+                ├── iftrue: Compound
+                │   └── block_items[0]: Return
+                │       └── expr: ID name='a'
+                └── iffalse: Compound
+                    └── block_items[0]: Return
+                        └── expr: UnaryOp op='-'
+                            └── expr: ID name='a'
+
+========================================================================
+SITE SCAN (suitability checks for every candidate)
+========================================================================
+
+------------------------------------------------------------------------
+CHECK for2while
+------------------------------------------------------------------------
+  candidate_stmt: If @ :4:5
+  snippet: if (a >= 0) { return a; } else { return -a; }
+  [FAIL] node is For? type=If
+  => APPLICABLE=False  reason: not a For
+
+------------------------------------------------------------------------
+CHECK for2while
+------------------------------------------------------------------------
+  candidate_stmt: Return @ :5:9
+  snippet: return a;
+  [FAIL] node is For? type=Return
+  => APPLICABLE=False  reason: not a For
+
+------------------------------------------------------------------------
+CHECK for2while
+------------------------------------------------------------------------
+  candidate_stmt: Return @ :7:9
+  snippet: return -a;
+  [FAIL] node is For? type=Return
+  => APPLICABLE=False  reason: not a For
+
+========================================================================
+SITE SCAN SUMMARY
+========================================================================
+transform: for2while
+applicable_site_count: 0
+no applicable locations; nothing written

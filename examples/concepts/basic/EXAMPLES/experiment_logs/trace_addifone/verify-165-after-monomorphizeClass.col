@@ -1,0 +1,27 @@
+requires a != -2147483648;
+ensures res == (0 <= a ? a : -a);
+void absolute(int tid, int a) returns (int res) {
+    Object exc;
+    exc = null;
+    int return1;
+    if (0 <= a) {
+        return1 = a;
+        a;
+        goto END;
+    } else {
+        if (1 != 0) {
+            int flatten;
+            flatten = -a;
+            return1 = flatten;
+            flatten;
+            goto END;
+        }
+    }
+    label END;
+    
+    res = return1;
+    return;
+    label BUBBLE;
+    
+    assert exc == null;
+}

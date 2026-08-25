@@ -1,0 +1,220 @@
+adt WellFoundedOrder<t> {
+    pure boolean bounded(t v);
+    pure boolean decreasing(t v1, t v2);
+}
+
+adt IntOrder {
+    axiom (\forall int i; 0 <= i == WellFoundedOrder<int>.bounded(i));
+    axiom (\forall int i; (\forall int j; i < j == WellFoundedOrder<int>.decreasing(i, j)));
+}
+
+adt PointerCastHelper {
+    
+}
+
+adt Block {
+    pure int blockLength(Block b);
+    pure ref loc(Block b, int i);
+    pure int blockAddress(Block b);
+    pure Block locInv1(ref r);
+    pure int locInv2(ref r);
+    pure Block addrInv(int address);
+    axiom (\forall Block b; blockLength(b) >= 0);
+    axiom (\forall Block b, int i; locInv1(loc(b, i)) == b && locInv2(loc(b, i)) == i);
+    axiom (\forall Block b; blockAddress(b) > 0);
+}
+
+adt Pointer {
+    pure Block pointerBlock(Pointer p);
+    pure int pointerOffset(Pointer p);
+    pure Pointer pointerInv(ref r);
+    pure int ptrAddress(Pointer p, int stride);
+    axiom (\forall Pointer p; pointerOffset(p) >= 0 && pointerOffset(p) < blockLength(pointerBlock(p)));
+    axiom (\forall ref r; ptrDeref(pointerInv(r)) == r);
+    axiom (\forall Pointer p; pointerInv(ptrDeref(p)) == p);
+    axiom (\forall Pointer p, int stride;
+        stride > 0 ==> ptrAddress(p, stride) == blockAddress(pointerBlock(p)) + pointerOffset(p) * stride
+    );
+    axiom (\forall Pointer p, int stride; stride > 0 ==> ptrAddress(p, stride) > 0);
+    axiom (\forall Pointer p1, Pointer p2, int stride;
+        stride > 0 && ptrAddress(p1, stride) == ptrAddress(p2, stride) && pointerBlock(p1) == pointerBlock(p2) ==>
+            p1 == p2
+    );
+    axiom ptrAddAxiom();
+    axiom ptrAddAxiom2();
+    axiom (\forall Pointer i, int i1; ptrAddress(i, i1) <= 18446744073709551615);
+}
+
+decreases;
+pure ref ptrDeref(Pointer p) = loc(pointerBlock(p), pointerOffset(p));
+
+requires 0 <= pointerOffset(p) + offset;
+requires pointerOffset(p) + offset < blockLength(pointerBlock(p));
+decreases;
+ensures offset == 0 ==> \result == p;
+ensures pointerOffset(\result) == pointerOffset(p) + offset;
+ensures pointerBlock(\result) == pointerBlock(p);
+pure Pointer ptrAdd(Pointer p, int offset);
+
+decreases;
+ensures \polarity_dependent(
+    (\forall Pointer p, int offset, int i;
+        0 <= pointerOffset(p) + offset && pointerOffset(p) + offset < blockLength(pointerBlock(p)) &&
+        0 <= pointerOffset(p) + offset + i &&
+        pointerOffset(p) + offset + i < blockLength(pointerBlock(p)) ==>
+            ptrAdd(ptrAdd(p, offset), i) == ptrAdd(p, offset + i)
+    ),
+    true
+);
+pure boolean ptrAddAxiom() = true;
+
+decreases;
+ensures (\forall Pointer p, int i, int j;
+    0 <= pointerOffset(p) + i && pointerOffset(p) + i < blockLength(pointerBlock(p)) && 0 <= pointerOffset(p) + j &&
+    pointerOffset(p) + j < blockLength(pointerBlock(p)) ==>
+        i == j == ptrAdd(p, i) == ptrAdd(p, j)
+);
+pure boolean ptrAddAxiom2() = true;
+
+field Int: int
+
+adt Any {
+    
+}
+
+decreases;
+pure Any anyAs(Any t);
+
+decreases;
+ensures anyAs(\result) == t;
+pure Any asAny(Any t);
+
+adt Option<t> {
+    pure Option<t> `none`();
+    pure Option<t> some(t x);
+    pure t optionGet(Option<t> opt);
+    axiom (\forall t x; `none`() != some(x));
+    axiom (\forall t x; optionGet(some(x)) == x);
+    axiom (\forall Option<t> opt; some(optionGet(opt)) == opt);
+}
+
+requires opt != Option<Any>.`none`();
+decreases;
+ensures Option<Any>.some(\result) == opt;
+pure Any optGet(Option<Any> opt) = Option<Any>.optionGet(opt);
+
+decreases;
+ensures opt == Option<Any>.`none`() ==> \result == alt;
+ensures opt != Option<Any>.`none`() ==> \result == optGet(opt);
+pure Any optOrElse(Option<Any> opt, Any alt) = opt == Option<Any>.`none`() ? alt : optGet(opt);
+
+requires opt != Option<Pointer>.`none`();
+decreases;
+ensures Option<Pointer>.some(\result) == opt;
+pure Pointer optGet1(Option<Pointer> opt) = Option<Pointer>.optionGet(opt);
+
+requires arr != Option<Pointer>.`none`();
+requires 0 <= Pointer.pointerOffset(optGet1(arr)) + length;
+requires Pointer.pointerOffset(optGet1(arr)) + length <= Block.blockLength(Pointer.pointerBlock(optGet1(arr)));
+requires (\forall* int i; 0 <= i && i < length ==> Value(ptrDeref(ptrAdd(optGet1(arr), i)).Int));
+requires 0 < length;
+void isBiggest(Option<Pointer> arr, int length) {
+    assert false;
+}
+
+requires arr != Option<Pointer>.`none`();
+requires 0 <= Pointer.pointerOffset(optGet1(arr)) + length;
+requires Pointer.pointerOffset(optGet1(arr)) + length <= Block.blockLength(Pointer.pointerBlock(optGet1(arr)));
+requires (\forall* int i; 0 <= i && i < length ==> Value(ptrDeref(ptrAdd(optGet1(arr), i)).Int));
+requires 0 < length;
+ensures arr != Option<Pointer>.`none`();
+ensures 0 <= Pointer.pointerOffset(optGet1(arr)) + length;
+ensures Pointer.pointerOffset(optGet1(arr)) + length <= Block.blockLength(Pointer.pointerBlock(optGet1(arr)));
+ensures (\forall* int i; 0 <= i && i < length ==> Value(ptrDeref(ptrAdd(optGet1(arr), i)).Int));
+ensures (\forall int x; 0 <= x && x < length ==> ptrDeref(ptrAdd(optGet1(arr), x)).Int <= res);
+ensures (\exists int x; 0 <= x && x < length && res == ptrDeref(ptrAdd(optGet1(arr), x)).Int);
+void isBiggest1(int tid, Option<Pointer> arr, int length) returns (int res) {
+    ref exc;
+    exc = null;
+    int return1;
+    int biggest;
+    int i;
+    {
+        int flatten;
+        flatten = ptrDeref(ptrAdd(optGet1(arr), 0)).Int;
+        biggest = flatten;
+        flatten;
+        label LOOP;
+        
+        ref excbeforeloop;
+        excbeforeloop = exc;
+        loop_invariant exc == excbeforeloop;
+        loop_invariant arr != Option<Pointer>.`none`();
+        loop_invariant 0 <= Pointer.pointerOffset(optGet1(arr)) + length;
+        loop_invariant Pointer.pointerOffset(optGet1(arr)) + length <=
+        Block.blockLength(Pointer.pointerBlock(optGet1(arr)));
+        loop_invariant (\forall* int i1; 0 <= i1 && i1 < length ==> Value(ptrDeref(ptrAdd(optGet1(arr), i1)).Int));
+        loop_invariant 1 <= i;
+        loop_invariant i < length + 1;
+        loop_invariant (\forall int x; 0 <= x && x < i ==> ptrDeref(ptrAdd(optGet1(arr), x)).Int <= biggest);
+        loop_invariant (\exists int x; 0 <= x && x < i && biggest == ptrDeref(ptrAdd(optGet1(arr), x)).Int);
+        for (
+            {
+                int flatten;
+                flatten = 1;
+                i = flatten;
+                flatten;
+            };
+            i < length;
+            {
+                int flatten;
+                flatten = i;
+                i = i + 1;
+                flatten;
+            }
+        ) {
+            if (biggest < ptrDeref(ptrAdd(optGet1(arr), i)).Int) {
+                int flatten;
+                flatten = ptrDeref(ptrAdd(optGet1(arr), i)).Int;
+                biggest = flatten;
+                flatten;
+            }
+        }
+        return1 = biggest;
+        biggest;
+        goto END;
+    }
+    label END;
+    
+    res = return1;
+    return;
+    label BUBBLE;
+    
+    assert exc == (null);
+}
+
+void `type`() {
+    assert false;
+}
+
+decreases;
+ensures \result >= 0;
+ensures \result <= 0;
+ensures `type` == (null) ==> \result == 0;
+ensures `type` != (null) ==> \result != 0;
+pure int type1(ref `type`);
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+void subtype(int subtype, int subtype1) {
+    assert false;
+}
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+decreases;
+pure boolean subtype1(int subtype, int subtype1) = (subtype == 0 ==> true) && true;

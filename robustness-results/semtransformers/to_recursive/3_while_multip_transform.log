@@ -1,0 +1,178 @@
+
+========================================================================
+TRANSFORM DEBUG LOG
+========================================================================
+log_file: ..\UPDATED_EXAMPLES\C\patterns\to_recursive\3_while_multip_transform.log
+source_file: ..\UPDATED_EXAMPLES\C\3_while_multip.c
+mode: implement_all_list
+selected_transforms: ['to_recursive']
+
+========================================================================
+SEED SOURCE
+========================================================================
+(lines numbered 1..25)
+
+  1 | /*@
+  2 |   requires k >= 0 && m >= 0;
+  3 |   ensures \result == k * m;
+  4 | @*/
+  5 | 
+  6 | 
+  7 | int mult_add(int k, int m)
+  8 | {
+  9 |     int sum = 0;
+ 10 |     int remaining = m;
+ 11 | 
+ 12 |     //@ loop_invariant 0 <= remaining && remaining <= m;
+ 13 |     //@ loop_invariant sum == (m - remaining) * k;
+ 14 |     //@ decreases remaining;
+ 15 | 
+ 16 |     while (0 < remaining)
+ 17 |     {
+ 18 |         sum = sum + k;
+ 19 |         remaining--;
+ 20 |     }
+ 21 | 
+ 22 |     return sum;
+ 23 | }
+ 24 | 
+ 25 | 
+
+========================================================================
+PARSED AST (before site scan)
+========================================================================
+
+------------------------------------------------------------------------
+AST (parsed from seed)
+------------------------------------------------------------------------
+└── root: FileAST
+    └── ext[0]: FuncDef decl='mult_add'
+        ├── decl: Decl name='mult_add'
+        │   └── type: FuncDecl
+        │       ├── args: ParamList
+        │       │   ├── params[0]: Decl name='k'
+        │       │   │   └── type: TypeDecl
+        │       │   │       └── type: IdentifierType
+        │       │   └── params[1]: Decl name='m'
+        │       │       └── type: TypeDecl
+        │       │           └── type: IdentifierType
+        │       └── type: TypeDecl
+        │           └── type: IdentifierType
+        └── body: Compound
+            ├── block_items[0]: Decl name='sum'
+            │   ├── type: TypeDecl
+            │   │   └── type: IdentifierType
+            │   └── init: Constant int='0'
+            ├── block_items[1]: Decl name='remaining'
+            │   ├── type: TypeDecl
+            │   │   └── type: IdentifierType
+            │   └── init: ID name='m'
+            ├── block_items[2]: While
+            │   ├── cond: BinaryOp op='<'
+            │   │   ├── left: Constant int='0'
+            │   │   └── right: ID name='remaining'
+            │   └── stmt: Compound
+            │       ├── block_items[0]: Assignment
+            │       │   ├── lvalue: ID name='sum'
+            │       │   └── rvalue: BinaryOp op='+'
+            │       │       ├── left: ID name='sum'
+            │       │       └── right: ID name='k'
+            │       └── block_items[1]: UnaryOp op='p--'
+            │           └── expr: ID name='remaining'
+            └── block_items[3]: Return
+                └── expr: ID name='sum'
+
+========================================================================
+SITE SCAN (suitability checks for every candidate)
+========================================================================
+
+------------------------------------------------------------------------
+CHECK to_recursive
+------------------------------------------------------------------------
+  candidate_stmt: Decl @ :6:9
+  snippet: int sum = 0
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_recursive
+------------------------------------------------------------------------
+  candidate_stmt: Decl @ :7:9
+  snippet: int remaining = m
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_recursive
+------------------------------------------------------------------------
+  candidate_stmt: While @ :13:5
+  snippet: while (0 < remaining) { sum = sum + k; remaining--; }
+  => APPLICABLE=True  reason: returned transform
+
+------------------------------------------------------------------------
+CHECK to_recursive
+------------------------------------------------------------------------
+  candidate_stmt: Compound @ :14:1
+  snippet: { sum = sum + k; remaining--; }
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_recursive
+------------------------------------------------------------------------
+  candidate_stmt: Assignment @ :15:9
+  snippet: sum = sum + k
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_recursive
+------------------------------------------------------------------------
+  candidate_stmt: UnaryOp @ :16:9
+  snippet: remaining--
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_recursive
+------------------------------------------------------------------------
+  candidate_stmt: Return @ :19:5
+  snippet: return sum;
+  => APPLICABLE=False  reason: not applicable
+
+========================================================================
+SITE SCAN SUMMARY
+========================================================================
+transform: to_recursive
+applicable_site_count: 1
+  site[0] APPLICABLE -> output *_site0.*
+
+========================================================================
+APPLY SITES (re-parse; check spam suppressed)
+========================================================================
+APPLIED site[0] -> ..\UPDATED_EXAMPLES\C\patterns\to_recursive\3_while_multip_site0.c
+
+========================================================================
+TRANSFORMED SOURCE (site[0])
+========================================================================
+(lines numbered 1..24)
+
+  1 | void func_BQkTMOQc(int *sum, int *k, int *remaining)
+  2 | {
+  3 |   if (0 < (*remaining))
+  4 |   {
+  5 |     {
+  6 |       *sum = (*sum) + (*k);
+  7 |       (*remaining)--;
+  8 |     }
+  9 |     func_BQkTMOQc(sum, k, remaining);
+ 10 |   }
+ 11 |   else
+ 12 |   {
+ 13 |   }
+ 14 | }
+ 15 | 
+ 16 | int mult_add(int k, int m)
+ 17 | {
+ 18 |   int sum = 0;
+ 19 |   int remaining = m;
+ 20 |   func_BQkTMOQc(&sum, &k, &remaining);
+ 21 |   return sum;
+ 22 | }
+ 23 | 
+ 24 | 

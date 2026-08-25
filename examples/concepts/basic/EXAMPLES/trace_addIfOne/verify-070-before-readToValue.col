@@ -1,0 +1,22 @@
+context_everywhere arr != null;
+context_everywhere 0 <= \pointer_block_offset(arr) + length;
+context_everywhere \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+context_everywhere (\forall* int i; 0 <= i && i < length ==> Perm(arr + i, read));
+requires length > 0;
+ensures (\forall int x; 0 <= x && x < length ==> \result >= arr[x]);
+ensures (\exists int x; 0 <= x && x < length && \result == arr[x]);
+int isBiggest(pointer<int> arr, int length) {
+    int biggest;
+    int i;
+    biggest = arr[0];
+    loop_invariant 1 <= i;
+    loop_invariant i <= length;
+    loop_invariant (\forall int x; 0 <= x && x < i ==> biggest >= arr[x]);
+    loop_invariant (\exists int x; 0 <= x && x < i && biggest == arr[x]);
+    for (i = 1; i < length; i = i + 1) {
+        if (arr[i] > biggest) {
+            biggest = arr[i];
+        }
+    }
+    return biggest;
+}

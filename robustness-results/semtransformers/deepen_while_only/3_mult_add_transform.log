@@ -1,0 +1,125 @@
+
+========================================================================
+TRANSFORM DEBUG LOG
+========================================================================
+log_file: ..\UPDATED_EXAMPLES\C\patterns\deepen_while_only\3_mult_add_transform.log
+source_file: ..\UPDATED_EXAMPLES\C\3_mult_add.c
+mode: implement_all_list
+selected_transforms: ['deepen_while']
+
+========================================================================
+SEED SOURCE
+========================================================================
+(lines numbered 1..16)
+
+  1 | /*@
+  2 |   requires k >= 0 && m >= 0;
+  3 |   ensures \result == k * m;
+  4 |   decreases k;
+  5 | @*/
+  6 | int mult_add(int k, int m)
+  7 | {
+  8 |     if (m == 0 || k == 0)
+  9 |     {
+ 10 |         return 0;
+ 11 |     }
+ 12 |     else
+ 13 |     {
+ 14 |         return m + mult_add(k - 1, m);
+ 15 |     }
+ 16 | }
+
+========================================================================
+PARSED AST (before site scan)
+========================================================================
+
+------------------------------------------------------------------------
+AST (parsed from seed)
+------------------------------------------------------------------------
+└── root: FileAST
+    └── ext[0]: FuncDef decl='mult_add'
+        ├── decl: Decl name='mult_add'
+        │   └── type: FuncDecl
+        │       ├── args: ParamList
+        │       │   ├── params[0]: Decl name='k'
+        │       │   │   └── type: TypeDecl
+        │       │   │       └── type: IdentifierType
+        │       │   └── params[1]: Decl name='m'
+        │       │       └── type: TypeDecl
+        │       │           └── type: IdentifierType
+        │       └── type: TypeDecl
+        │           └── type: IdentifierType
+        └── body: Compound
+            └── block_items[0]: If
+                ├── cond: BinaryOp op='||'
+                │   ├── left: BinaryOp op='=='
+                │   │   ├── left: ID name='m'
+                │   │   └── right: Constant int='0'
+                │   └── right: BinaryOp op='=='
+                │       ├── left: ID name='k'
+                │       └── right: Constant int='0'
+                ├── iftrue: Compound
+                │   └── block_items[0]: Return
+                │       └── expr: Constant int='0'
+                └── iffalse: Compound
+                    └── block_items[0]: Return
+                        └── expr: BinaryOp op='+'
+                            ├── left: ID name='m'
+                            └── right: FuncCall
+                                ├── name: ID name='mult_add'
+                                └── args: ExprList
+                                    ├── exprs[0]: BinaryOp op='-'
+                                    │   ├── left: ID name='k'
+                                    │   └── right: Constant int='1'
+                                    └── exprs[1]: ID name='m'
+
+========================================================================
+SITE SCAN (suitability checks for every candidate)
+========================================================================
+
+------------------------------------------------------------------------
+CHECK deepen_while
+------------------------------------------------------------------------
+  candidate_stmt: If @ :4:5
+  snippet: if ((m == 0) || (k == 0)) { return 0; } else { return m + mult_add(k - 1, m); }
+  [FAIL] node is While? type=If
+  => APPLICABLE=False  reason: not a suitable While (type/side-effects/break)
+
+------------------------------------------------------------------------
+CHECK deepen_while
+------------------------------------------------------------------------
+  candidate_stmt: Compound @ :5:1
+  snippet: { return 0; }
+  [FAIL] node is While? type=Compound
+  => APPLICABLE=False  reason: not a suitable While (type/side-effects/break)
+
+------------------------------------------------------------------------
+CHECK deepen_while
+------------------------------------------------------------------------
+  candidate_stmt: Compound @ :9:1
+  snippet: { return m + mult_add(k - 1, m); }
+  [FAIL] node is While? type=Compound
+  => APPLICABLE=False  reason: not a suitable While (type/side-effects/break)
+
+------------------------------------------------------------------------
+CHECK deepen_while
+------------------------------------------------------------------------
+  candidate_stmt: Return @ :6:9
+  snippet: return 0;
+  [FAIL] node is While? type=Return
+  => APPLICABLE=False  reason: not a suitable While (type/side-effects/break)
+
+------------------------------------------------------------------------
+CHECK deepen_while
+------------------------------------------------------------------------
+  candidate_stmt: Return @ :10:9
+  snippet: return m + mult_add(k - 1, m);
+  [FAIL] node is While? type=Return
+  => APPLICABLE=False  reason: not a suitable While (type/side-effects/break)
+
+========================================================================
+SITE SCAN SUMMARY
+========================================================================
+transform: deepen_while
+applicable_site_count: 0
+no applicable locations; nothing written

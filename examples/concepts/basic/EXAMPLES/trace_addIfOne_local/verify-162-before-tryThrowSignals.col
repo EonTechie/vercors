@@ -1,0 +1,60 @@
+requires arr != null;
+requires 0 <= \pointer_block_offset(arr) + length;
+requires \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+requires (\forall* int i; i \in {0 .. length} ==> Value(arr + i));
+requires 0 < length;
+ensures arr != null;
+ensures 0 <= \pointer_block_offset(arr) + length;
+ensures \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+ensures (\forall* int i; i \in {0 .. length} ==> Value(arr + i));
+ensures (\forall int x; x \in {0 .. length} ==> arr[x] <= res);
+ensures (\exists int x; x \in {0 .. length} && res == arr[x]);
+void isBiggest(int tid, pointer<int> arr, int length) returns (int res) {
+    int return1;
+    int biggest;
+    int i;
+    {
+        int flatten;
+        flatten = arr[0];
+        biggest = flatten;
+        flatten;
+        label LOOP;
+        
+        loop_invariant arr != null;
+        loop_invariant 0 <= \pointer_block_offset(arr) + length;
+        loop_invariant \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+        loop_invariant (\forall* int i1; i1 \in {0 .. length} ==> Value(arr + i1));
+        loop_invariant i \in {1 .. length + 1};
+        loop_invariant (\forall int x; x \in {0 .. i} ==> arr[x] <= biggest);
+        loop_invariant (\exists int x; x \in {0 .. i} && biggest == arr[x]);
+        for (
+            {
+                int flatten;
+                flatten = 1;
+                i = flatten;
+                flatten;
+            };
+            i < length;
+            {
+                int flatten;
+                flatten = i;
+                i = i + 1;
+                flatten;
+            }
+        ) {
+            if (biggest < arr[i]) {
+                int flatten;
+                flatten = arr[i];
+                biggest = flatten;
+                flatten;
+            }
+        }
+        return1 = biggest;
+        biggest;
+        goto END;
+    }
+    label END;
+    
+    res = return1;
+    return;
+}

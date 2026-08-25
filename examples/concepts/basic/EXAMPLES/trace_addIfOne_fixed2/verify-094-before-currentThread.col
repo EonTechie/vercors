@@ -1,0 +1,32 @@
+requires arr != null;
+requires 0 <= \pointer_block_offset(arr) + length;
+requires \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+requires (\forall* int i; 0 <= i && i < length ==> Value(arr + i));
+requires length > 0;
+ensures arr != null;
+ensures 0 <= \pointer_block_offset(arr) + length;
+ensures \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+ensures (\forall* int i; 0 <= i && i < length ==> Value(arr + i));
+ensures (\forall int x; 0 <= x && x < length ==> \result >= arr[x]);
+ensures (\exists int x; 0 <= x && x < length && \result == arr[x]);
+int isBiggest(pointer<int> arr, int length) {
+    int biggest;
+    int i;
+    biggest = arr[0];
+    loop_invariant arr != null;
+    loop_invariant 0 <= \pointer_block_offset(arr) + length;
+    loop_invariant \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+    loop_invariant (\forall* int i1; 0 <= i1 && i1 < length ==> Value(arr + i1));
+    loop_invariant 1 <= i;
+    loop_invariant i <= length;
+    loop_invariant (\forall int x; 0 <= x && x < i ==> biggest >= arr[x]);
+    loop_invariant (\exists int x; 0 <= x && x < i && biggest == arr[x]);
+    for (i = 1; i < length; i = i + 1) {
+        if (arr[i] > biggest) {
+            biggest = arr[i];
+        }
+    }
+    if (1 != 0) {
+        return biggest;
+    }
+}

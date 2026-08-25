@@ -1,0 +1,13 @@
+[INFO] Start: VerCors (at 16:16:46)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+The quantifier 6_pure.c:21-:23: '      (\forall int x;
+          0 <= x && x < length;
+          xs[x] == list[x]);' contains no triggers
+The quantifier 6_pure.c:21-:23: '      (\forall int x;
+          0 <= x && x < length;
+          xs[x] == list[x]);' contains no triggers
+The quantifier 6_pure.c:21-:23: '      (\forall int x;
+          0 <= x && x < length;
+          xs[x] == list[x]);' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 16:17:11, duration: 00:00:24)

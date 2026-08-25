@@ -1,0 +1,28 @@
+[INFO] Start: VerCors (at 16:18:18)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-6828644382337473802.i
+--------------------------------------
+   28      loop_invariant 0 <= i;
+   29      loop_invariant i <= length;
+                                          [--
+   30      loop_invariant sum == prefixSum(xs, i);
+                                           --]
+   31      @*/
+   32      for (;i < length; i = i + 1) {
+--------------------------------------
+At site-1.c
+--------------------------------------
+   21      loop_invariant 0 <= i;
+   22      loop_invariant i <= length;
+      [---------------------------------------------
+   23      loop_invariant sum == prefixSum(xs, i);
+       ---------------------------------------------]
+   24      @*/
+   25      for (;i < length; i = i + 1) {
+--------------------------------------
+Could not find local named xs.
+======================================
+[INFO] Done: VerCors (at 16:18:28, duration: 00:00:10)
+1 targets failed
+vercors.main.run subprocess failed

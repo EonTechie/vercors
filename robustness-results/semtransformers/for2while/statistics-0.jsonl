@@ -1,0 +1,7 @@
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\1_absolute.c", "output": [], "site_count": 0, "walltime": 0.016800642013549805}
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\3_mult_add.c", "output": [], "site_count": 0, "walltime": 0.0033783912658691406}
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\3_while_multip.c", "output": [], "site_count": 0, "walltime": 0.002720355987548828}
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\2_swap.c", "output": [], "site_count": 0, "walltime": 0.0038177967071533203}
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\4_big.c", "output": [{"file_path": "..\\UPDATED_EXAMPLES\\C\\patterns\\for2while\\4_big_site0.c", "trace": "for2while: 0"}], "site_count": 1, "walltime": 0.007526397705078125}
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\6_pure.c", "output": [{"file_path": "..\\UPDATED_EXAMPLES\\C\\patterns\\for2while\\6_pure_site0.c", "trace": "for2while: 0"}], "site_count": 1, "walltime": 0.0059087276458740234}
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\5_bubbleSort.c", "output": [{"file_path": "..\\UPDATED_EXAMPLES\\C\\patterns\\for2while\\5_bubbleSort_site0.c", "trace": "for2while: 0"}, {"file_path": "..\\UPDATED_EXAMPLES\\C\\patterns\\for2while\\5_bubbleSort_site1.c", "trace": "for2while: 1"}], "site_count": 2, "walltime": 0.015236139297485352}

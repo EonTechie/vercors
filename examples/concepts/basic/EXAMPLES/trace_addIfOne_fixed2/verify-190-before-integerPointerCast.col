@@ -1,0 +1,103 @@
+requires arr != null;
+requires 0 <= \pointer_block_offset(arr) + length;
+requires \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+requires (\forall* int i; i \in {0 .. length} ==> Value(arr + i));
+requires 0 < length;
+void isBiggest(pointer<int> arr, int length) {
+    assert false;
+}
+
+requires arr != null;
+requires 0 <= \pointer_block_offset(arr) + length;
+requires \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+requires (\forall* int i; i \in {0 .. length} ==> Value(arr + i));
+requires 0 < length;
+ensures arr != null;
+ensures 0 <= \pointer_block_offset(arr) + length;
+ensures \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+ensures (\forall* int i; i \in {0 .. length} ==> Value(arr + i));
+ensures (\forall int x; x \in {0 .. length} ==> arr[x] <= res);
+ensures (\exists int x; x \in {0 .. length} && res == arr[x]);
+void isBiggest1(int tid, pointer<int> arr, int length) returns (int res) {
+    ref exc;
+    exc = null;
+    int return1;
+    int biggest;
+    int i;
+    int flatten;
+    flatten = arr[0];
+    biggest = flatten;
+    flatten;
+    label LOOP;
+    
+    ref excbeforeloop;
+    excbeforeloop = exc;
+    loop_invariant exc == excbeforeloop;
+    loop_invariant arr != null;
+    loop_invariant 0 <= \pointer_block_offset(arr) + length;
+    loop_invariant \pointer_block_offset(arr) + length <= \pointer_block_length(arr);
+    loop_invariant (\forall* int i1; i1 \in {0 .. length} ==> Value(arr + i1));
+    loop_invariant i \in {1 .. length + 1};
+    loop_invariant (\forall int x; x \in {0 .. i} ==> arr[x] <= biggest);
+    loop_invariant (\exists int x; x \in {0 .. i} && biggest == arr[x]);
+    for (
+        {
+            int flatten;
+            flatten = 1;
+            i = flatten;
+            flatten;
+        };
+        i < length;
+        {
+            int flatten;
+            flatten = i;
+            i = i + 1;
+            flatten;
+        }
+    ) {
+        if (biggest < arr[i]) {
+            int flatten;
+            flatten = arr[i];
+            biggest = flatten;
+            flatten;
+        }
+    }
+    if (1 != 0) {
+        return1 = biggest;
+        biggest;
+        goto END;
+    }
+    label END;
+    
+    res = return1;
+    return;
+    label BUBBLE;
+    
+    assert exc == null;
+}
+
+void `type`() {
+    assert false;
+}
+
+decreases;
+ensures \result >= 0;
+ensures \result <= 0;
+ensures `type` == null ==> \result == 0;
+ensures `type` != null ==> \result != 0;
+pure int type1(ref `type`);
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+void subtype(int subtype, int subtype1) {
+    assert false;
+}
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+decreases;
+pure boolean subtype1(int subtype, int subtype1) = (subtype == 0 ==> true) && true;

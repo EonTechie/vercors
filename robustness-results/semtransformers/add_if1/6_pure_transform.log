@@ -1,0 +1,125 @@
+
+========================================================================
+TRANSFORM DEBUG LOG
+========================================================================
+log_file: C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\6_pure\add_if1\6_pure_transform.log
+source_file: C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\6_pure.c
+mode: implement_all_list
+selected_transforms: ['add_if1']
+
+========================================================================
+PARSED AST (before site scan)
+========================================================================
+
+------------------------------------------------------------------------
+AST after remove_comments + parse
+------------------------------------------------------------------------
+└── root: FileAST
+    └── ext[0]: FuncDef decl='sum_list'
+        ├── decl: Decl name='sum_list'
+        │   └── type: FuncDecl
+        │       ├── args: ParamList
+        │       │   ├── params[0]: Decl name='list'
+        │       │   │   └── type: PtrDecl
+        │       │   │       └── type: TypeDecl
+        │       │   │           └── type: IdentifierType
+        │       │   └── params[1]: Decl name='length'
+        │       │       └── type: TypeDecl
+        │       │           └── type: IdentifierType
+        │       └── type: TypeDecl
+        │           └── type: IdentifierType
+        └── body: Compound
+            ├── block_items[0]: Decl name='sum'
+            │   ├── type: TypeDecl
+            │   │   └── type: IdentifierType
+            │   └── init: Constant int='0'
+            ├── block_items[1]: Decl name='i'
+            │   ├── type: TypeDecl
+            │   │   └── type: IdentifierType
+            │   └── init: Constant int='0'
+            ├── block_items[2]: For
+            │   ├── cond: BinaryOp op='<'
+            │   │   ├── left: ID name='i'
+            │   │   └── right: ID name='length'
+            │   ├── next: UnaryOp op='p++'
+            │   │   └── expr: ID name='i'
+            │   └── stmt: Compound
+            │       └── block_items[0]: Assignment
+            │           ├── lvalue: ID name='sum'
+            │           └── rvalue: BinaryOp op='+'
+            │               ├── left: ID name='sum'
+            │               └── right: ArrayRef
+            │                   ├── name: ID name='list'
+            │                   └── subscript: ID name='i'
+            └── block_items[3]: Return
+                └── expr: ID name='sum'
+
+========================================================================
+SITE SCAN (suitability checks for every candidate)
+========================================================================
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: Decl @ :6:9
+  snippet: int sum = 0
+  [FAIL] stmt is not Decl? type=Decl
+  => APPLICABLE=False  reason: rejects Decl nodes
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: Decl @ :7:9
+  snippet: int i = 0
+  [FAIL] stmt is not Decl? type=Decl
+  => APPLICABLE=False  reason: rejects Decl nodes
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: For @ :10:5
+  snippet: for (; i < length; i++) { sum = sum + list[i]; }
+  [PASS] stmt is not Decl? type=For
+  => APPLICABLE=True  reason: wrap statement in if(1){...}
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: Compound @ :11:1
+  snippet: { sum = sum + list[i]; }
+  [PASS] stmt is not Decl? type=Compound
+  => APPLICABLE=True  reason: wrap statement in if(1){...}
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: Assignment @ :12:9
+  snippet: sum = sum + list[i]
+  [PASS] stmt is not Decl? type=Assignment
+  => APPLICABLE=True  reason: wrap statement in if(1){...}
+
+------------------------------------------------------------------------
+CHECK add_if1
+------------------------------------------------------------------------
+  candidate_stmt: Return @ :15:5
+  snippet: return sum;
+  [PASS] stmt is not Decl? type=Return
+  => APPLICABLE=True  reason: wrap statement in if(1){...}
+
+========================================================================
+SITE SCAN SUMMARY
+========================================================================
+transform: add_if1
+applicable_site_count: 4
+  site[0] APPLICABLE -> output *_site0.*
+  site[1] APPLICABLE -> output *_site1.*
+  site[2] APPLICABLE -> output *_site2.*
+  site[3] APPLICABLE -> output *_site3.*
+
+========================================================================
+APPLY SITES (re-parse; check spam suppressed)
+========================================================================
+APPLIED site[0] -> C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\6_pure\add_if1\6_pure_site0.c
+APPLIED site[1] -> C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\6_pure\add_if1\6_pure_site1.c
+APPLIED site[2] -> C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\6_pure\add_if1\6_pure_site2.c
+APPLIED site[3] -> C:\Users\filiz.yildiz1\Projects\UT\UPDATED_EXAMPLES\C\out_sites\6_pure\add_if1\6_pure_site3.c

@@ -1,0 +1,53 @@
+void test() {
+    assert false;
+}
+
+void test1(int tid, int x) returns (int res) {
+    ref exc;
+    exc = null;
+    int return1;
+    {
+        if (1 != 0) {
+            int flatten;
+            flatten = x + 1;
+            x = flatten;
+            flatten;
+        }
+        return1 = x;
+        x;
+        goto END;
+    }
+    label END;
+    
+    res = return1;
+    return;
+    label BUBBLE;
+    
+    assert exc == null;
+}
+
+void `type`() {
+    assert false;
+}
+
+decreases;
+ensures \result >= 0;
+ensures \result <= 0;
+ensures `type` == null ==> \result == 0;
+ensures `type` != null ==> \result != 0;
+pure int type1(ref `type`);
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+void subtype(int subtype, int subtype1) {
+    assert false;
+}
+
+requires subtype >= 0;
+requires subtype <= 0;
+requires subtype1 >= 0;
+requires subtype1 <= 0;
+decreases;
+pure boolean subtype1(int subtype, int subtype1) = (subtype == 0 ==> true) && true;

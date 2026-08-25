@@ -1,0 +1,54 @@
+[INFO] Start: VerCors (at 15:59:03)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-12636277819740868142.i
+--------------------------------------
+   15  decreases;
+   16  ensures \result >= 2;
+               [-------------
+   17  pure int sizeof_struct unknown_1216741689();
+                -------------]
+   18  @*/
+   19
+--------------------------------------
+[1/4] Parsing failed: rule typedefName failed predicate: {isTypedefName($ctx)}?
+--------------------------------------
+At vercors-interpreted-12636277819740868142.i
+--------------------------------------
+   19  
+   20  
+      [-----
+   21  class IntBox {
+       -----]
+   22      int value;
+   23  }
+--------------------------------------
+[2/4] Parsing failed: rule typedefName failed predicate: {isTypedefName($ctx)}?
+--------------------------------------
+At vercors-interpreted-12636277819740868142.i
+--------------------------------------
+   23  }
+   24  
+                [------
+   25  void swap(IntBox *pointer1, IntBox *pointer2) {
+                 ------]
+   26      int temp;
+   27      temp = (*pointer1).value;
+--------------------------------------
+[3/4] Parsing failed: rule typedefName failed predicate: {isTypedefName($ctx)}?
+--------------------------------------
+At vercors-interpreted-12636277819740868142.i
+--------------------------------------
+   23  }
+   24  
+                                  [------
+   25  void swap(IntBox *pointer1, IntBox *pointer2) {
+                                   ------]
+   26      int temp;
+   27      temp = (*pointer1).value;
+--------------------------------------
+[4/4] Parsing failed: rule typedefName failed predicate: {isTypedefName($ctx)}?
+======================================
+[INFO] Done: VerCors (at 15:59:13, duration: 00:00:10)
+1 targets failed
+vercors.main.run subprocess failed

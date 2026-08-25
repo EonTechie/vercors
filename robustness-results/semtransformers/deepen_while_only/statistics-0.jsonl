@@ -1,0 +1,7 @@
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\1_absolute.c", "output": [], "site_count": 0, "walltime": 0.01922130584716797}
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\3_mult_add.c", "output": [], "site_count": 0, "walltime": 0.006723642349243164}
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\3_while_multip.c", "output": [{"file_path": "..\\UPDATED_EXAMPLES\\C\\patterns\\deepen_while_only\\3_while_multip_site0.c", "trace": "deepen_while: 0"}], "site_count": 1, "walltime": 0.008001565933227539}
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\2_swap.c", "output": [], "site_count": 0, "walltime": 0.005876064300537109}
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\4_big.c", "output": [], "site_count": 0, "walltime": 0.00487208366394043}
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\6_pure.c", "output": [], "site_count": 0, "walltime": 0.0042040348052978516}
+{"source_file": "..\\UPDATED_EXAMPLES\\C\\5_bubbleSort.c", "output": [], "site_count": 0, "walltime": 0.006190299987792969}

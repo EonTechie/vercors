@@ -1,0 +1,309 @@
+adt WellFoundedOrder<t> {
+    pure boolean bounded(t v);
+    pure boolean decreasing(t v1, t v2);
+}
+
+adt IntOrder {
+    axiom (\forall int i; 0 <= i == WellFoundedOrder<int>.bounded(i));
+    axiom (\forall int i; (\forall int j; i < j == WellFoundedOrder<int>.decreasing(i, j)));
+}
+
+void sizeof_int() {
+    assert false;
+}
+
+decreases;
+ensures 2 <= \result;
+pure int sizeof_int1();
+
+void sizeof_struct unknown_2096503027() {
+    assert false;
+}
+
+decreases;
+ensures 2 <= \result;
+pure int sizeof_struct unknown_2096503028();
+
+adt PointerCastHelper {
+    
+}
+
+adt Block {
+    pure int blockLength(Block b);
+    pure ref loc(Block b, int i);
+    pure int blockAddress(Block b);
+    pure Block locInv1(ref r);
+    pure int locInv2(ref r);
+    pure Block addrInv(int address);
+    axiom (\forall Block b; Block.blockLength(b) >= 0);
+    axiom (\forall Block b, int i; Block.locInv1(Block.loc(b, i)) == b && Block.locInv2(Block.loc(b, i)) == i);
+    axiom (\forall Block b; Block.blockAddress(b) > 0);
+}
+
+decreases;
+pure PointerCastHelper to_cast_helper_intbox_992063733(Pointer ptr);
+
+decreases;
+pure Pointer from_cast_helper_intbox_992063733(PointerCastHelper helper);
+
+decreases;
+pure PointerCastHelper to_cast_helper_int(Pointer ptr);
+
+decreases;
+pure Pointer from_cast_helper_int(PointerCastHelper helper);
+
+decreases;
+pure PointerCastHelper to_cast_helper_void(Pointer ptr);
+
+decreases;
+pure Pointer from_cast_helper_void(PointerCastHelper helper);
+
+adt Pointer {
+    pure Block pointerBlock(Pointer p);
+    pure int pointerOffset(Pointer p);
+    pure Pointer pointerInv(ref r);
+    pure int ptrAddress(Pointer p, int stride);
+    axiom (\forall Pointer p;
+        Pointer.pointerOffset(p) >= 0 && Pointer.pointerOffset(p) < Block.blockLength(Pointer.pointerBlock(p))
+    );
+    axiom (\forall ref r; ptrDeref(Pointer.pointerInv(r)) == r);
+    axiom (\forall Pointer p; Pointer.pointerInv(ptrDeref(p)) == p);
+    axiom (\forall Pointer p, int stride;
+        stride > 0 ==>
+            Pointer.ptrAddress(p, stride) ==
+            Block.blockAddress(Pointer.pointerBlock(p)) + Pointer.pointerOffset(p) * stride
+    );
+    axiom (\forall Pointer p, int stride; stride > 0 ==> Pointer.ptrAddress(p, stride) > 0);
+    axiom (\forall Pointer p1, Pointer p2, int stride;
+        stride > 0 &&
+        Pointer.ptrAddress(p1, stride) == Pointer.ptrAddress(p2, stride) &&
+        Pointer.pointerBlock(p1) == Pointer.pointerBlock(p2) ==>
+            p1 == p2
+    );
+    axiom ptrAddAxiom();
+    axiom ptrAddAxiom2();
+    axiom (\forall PointerCastHelper i; to_cast_helper_intbox_992063733(from_cast_helper_intbox_992063733(i)) == i);
+    axiom (\forall Pointer i; from_cast_helper_intbox_992063733(to_cast_helper_intbox_992063733(i)) == i);
+    axiom (\forall PointerCastHelper i; to_cast_helper_int(from_cast_helper_int(i)) == i);
+    axiom (\forall Pointer i; from_cast_helper_int(to_cast_helper_int(i)) == i);
+    axiom (\forall PointerCastHelper i; to_cast_helper_void(from_cast_helper_void(i)) == i);
+    axiom (\forall Pointer i; from_cast_helper_void(to_cast_helper_void(i)) == i);
+    axiom (\forall Pointer i, int i1; Pointer.ptrAddress(i, i1) <= 18446744073709551615);
+}
+
+decreases;
+pure ref ptrDeref(Pointer p) = Block.loc(Pointer.pointerBlock(p), Pointer.pointerOffset(p));
+
+requires 0 <= Pointer.pointerOffset(p) + offset;
+requires Pointer.pointerOffset(p) + offset < Block.blockLength(Pointer.pointerBlock(p));
+decreases;
+ensures offset == 0 ==> \result == p;
+ensures Pointer.pointerOffset(\result) == Pointer.pointerOffset(p) + offset;
+ensures Pointer.pointerBlock(\result) == Pointer.pointerBlock(p);
+pure Pointer ptrAdd(Pointer p, int offset);
+
+decreases;
+ensures \polarity_dependent(
+    (\forall Pointer p, int offset, int i;
+        0 <= Pointer.pointerOffset(p) + offset &&
+        Pointer.pointerOffset(p) + offset < Block.blockLength(Pointer.pointerBlock(p)) &&
+        0 <= Pointer.pointerOffset(p) + offset + i &&
+        Pointer.pointerOffset(p) + offset + i < Block.blockLength(Pointer.pointerBlock(p)) ==>
+            ptrAdd(ptrAdd(p, offset), i) == ptrAdd(p, offset + i)
+    ),
+    true
+);
+pure boolean ptrAddAxiom() = true;
+
+decreases;
+ensures (\forall Pointer p, int i, int j;
+    0 <= Pointer.pointerOffset(p) + i && Pointer.pointerOffset(p) + i < Block.blockLength(Pointer.pointerBlock(p)) &&
+    0 <= Pointer.pointerOffset(p) + j &&
+    Pointer.pointerOffset(p) + j < Block.blockLength(Pointer.pointerBlock(p)) ==>
+        i == j == ptrAdd(p, i) == ptrAdd(p, j)
+);
+pure boolean ptrAddAxiom2() = true;
+
+decreases;
+ensures \result == from_cast_helper_intbox_992063733(to_cast_helper_int(value));
+ensures Pointer.ptrAddress(\result, sizeof_struct unknown_2096503028()) == Pointer.ptrAddress(value, sizeof_int1());
+pure Pointer as_intbox_992063733_from_int(Pointer value);
+
+decreases;
+ensures \result == from_cast_helper_int(to_cast_helper_intbox_992063733(value));
+ensures Pointer.ptrAddress(\result, sizeof_int1()) == Pointer.ptrAddress(value, sizeof_struct unknown_2096503028());
+pure Pointer as_int_from_intbox_992063733(Pointer value);
+
+decreases;
+pure Pointer ptr_to_intbox_inv(IntBox a);
+
+decreases;
+ensures p == ptr_to_intbox_inv(\result);
+pure IntBox ptr_to_intbox(Pointer p);
+
+decreases;
+ensures \result == from_cast_helper_intbox_992063733(to_cast_helper_void(value));
+ensures Pointer.ptrAddress(\result, sizeof_struct unknown_2096503028()) == Pointer.ptrAddress(value, 1);
+pure Pointer as_intbox_992063733_from_void(Pointer value);
+
+decreases;
+ensures \result == from_cast_helper_void(to_cast_helper_intbox_992063733(value));
+ensures Pointer.ptrAddress(\result, 1) == Pointer.ptrAddress(value, sizeof_struct unknown_2096503028());
+pure Pointer as_void_from_intbox_992063733(Pointer value);
+
+decreases;
+ensures \result == from_cast_helper_void(to_cast_helper_int(value));
+ensures Pointer.ptrAddress(\result, 1) == Pointer.ptrAddress(value, sizeof_int1());
+pure Pointer as_void_from_int(Pointer value);
+
+decreases;
+ensures \result == from_cast_helper_int(to_cast_helper_void(value));
+ensures Pointer.ptrAddress(\result, sizeof_int1()) == Pointer.ptrAddress(value, 1);
+pure Pointer as_int_from_void(Pointer value);
+
+adt IntBox {
+    axiom (\forall IntBox i; IntBox.inv_value(IntBox.value(i)) == i);
+    pure Pointer value(IntBox value);
+    pure IntBox inv_value(Pointer value1);
+    axiom (\forall Pointer i; as_int_from_intbox_992063733(i) == IntBox.value(ptr_to_intbox(i)));
+    axiom (\forall Pointer i, Pointer i1;
+        i == IntBox.value(ptr_to_intbox(i1)) ==> as_intbox_992063733_from_int(i) == i1
+    );
+    axiom (\forall Pointer i, Pointer i1;
+        i == as_void_from_intbox_992063733(i1) ==> as_int_from_void(i) == as_int_from_intbox_992063733(i1)
+    );
+    axiom (\forall Pointer i;
+        Pointer.ptrAddress(as_void_from_intbox_992063733(i), 1) ==
+        Pointer.ptrAddress(as_void_from_int(IntBox.value(ptr_to_intbox(i))), 1)
+    );
+    axiom (\forall Pointer i;
+        Pointer.ptrAddress(as_void_from_intbox_992063733(i), 1) + sizeof_struct unknown_2096503028() >=
+        Pointer.ptrAddress(as_void_from_int(IntBox.value(ptr_to_intbox(i))), 1) + sizeof_int1()
+    );
+}
+
+field Int: int
+
+adt Any {
+    
+}
+
+decreases;
+pure Any anyAs(Any t);
+
+decreases;
+ensures anyAs(\result) == t;
+pure Any asAny(Any t);
+
+adt Option<t> {
+    pure Option<t> `none`();
+    pure Option<t> some(t x);
+    pure t optionGet(Option<t> opt);
+    axiom (\forall t x; Option<t>.`none`() != Option<t>.some(x));
+    axiom (\forall t x; Option<t>.optionGet(Option<t>.some(x)) == x);
+    axiom (\forall Option<t> opt; Option<t>.some(Option<t>.optionGet(opt)) == opt);
+}
+
+requires opt != Option<Any>.`none`();
+decreases;
+ensures Option<Any>.some(\result) == opt;
+pure Any optGet(Option<Any> opt) = Option<Any>.optionGet(opt);
+
+decreases;
+ensures opt == Option<Any>.`none`() ==> \result == alt;
+ensures opt != Option<Any>.`none`() ==> \result == optGet(opt);
+pure Any optOrElse(Option<Any> opt, Any alt) = opt == Option<Any>.`none`() ? alt : optGet(opt);
+
+requires opt != Option<Pointer>.`none`();
+decreases;
+ensures Option<Pointer>.some(\result) == opt;
+pure Pointer optGet1(Option<Pointer> opt) = Option<Pointer>.optionGet(opt);
+
+requires pointer1 != Option<Pointer>.`none`();
+requires pointer2 != Option<Pointer>.`none`();
+requires pointer1 != pointer2 ==>
+    Perm(ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer1), 0))), 0)).Int, write);
+requires pointer1 != pointer2 ==>
+    Perm(ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer2), 0))), 0)).Int, write);
+requires pointer1 == pointer2 ==>
+    Perm(ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer1), 0))), 0)).Int, write);
+void swap(Option<Pointer> pointer1, Option<Pointer> pointer2) {
+    assert false;
+}
+
+adt Void {
+    pure Void unit();
+    axiom (\forall Void v; true ==> Void.unit() == v);
+}
+
+requires pointer1 != Option<Pointer>.`none`();
+requires pointer2 != Option<Pointer>.`none`();
+requires pointer1 != pointer2 ==>
+    Perm(ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer1), 0))), 0)).Int, write);
+requires pointer1 != pointer2 ==>
+    Perm(ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer2), 0))), 0)).Int, write);
+requires pointer1 == pointer2 ==>
+    Perm(ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer1), 0))), 0)).Int, write);
+ensures pointer1 != pointer2 ==>
+    Perm(ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer1), 0))), 0)).Int, write);
+ensures pointer1 != pointer2 ==>
+    Perm(ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer2), 0))), 0)).Int, write);
+ensures pointer1 == pointer2 ==>
+    Perm(ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer1), 0))), 0)).Int, write);
+ensures ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer1), 0))), 0)).Int ==
+\old(ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer2), 0))), 0)).Int);
+ensures ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer2), 0))), 0)).Int ==
+\old(ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer1), 0))), 0)).Int);
+void swap1(int tid, Option<Pointer> pointer1, Option<Pointer> pointer2) returns (Void res) {
+    ref exc;
+    exc = null;
+    Void return1;
+    int temp;
+    int flatten;
+    flatten = ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer1), 0))), 0)).Int;
+    temp = flatten;
+    flatten;
+    IntBox flatten;
+    int flatten1;
+    flatten = ptr_to_intbox(ptrAdd(optGet1(pointer1), 0));
+    flatten1 = ptrDeref(ptrAdd(IntBox.value(ptr_to_intbox(ptrAdd(optGet1(pointer2), 0))), 0)).Int;
+    ptrDeref(ptrAdd(IntBox.value(flatten), 0)).Int = flatten1;
+    flatten1;
+    IntBox flatten;
+    flatten = ptr_to_intbox(ptrAdd(optGet1(pointer2), 0));
+    ptrDeref(ptrAdd(IntBox.value(flatten), 0)).Int = temp;
+    temp;
+    label END;
+    
+    res = return1;
+    return;
+    label BUBBLE;
+    
+    assert exc == (null);
+}
+
+void `type`() {
+    assert false;
+}
+
+decreases;
+ensures \result >= 0;
+ensures \result <= 1;
+ensures `type` == (null) ==> \result == 0;
+ensures `type` != (null) ==> \result != 0;
+pure int type1(ref `type`);
+
+requires subtype >= 0;
+requires subtype <= 1;
+requires subtype1 >= 0;
+requires subtype1 <= 1;
+void subtype(int subtype, int subtype1) {
+    assert false;
+}
+
+requires subtype >= 0;
+requires subtype <= 1;
+requires subtype1 >= 0;
+requires subtype1 <= 1;
+decreases;
+pure boolean subtype1(int subtype, int subtype1) = (subtype == 0 ==> true) && (subtype == 1 ==> subtype1 == 1);

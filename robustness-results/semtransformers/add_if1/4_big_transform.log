@@ -1,0 +1,323 @@
+
+========================================================================
+TRANSFORM DEBUG LOG
+========================================================================
+log_file: ..\UPDATED_EXAMPLES\C\patterns\add_if1\4_big_transform.log
+source_file: ..\UPDATED_EXAMPLES\C\4_big.c
+mode: implement_all_list
+selected_transforms: ['add_if1']
+
+========================================================================
+SEED SOURCE
+========================================================================
+(lines numbered 1..43)
+
+  1 | /*@
+  2 |   requires length > 0;
+  3 | 
+  4 |   context_everywhere \pointer(arr, length, read);
+  5 | 
+  6 |   ensures
+  7 |       (\forall int x;
+  8 |           0 <= x && x < length;
+  9 |           \result >= arr[x]);
+ 10 | 
+ 11 |   ensures
+ 12 |       (\exists int x;
+ 13 |           0 <= x && x < length;
+ 14 |           \result == arr[x]);
+ 15 | @*/
+ 16 | int isBiggest(int *arr, int length)
+ 17 | {
+ 18 |     int biggest = arr[0];
+ 19 |     int i;
+ 20 | 
+ 21 |     /*@
+ 22 |       loop_invariant 1 <= i && i <= length;
+ 23 | 
+ 24 |       loop_invariant
+ 25 |           (\forall int x;
+ 26 |               0 <= x && x < i;
+ 27 |               biggest >= arr[x]);
+ 28 | 
+ 29 |       loop_invariant
+ 30 |           (\exists int x;
+ 31 |               0 <= x && x < i;
+ 32 |               biggest == arr[x]);
+ 33 |     @*/
+ 34 |     for (i = 1; i < length; i++)
+ 35 |     {
+ 36 |         if (arr[i] > biggest)
+ 37 |         {
+ 38 |             biggest = arr[i];
+ 39 |         }
+ 40 |     }
+ 41 | 
+ 42 |     return biggest;
+ 43 | }
+
+========================================================================
+PARSED AST (before site scan)
+========================================================================
+
+------------------------------------------------------------------------
+AST (parsed from seed)
+------------------------------------------------------------------------
+└── root: FileAST
+    └── ext[0]: FuncDef decl='isBiggest'
+        ├── decl: Decl name='isBiggest'
+        │   └── type: FuncDecl
+        │       ├── args: ParamList
+        │       │   ├── params[0]: Decl name='arr'
+        │       │   │   └── type: PtrDecl
+        │       │   │       └── type: TypeDecl
+        │       │   │           └── type: IdentifierType
+        │       │   └── params[1]: Decl name='length'
+        │       │       └── type: TypeDecl
+        │       │           └── type: IdentifierType
+        │       └── type: TypeDecl
+        │           └── type: IdentifierType
+        └── body: Compound
+            ├── block_items[0]: Decl name='biggest'
+            │   ├── type: TypeDecl
+            │   │   └── type: IdentifierType
+            │   └── init: ArrayRef
+            │       ├── name: ID name='arr'
+            │       └── subscript: Constant int='0'
+            ├── block_items[1]: Decl name='i'
+            │   └── type: TypeDecl
+            │       └── type: IdentifierType
+            ├── block_items[2]: For
+            │   ├── init: Assignment
+            │   │   ├── lvalue: ID name='i'
+            │   │   └── rvalue: Constant int='1'
+            │   ├── cond: BinaryOp op='<'
+            │   │   ├── left: ID name='i'
+            │   │   └── right: ID name='length'
+            │   ├── next: UnaryOp op='p++'
+            │   │   └── expr: ID name='i'
+            │   └── stmt: Compound
+            │       └── block_items[0]: If
+            │           ├── cond: BinaryOp op='>'
+            │           │   ├── left: ArrayRef
+            │           │   │   ├── name: ID name='arr'
+            │           │   │   └── subscript: ID name='i'
+            │           │   └── right: ID name='biggest'
+            │           └── iftrue: Compound
+            │               └── block_items[0]: Assignment
+            │                   ├── lvalue: ID name='biggest'
+            │                   └── rvalue: ArrayRef
+            │                       ├── name: ID name='arr'
+            │                       └── subscript: ID name='i'
+            └── block_items[3]: Return
+                └── expr: ID name='biggest'
+
+========================================================================
+SITE SCAN (suitability checks for every candidate)
+========================================================================
+
+========================================================================
+SITE SCAN SUMMARY
+========================================================================
+transform: add_if1
+applicable_site_count: 6
+  site[0] APPLICABLE -> output *_site0.*
+  site[1] APPLICABLE -> output *_site1.*
+  site[2] APPLICABLE -> output *_site2.*
+  site[3] APPLICABLE -> output *_site3.*
+  site[4] APPLICABLE -> output *_site4.*
+  site[5] APPLICABLE -> output *_site5.*
+
+========================================================================
+APPLY SITES (re-parse; check spam suppressed)
+========================================================================
+APPLIED site[0] -> ..\UPDATED_EXAMPLES\C\patterns\add_if1\4_big_site0.c
+
+========================================================================
+TRANSFORMED SOURCE (site[0])
+========================================================================
+(lines numbered 1..25)
+
+  1 | int isBiggest(int *arr, int length)
+  2 | {
+  3 |   int biggest = arr[0];
+  4 |   int i;
+  5 |   if (1)
+  6 |   {
+  7 |     for (i = 1; i < length; i++)
+  8 |     {
+  9 |       if (arr[i] > biggest)
+ 10 |       {
+ 11 |         biggest = arr[i];
+ 12 |       }
+ 13 |       else
+ 14 |       {
+ 15 |       }
+ 16 |     }
+ 17 | 
+ 18 |   }
+ 19 |   else
+ 20 |   {
+ 21 |   }
+ 22 |   return biggest;
+ 23 | }
+ 24 | 
+ 25 | 
+APPLIED site[1] -> ..\UPDATED_EXAMPLES\C\patterns\add_if1\4_big_site1.c
+
+========================================================================
+TRANSFORMED SOURCE (site[1])
+========================================================================
+(lines numbered 1..23)
+
+  1 | int isBiggest(int *arr, int length)
+  2 | {
+  3 |   int biggest = arr[0];
+  4 |   int i;
+  5 |   for (i = 1; i < length; i++)
+  6 |     if (1)
+  7 |   {
+  8 |     if (arr[i] > biggest)
+  9 |     {
+ 10 |       biggest = arr[i];
+ 11 |     }
+ 12 |     else
+ 13 |     {
+ 14 |     }
+ 15 |   }
+ 16 |   else
+ 17 |   {
+ 18 |   }
+ 19 | 
+ 20 |   return biggest;
+ 21 | }
+ 22 | 
+ 23 | 
+APPLIED site[2] -> ..\UPDATED_EXAMPLES\C\patterns\add_if1\4_big_site2.c
+
+========================================================================
+TRANSFORMED SOURCE (site[2])
+========================================================================
+(lines numbered 1..25)
+
+  1 | int isBiggest(int *arr, int length)
+  2 | {
+  3 |   int biggest = arr[0];
+  4 |   int i;
+  5 |   for (i = 1; i < length; i++)
+  6 |   {
+  7 |     if (1)
+  8 |     {
+  9 |       if (arr[i] > biggest)
+ 10 |       {
+ 11 |         biggest = arr[i];
+ 12 |       }
+ 13 |       else
+ 14 |       {
+ 15 |       }
+ 16 |     }
+ 17 |     else
+ 18 |     {
+ 19 |     }
+ 20 |   }
+ 21 | 
+ 22 |   return biggest;
+ 23 | }
+ 24 | 
+ 25 | 
+APPLIED site[3] -> ..\UPDATED_EXAMPLES\C\patterns\add_if1\4_big_site3.c
+
+========================================================================
+TRANSFORMED SOURCE (site[3])
+========================================================================
+(lines numbered 1..25)
+
+  1 | int isBiggest(int *arr, int length)
+  2 | {
+  3 |   int biggest = arr[0];
+  4 |   int i;
+  5 |   for (i = 1; i < length; i++)
+  6 |   {
+  7 |     if (arr[i] > biggest)
+  8 |     {
+  9 |       if (1)
+ 10 |       {
+ 11 |         biggest = arr[i];
+ 12 |       }
+ 13 |       else
+ 14 |       {
+ 15 |       }
+ 16 |     }
+ 17 |     else
+ 18 |     {
+ 19 |     }
+ 20 |   }
+ 21 | 
+ 22 |   return biggest;
+ 23 | }
+ 24 | 
+ 25 | 
+APPLIED site[4] -> ..\UPDATED_EXAMPLES\C\patterns\add_if1\4_big_site4.c
+
+========================================================================
+TRANSFORMED SOURCE (site[4])
+========================================================================
+(lines numbered 1..25)
+
+  1 | int isBiggest(int *arr, int length)
+  2 | {
+  3 |   int biggest = arr[0];
+  4 |   int i;
+  5 |   for (i = 1; i < length; i++)
+  6 |   {
+  7 |     if (arr[i] > biggest)
+  8 |     {
+  9 |       if (1)
+ 10 |       {
+ 11 |         biggest = arr[i];
+ 12 |       }
+ 13 |       else
+ 14 |       {
+ 15 |       }
+ 16 |     }
+ 17 |     else
+ 18 |     {
+ 19 |     }
+ 20 |   }
+ 21 | 
+ 22 |   return biggest;
+ 23 | }
+ 24 | 
+ 25 | 
+APPLIED site[5] -> ..\UPDATED_EXAMPLES\C\patterns\add_if1\4_big_site5.c
+
+========================================================================
+TRANSFORMED SOURCE (site[5])
+========================================================================
+(lines numbered 1..25)
+
+  1 | int isBiggest(int *arr, int length)
+  2 | {
+  3 |   int biggest = arr[0];
+  4 |   int i;
+  5 |   for (i = 1; i < length; i++)
+  6 |   {
+  7 |     if (arr[i] > biggest)
+  8 |     {
+  9 |       biggest = arr[i];
+ 10 |     }
+ 11 |     else
+ 12 |     {
+ 13 |     }
+ 14 |   }
+ 15 | 
+ 16 |   if (1)
+ 17 |   {
+ 18 |     return biggest;
+ 19 |   }
+ 20 |   else
+ 21 |   {
+ 22 |   }
+ 23 | }
+ 24 | 
+ 25 | 

@@ -1,0 +1,117 @@
+
+========================================================================
+TRANSFORM DEBUG LOG
+========================================================================
+log_file: ..\UPDATED_EXAMPLES\C\patterns\to_method\2_swap_transform.log
+source_file: ..\UPDATED_EXAMPLES\C\2_swap.c
+mode: implement_all_list
+selected_transforms: ['to_method']
+
+========================================================================
+SEED SOURCE
+========================================================================
+(lines numbered 1..24)
+
+  1 | struct IntBox {
+  2 |     int value;
+  3 | };
+  4 | 
+  5 | /*@
+  6 |   requires pointer1 != NULL;
+  7 |   requires pointer2 != NULL;
+  8 | 
+  9 |   context pointer1 != pointer2 ==>
+ 10 |       Perm(pointer1->value, write) **
+ 11 |       Perm(pointer2->value, write);
+ 12 | 
+ 13 |   context pointer1 == pointer2 ==>
+ 14 |       Perm(pointer1->value, write);
+ 15 | 
+ 16 |   ensures pointer1->value == \old(pointer2->value);
+ 17 |   ensures pointer2->value == \old(pointer1->value);
+ 18 | @*/
+ 19 | static void swap(struct IntBox *pointer1, struct IntBox *pointer2)
+ 20 | {
+ 21 |     int temp = pointer1->value;
+ 22 |     pointer1->value = pointer2->value;
+ 23 |     pointer2->value = temp;
+ 24 | }
+
+========================================================================
+PARSED AST (before site scan)
+========================================================================
+
+------------------------------------------------------------------------
+AST (parsed from seed)
+------------------------------------------------------------------------
+└── root: FileAST
+    ├── ext[0]: Decl name=None
+    │   └── type: Struct
+    │       └── decls[0]: Decl name='value'
+    │           └── type: TypeDecl
+    │               └── type: IdentifierType
+    └── ext[1]: FuncDef decl='swap'
+        ├── decl: Decl name='swap'
+        │   └── type: FuncDecl
+        │       ├── args: ParamList
+        │       │   ├── params[0]: Decl name='pointer1'
+        │       │   │   └── type: PtrDecl
+        │       │   │       └── type: TypeDecl
+        │       │   │           └── type: Struct
+        │       │   └── params[1]: Decl name='pointer2'
+        │       │       └── type: PtrDecl
+        │       │           └── type: TypeDecl
+        │       │               └── type: Struct
+        │       └── type: TypeDecl
+        │           └── type: IdentifierType
+        └── body: Compound
+            ├── block_items[0]: Decl name='temp'
+            │   ├── type: TypeDecl
+            │   │   └── type: IdentifierType
+            │   └── init: StructRef
+            │       ├── name: ID name='pointer1'
+            │       └── field: ID name='value'
+            ├── block_items[1]: Assignment
+            │   ├── lvalue: StructRef
+            │   │   ├── name: ID name='pointer1'
+            │   │   └── field: ID name='value'
+            │   └── rvalue: StructRef
+            │       ├── name: ID name='pointer2'
+            │       └── field: ID name='value'
+            └── block_items[2]: Assignment
+                ├── lvalue: StructRef
+                │   ├── name: ID name='pointer2'
+                │   └── field: ID name='value'
+                └── rvalue: ID name='temp'
+
+========================================================================
+SITE SCAN (suitability checks for every candidate)
+========================================================================
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: Decl @ :8:9
+  snippet: int temp = pointer1->value
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: Assignment @ :9:5
+  snippet: pointer1->value = pointer2->value
+  => APPLICABLE=False  reason: not applicable
+
+------------------------------------------------------------------------
+CHECK to_method
+------------------------------------------------------------------------
+  candidate_stmt: Assignment @ :10:5
+  snippet: pointer2->value = temp
+  => APPLICABLE=False  reason: not applicable
+
+========================================================================
+SITE SCAN SUMMARY
+========================================================================
+transform: to_method
+applicable_site_count: 0
+no applicable locations; nothing written
