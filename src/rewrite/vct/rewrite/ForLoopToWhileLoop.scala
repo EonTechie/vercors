@@ -10,25 +10,48 @@ case object ForLoopToWhileLoop extends RewriterBuilder {
   override def key: String = "forLoop"
   override def desc: String =
     "Translate for loops into while loops by putting initialization and the update before and in the loop."
+
+  def rewriteLoop[Pre <: Generation, Post <: Generation](
+      loop: Loop[Pre],
+      rewriteDefaultLoop: Loop[Pre] => Statement[Post],
+      dispatchStatement: Statement[Pre] => Statement[Post],
+      dispatchExpr: Expr[Pre] => Expr[Post],
+      dispatchContract: LoopContract[Pre] => LoopContract[Post],
+  ): Statement[Post] =
+    loop match {
+      case Loop(Block(Nil), _, Block(Nil), _, _) =>
+        rewriteDefaultLoop(loop)
+
+      case Loop(init, cond, update, contract, body) =>
+        implicit val o: Origin = loop.o
+        Block[Post](Seq(
+          dispatchStatement(init),
+          Loop[Post](
+            Block[Post](Nil),
+            dispatchExpr(cond),
+            Block[Post](Nil),
+            dispatchContract(contract),
+            Block[Post](Seq(
+              dispatchStatement(body),
+              dispatchStatement(update),
+            )),
+          ),
+        ))
+    }
 }
 
 case class ForLoopToWhileLoop[Pre <: Generation]() extends Rewriter[Pre] {
   override def dispatch(stat: Statement[Pre]): Statement[Post] =
     stat match {
-      case Loop(Block(Nil), cond, Block(Nil), contract, body) =>
-        rewriteDefault(stat)
-      case loop @ Loop(init, cond, update, contract, body) =>
-        implicit val o: Origin = stat.o
-        Block(Seq(
-          dispatch(init),
-          Loop(
-            Block(Nil),
-            dispatch(cond),
-            Block(Nil),
-            dispatch(contract),
-            Block(Seq(dispatch(body), dispatch(update))),
-          ),
-        ))
-      case other => rewriteDefault(other)
+      case loop: Loop[Pre] =>
+        ForLoopToWhileLoop.rewriteLoop(
+          loop,
+          (loop: Loop[Pre]) => loop.rewriteDefault(),
+          (stat: Statement[Pre]) => dispatch(stat),
+          (expr: Expr[Pre]) => dispatch(expr),
+          (contract: LoopContract[Pre]) => dispatch(contract),
+        )
+
+      case other => other.rewriteDefault()
     }
 }

@@ -4,7 +4,13 @@ import com.typesafe.scalalogging.LazyLogging
 import hre.stages.FunctionStage
 import vct.col.origin.BlameCollector
 import vct.col.print.Ctx
-import vct.col.rewrite.{AddIfOne, AddIfZero, InitialGeneration, RewriterBuilder}
+import vct.col.rewrite.{
+  AddIfOne,
+  AddIfZero,
+  InitialGeneration,
+  RewriterBuilder,
+  RobustnessForLoopToWhileLoop,
+}
 import vct.main.Main.{EXIT_CODE_ERROR, EXIT_CODE_SUCCESS}
 import vct.main.stages.{Output, Parsing, Resolution, Transformation}
 import vct.options.Options
@@ -78,10 +84,14 @@ case object Robustness extends LazyLogging {
           Some("add_if1") =>
         AddIfOne
 
+      case Some("for-to-while") | Some("for_to_while") | Some("for2while") |
+          Some("for-loop-to-while") | Some("for_loop_to_while") =>
+        RobustnessForLoopToWhileLoop
+
       case Some(other) =>
         throw new IllegalArgumentException(
           s"Unknown ROBUSTNESS_TRANSFORM=$other. " +
-            "Use add-if-zero or add-if-one."
+            "Use add-if-zero, add-if-one, or for-to-while."
         )
     }
 
