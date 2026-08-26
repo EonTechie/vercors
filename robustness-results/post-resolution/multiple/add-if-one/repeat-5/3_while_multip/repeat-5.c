@@ -1,0 +1,42 @@
+/*@
+requires k >= 0;
+requires m >= 0;
+ensures \result == k * m;
+@*/
+int multAdd(int k, int m) {
+    int sum;
+    if (1) {
+        if (1) {
+            if (1) {
+                if (1) {
+                    sum = 0;
+                } else {
+                    /*@ assert false; @*/
+                }
+            } else {
+                /*@ assert false; @*/
+            }
+        } else {
+            /*@ assert false; @*/
+        }
+    } else {
+        /*@ assert false; @*/
+    }
+    int remaining;
+    remaining = m;
+    if (1) {
+        /*@
+        decreases remaining;
+        loop_invariant 0 <= remaining;
+        loop_invariant remaining <= m;
+        loop_invariant sum == (m - remaining) * k;
+        @*/
+        while (0 < remaining) {
+            sum = sum + k;
+            remaining = remaining - 1;
+        }
+    } else {
+        /*@ assert false; @*/
+    }
+    return sum;
+}

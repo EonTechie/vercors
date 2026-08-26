@@ -63,6 +63,12 @@ case class PreferredName(preferredName: Seq[String]) extends NameStrategy {
 
 case class NamePrefix(prefix: String) extends OriginContent
 
+/** Marker for LangCToCol encoding helpers such as `pure int sizeof_int()`.
+  * They exist in the resolved AST for pointer-size reasoning, but must not be
+  * emitted when the program is printed back as C.
+  */
+case object GeneratedSizeOfHelper extends OriginContent
+
 case class RequiredName(requiredName: String) extends NameStrategy {
   override def name(tail: Origin): Option[Name] =
     Some(Name.Required(requiredName))

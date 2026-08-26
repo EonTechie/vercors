@@ -105,7 +105,10 @@ case object Options {
 
       opt[Int]("robustness-repeat")
         .action((amount, c) => c.copy(robustnessRepeat = amount))
-        .text("Number of times to apply the robustness transformation"),
+        .text(
+          "Apply the robustness transform this many times on the resolved AST. " +
+            "Comma-separated ROBUSTNESS_TRANSFORM values cycle across applications."
+        ),
 
       opt[Unit]("more").abbr("m").action((_, c) => c.copy(more = true))
         .text("Always print the maximum amount of information about errors."),

@@ -1,0 +1,29 @@
+[INFO] Robustness mode started
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 2
+[AddIfOne] candidate count = 4
+[AddIfOne] candidate 0 | function=mult_add | role=BLOCK_ITEM[2] | path=mult_add.body.block[2] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ decreases Remaining_1356668474; loop_invariant 0 <= Remaining_135666847...
+[AddIfOne] candidate 1 | function=mult_add | role=LOOP_BODY | path=mult_add.body.block[2].loop.body | kind=CompoundStatement(locals=0, items=2) | { Sum_1785348036 = Sum_1785348036 + K_1221321161; Remaining_1356668474 = Rema...
+[AddIfOne] candidate 2 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[2].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_1785348036 = Sum_1785348036 + K_1221321161;
+[AddIfOne] candidate 3 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[2].loop.body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | Remaining_1356668474 = Remaining_1356668474 - 1;
+[ADD_IF_ONE_SITE] application 1: default site 0 / 4
+[AddIfOne] SELECTED INDEX = 0
+[AddIfOne] SELECTED | function=mult_add | role=BLOCK_ITEM[2] | path=mult_add.body.block[2] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ decreases Remaining_1356668474; loop_invariant 0 <= Remaining_135666847...
+[AddIfOne] WRAP class=Scope | LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ decreases Remaining_1356668474; loop_invariant 0 <= Remaining_135666847...
+[AddIfOne] candidate count = 9
+[AddIfOne] candidate 0 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[1] | kind=AssignmentStatement | Sum_1010361023 = 0;
+[AddIfOne] candidate 1 | function=mult_add | role=BLOCK_ITEM[3] | path=mult_add.body.block[3] | kind=AssignmentStatement | Remaining_542864344 = M_1008751193;
+[AddIfOne] candidate 2 | function=mult_add | role=BLOCK_ITEM[4] | path=mult_add.body.block[4] | kind=IfStatement(arms=2) | if (1) { /*@ decreases Remaining_542864344; loop_invariant 0 <= Remaining_542...
+[AddIfOne] candidate 3 | function=mult_add | role=IF_TRUE | path=mult_add.body.block[4].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ decreases Remaining_542864344; loop_invariant 0 <= Remaining_542864344;...
+[AddIfOne] candidate 4 | function=mult_add | role=IF_ELSE[1] | path=mult_add.body.block[4].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 5 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].branch[0].block[0] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ decreases Remaining_542864344; loop_invariant 0 <= Remaining_542864344;...
+[AddIfOne] candidate 6 | function=mult_add | role=LOOP_BODY | path=mult_add.body.block[4].branch[0].block[0].loop.body | kind=CompoundStatement(locals=0, items=2) | { Sum_1010361023 = Sum_1010361023 + K_546452352; Remaining_542864344 = Remain...
+[AddIfOne] candidate 7 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_1010361023 = Sum_1010361023 + K_546452352;
+[AddIfOne] candidate 8 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | Remaining_542864344 = Remaining_542864344 - 1;
+[ADD_IF_ONE_SITE] application 2: default site 0 / 9
+[AddIfOne] SELECTED INDEX = 0
+[AddIfOne] SELECTED | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[1] | kind=AssignmentStatement | Sum_1010361023 = 0;
+[AddIfOne] WRAP class=AssignInitial | AssignmentStatement | Sum_1010361023 = 0;
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

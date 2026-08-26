@@ -1,0 +1,13 @@
+[INFO] Robustness mode started
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 2
+[AddIfZero] candidate 0 | function=swap | role=BLOCK_ITEM[1] | path=swap.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_812423980).Value_1391440696 = (*Pointer2_816956885).Value_1391440696;
+[AddIfZero] candidate 1 | function=swap | role=BLOCK_ITEM[2] | path=swap.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer2_816956885).Value_1391440696 = Temp_1746617043;
+[ADD_IF_ZERO_SITE] application 1: selected 0 / 2
+[AddIfZero] SELECTED INDEX = 0
+[AddIfZero] SELECTED | function=swap | role=BLOCK_ITEM[1] | path=swap.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_812423980).Value_1391440696 = (*Pointer2_816956885).Value_1391440696;
+[AddIfZero] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_812423980).Value_1391440696 = (*Pointer2_816956885).Value_1391440696;
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

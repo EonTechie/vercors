@@ -1,25 +1,38 @@
 package vct.col.rewrite
 
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
-/** Picks one site index per robustness application.
+/** Picks one site index per robustness application of a named transform.
   *
   * `ADD_IF_ZERO_SITE=0,2,1` with `--robustness-repeat 3` uses 0 then 2 then 1.
-  * A single index is reused on later applications.
+  * A shorter list reuses its last index on later applications.
+  *
+  * If the env var is unset, each application selects site 0 (deterministic,
+  * suitable for SemTransforms-style N-fold repeats). Counters are per env
+  * name so mixed transform chains do not share site lists.
+  *
+  * If an application has no remaining candidates, it is a no-op.
   */
 object RobustnessSiteSelection {
-  private val application = new AtomicInteger(0)
+  private val applications = new ConcurrentHashMap[String, AtomicInteger]()
 
-  def reset(): Unit = application.set(0)
+  def reset(): Unit = applications.clear()
 
   def nextIndex(
       envName: String,
       candidateCount: Int,
       required: Boolean,
   ): Option[Int] = {
-    val round = application.getAndIncrement()
+    val round = applications.computeIfAbsent(
+      envName,
+      _ => new AtomicInteger(0),
+    ).getAndIncrement()
 
-    if (candidateCount <= 0) { return None }
+    if (candidateCount <= 0) {
+      println(s"[$envName] application ${round + 1}: 0 candidates, skip")
+      return None
+    }
 
     sys.env.get(envName).map(_.trim).filter(_.nonEmpty) match {
       case Some(raw) =>
@@ -51,12 +64,19 @@ object RobustnessSiteSelection {
           )
         }
 
+        println(
+          s"[$envName] application ${round + 1}: selected $selected / $candidateCount"
+        )
         Some(selected)
 
       case None if required =>
         throw new IllegalArgumentException(s"$envName must be specified")
 
-      case None => None
+      case None =>
+        println(
+          s"[$envName] application ${round + 1}: default site 0 / $candidateCount"
+        )
+        Some(0)
     }
   }
 }

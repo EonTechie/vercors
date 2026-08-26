@@ -1,0 +1,12 @@
+[INFO] Robustness mode started
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 1
+[AddIfZero] candidate 0 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0] | kind=IfStatement(arms=2) | if (A_22958662 >= 0) { return A_22958662; } else { return -A_22958662; }
+[ADD_IF_ZERO_SITE] application 1: selected 0 / 1
+[AddIfZero] SELECTED INDEX = 0
+[AddIfZero] SELECTED | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0] | kind=IfStatement(arms=2) | if (A_22958662 >= 0) { return A_22958662; } else { return -A_22958662; }
+[AddIfZero] WRAP class=Branch | IfStatement(arms=2) | if (A_22958662 >= 0) { return A_22958662; } else { return -A_22958662; }
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

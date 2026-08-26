@@ -1,0 +1,15 @@
+[INFO] Robustness mode started
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 4
+[AddIfZero] candidate 0 | function=mult_add | role=BLOCK_ITEM[2] | path=mult_add.body.block[2] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ decreases Remaining_1595477246; loop_invariant 0 <= Remaining_159547724...
+[AddIfZero] candidate 1 | function=mult_add | role=LOOP_BODY | path=mult_add.body.block[2].loop.body | kind=CompoundStatement(locals=0, items=2) | { Sum_997609062 = Sum_997609062 + K_948125696; Remaining_1595477246 = Remaini...
+[AddIfZero] candidate 2 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[2].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_997609062 = Sum_997609062 + K_948125696;
+[AddIfZero] candidate 3 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[2].loop.body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | Remaining_1595477246 = Remaining_1595477246 - 1;
+[ADD_IF_ZERO_SITE] application 1: selected 2 / 4
+[AddIfZero] SELECTED INDEX = 2
+[AddIfZero] SELECTED | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[2].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_997609062 = Sum_997609062 + K_948125696;
+[AddIfZero] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | Sum_997609062 = Sum_997609062 + K_948125696;
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

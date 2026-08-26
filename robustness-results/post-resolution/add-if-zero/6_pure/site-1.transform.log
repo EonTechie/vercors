@@ -1,0 +1,14 @@
+[INFO] Robustness mode started
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 3
+[AddIfZero] candidate 0 | function=sum_list | role=BLOCK_ITEM[2] | path=sum_list.body.block[2] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ decreases Length_1368857906 - I_1079496040; loop_invariant 0 <= I_10794...
+[AddIfZero] candidate 1 | function=sum_list | role=LOOP_BODY | path=sum_list.body.block[2].loop.body | kind=CompoundStatement(locals=0, items=1) | { Sum_441240443 = Sum_441240443 + List_1149080047[I_1079496040]; }
+[AddIfZero] candidate 2 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[2].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_441240443 = Sum_441240443 + List_1149080047[I_1079496040];
+[ADD_IF_ZERO_SITE] application 1: selected 1 / 3
+[AddIfZero] SELECTED INDEX = 1
+[AddIfZero] SELECTED | function=sum_list | role=LOOP_BODY | path=sum_list.body.block[2].loop.body | kind=CompoundStatement(locals=0, items=1) | { Sum_441240443 = Sum_441240443 + List_1149080047[I_1079496040]; }
+[AddIfZero] WRAP class=Scope | CompoundStatement(locals=0, items=1) | { Sum_441240443 = Sum_441240443 + List_1149080047[I_1079496040]; }
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

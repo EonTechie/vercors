@@ -25,8 +25,8 @@ case class RobustnessForLoopToWhileLoop[Pre <: Generation]()
     RobustnessSiteSelection.nextIndex(
       envName,
       candidates.size,
-      required = true,
-    ).get
+      required = false,
+    ).getOrElse(0)
   }
 
   override def dispatch(program: Program[Pre]): Program[Post] = {

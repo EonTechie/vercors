@@ -1,0 +1,23 @@
+[INFO] Robustness mode started
+[INFO] Robustness transforms: robustnessForLoopToWhileLoop
+[INFO] Robustness repeat: 5
+[ForToWhile] candidate count = 2
+[ForToWhile] candidate 0 | function=bubble_sort | path=bubble_sort.body.scope.block[1].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[ForToWhile] candidate 1 | function=bubble_sort | path=bubble_sort.body.scope.block[1].scope.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[FOR_TO_WHILE_SITE] application 1: default site 0 / 2
+[ForToWhile] SELECTED INDEX = 0
+[ForToWhile] SELECTED | function=bubble_sort | path=bubble_sort.body.scope.block[1].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[ForToWhile] candidate count = 1
+[ForToWhile] candidate 0 | function=bubble_sort | path=bubble_sort.body.scope.block[2].scope.block[2].body.block[0].scope.block[0].scope | kind=ForLoop(init=Block(items=2), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[FOR_TO_WHILE_SITE] application 2: default site 0 / 1
+[ForToWhile] SELECTED INDEX = 0
+[ForToWhile] SELECTED | function=bubble_sort | path=bubble_sort.body.scope.block[2].scope.block[2].body.block[0].scope.block[0].scope | kind=ForLoop(init=Block(items=2), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[ForToWhile] candidate count = 0
+[FOR_TO_WHILE_SITE] application 3: 0 candidates, skip
+[ForToWhile] candidate count = 0
+[FOR_TO_WHILE_SITE] application 4: 0 candidates, skip
+[ForToWhile] candidate count = 0
+[FOR_TO_WHILE_SITE] application 5: 0 candidates, skip
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

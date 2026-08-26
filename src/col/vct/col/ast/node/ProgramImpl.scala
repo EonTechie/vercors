@@ -22,11 +22,22 @@ trait ProgramImpl[G]
     }
 
   override def layout(implicit ctx: Ctx): Doc = {
+    val decls =
+      ctx.syntax match {
+        case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP =>
+          declarations.filterNot {
+            case f: vct.col.ast.Function[_] => f.isGeneratedSizeOfHelper
+            case _ => false
+          }
+        case _ =>
+          declarations
+      }
+
     (if (ctx.syntax == Ctx.Java)
        (Text("import java.util.concurrent.locks.Lock;") <+/>
          "import java.util.concurrent.locks.ReentrantLock;" <+/>
          "import java.util.concurrent.locks.Condition;" <> Line)
      else
-       Empty) <> Doc.stack2(declarations)
+       Empty) <> Doc.stack2(decls)
   }
 }

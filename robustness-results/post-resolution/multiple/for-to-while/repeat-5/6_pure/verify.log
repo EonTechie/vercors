@@ -1,0 +1,9 @@
+[INFO] Start: VerCors (at 01:08:13)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier repeat-5.c:13-:13: 'context_everywhere (\forall int x; 0 <= x && x < length ==> xs[x] == list[x]);' contains no triggers
+[WARN] The quantifier repeat-5.c:13-:13: 'context_everywhere (\forall int x; 0 <= x && x < length ==> xs[x] == list[x]);' contains no triggers
+[WARN] The quantifier repeat-5.c:13-:13: 'context_everywhere (\forall int x; 0 <= x && x < length ==> xs[x] == list[x]);' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 01:08:48, duration: 00:00:34)
+[WARN] Non-daemon thread UnknownThreadGroup.[VerCors] Block layout updates (#16) is still running
+[WARN] Due to this VerCors will not exit and sit idly until that thread is done. You may want to stop the program manually.

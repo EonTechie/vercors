@@ -1,0 +1,7 @@
+[INFO] Start: VerCors (at 00:51:32)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier repeat-2.c:13-:13: 'context_everywhere (\forall int x; 0 <= x && x < length ==> xs[x] == list[x]);' contains no triggers
+[WARN] The quantifier repeat-2.c:13-:13: 'context_everywhere (\forall int x; 0 <= x && x < length ==> xs[x] == list[x]);' contains no triggers
+[WARN] The quantifier repeat-2.c:13-:13: 'context_everywhere (\forall int x; 0 <= x && x < length ==> xs[x] == list[x]);' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 00:52:04, duration: 00:00:32)

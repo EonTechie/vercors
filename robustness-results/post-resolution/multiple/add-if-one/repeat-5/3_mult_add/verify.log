@@ -1,0 +1,4 @@
+[INFO] Start: VerCors (at 01:01:48)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 01:02:10, duration: 00:00:21)

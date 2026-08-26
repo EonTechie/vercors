@@ -8,11 +8,12 @@ case object AddIfZero extends RewriterBuilder {
   override def key: String = "addIfZero"
 
   override def desc: String =
-    "Insert a dead if (false) assertion at a C statement-list site."
+    "Wrap a C statement as if (0) { assert false } else { original }."
 }
 
 case class AddIfZero[Pre <: Generation]() extends Rewriter[Pre] {
-  private var selected: Option[CInsertionSites.Site[Pre]] = None
+  private var selected: Option[CStatementSites.Site[Pre]] = None
+  private var wrapped: Boolean = false
 
   private def bool(value: Boolean, origin: Origin): BooleanValue[Post] =
     BooleanValue[Post](value)(origin)
@@ -20,11 +21,7 @@ case class AddIfZero[Pre <: Generation]() extends Rewriter[Pre] {
   private def asCompound(
       stat: Statement[Post],
       origin: Origin,
-  ): Statement[Post] =
-    stat match {
-      case scope @ Scope(Nil, Block(_)) => scope
-      case other => Scope[Post](Nil, Block[Post](Seq(other))(origin))(origin)
-    }
+  ): Statement[Post] = RobustnessStatementWrap.asCompound(stat, origin)
 
   private def deadBranch(origin: Origin): Statement[Post] =
     asCompound(
@@ -34,68 +31,71 @@ case class AddIfZero[Pre <: Generation]() extends Rewriter[Pre] {
       origin,
     )
 
-  private def emptyBranch(origin: Origin): Statement[Post] =
-    Scope[Post](Nil, Block[Post](Nil)(origin))(origin)
-
-  private def insertedStatement(origin: Origin): Statement[Post] =
-    Branch[Post](Seq(
-      (bool(value = false, origin), deadBranch(origin)),
-      (bool(value = true, origin), emptyBranch(origin)),
-    ))(origin)
-
   override def dispatch(program: Program[Pre]): Program[Post] = {
-    // Adjusted for robustness mode: collect SemTransformers-style zero-length
-    // insertion slots from the resolved AST and select one by index.
-    val candidates = CInsertionSites.collect(program)
+    // Dual of AddIfOne wrap sites: original statement goes in the else arm.
+    // Return/goto/break/continue themselves are not sites, but a parent
+    // if/loop/block may still be wrapped.
+    val candidates = CStatementSites
+      .collect(program, excludeContainedAbrupt = false)
 
     println(s"[AddIfZero] candidate count = ${candidates.size}")
 
     candidates.zipWithIndex.foreach { case (site, index) =>
       println(
         s"[AddIfZero] candidate $index" + s" | function=${site.functionName}" +
-          s" | path=${site.path}" + s" | kind=${site.description}"
+          s" | role=${site.role.label}" + s" | path=${site.path}" +
+          s" | kind=${site.description}"
       )
     }
 
-    if (candidates.isEmpty) {
-      RobustnessSiteSelection.nextIndex(
-        "ADD_IF_ZERO_SITE",
-        0,
-        required = false,
-      )
-      selected = None
-    } else {
-      val selectedIndex = RobustnessSiteSelection.nextIndex(
-        "ADD_IF_ZERO_SITE",
-        candidates.size,
-        required = true,
-      ).get
-
+    selected = RobustnessSiteSelection.nextIndex(
+      "ADD_IF_ZERO_SITE",
+      candidates.size,
+      required = false,
+    ).map { selectedIndex =>
       val site = candidates(selectedIndex)
-      selected = Some(site)
-
       println(s"[AddIfZero] SELECTED INDEX = $selectedIndex")
       println(
         s"[AddIfZero] SELECTED" + s" | function=${site.functionName}" +
-          s" | path=${site.path}" + s" | kind=${site.description}"
+          s" | role=${site.role.label}" + s" | path=${site.path}" +
+          s" | kind=${site.description}"
       )
+      site
     }
+    wrapped = false
 
     super.dispatch(program)
   }
 
+  private def isSelected(stat: Statement[Pre]): Boolean =
+    selected.exists(site => site.target eq stat)
+
   override def dispatch(stat: Statement[Pre]): Statement[Post] =
-    stat match {
-      case block @ Block(statements)
-          if selected.exists(site => site.container eq block) =>
-        val site = selected.get
-        val rewritten =
-          statements.take(site.index).map(dispatch) ++
-            Seq(insertedStatement(block.o)) ++
-            statements.drop(site.index).map(dispatch)
+    if (!wrapped && isSelected(stat)) {
+      wrapped = true
+      if (CStatementSites.isAbruptStatement(stat)) {
+        throw new IllegalStateException(
+          "AddIfZero selected a forbidden return-like control-flow site: " +
+            selected.map(site => s"${site.path} (${site.description})")
+              .getOrElse(stat.getClass.getSimpleName)
+        )
+      }
 
-        Block[Post](rewritten)(block.o)
-
-      case _ => stat.rewriteDefault()
+      println(
+        s"[AddIfZero] WRAP class=${stat.getClass.getSimpleName}" +
+          s" | ${selected.map(_.description).getOrElse("")}"
+      )
+      RobustnessStatementWrap.keepSurroundingBraces(
+        stat,
+        Branch[Post](Seq(
+          (bool(value = false, stat.o), deadBranch(stat.o)),
+          (
+            bool(value = true, stat.o),
+            asCompound(stat.rewriteDefault(), stat.o),
+          ),
+        ))(stat.o),
+      )
+    } else {
+      stat.rewriteDefault()
     }
 }

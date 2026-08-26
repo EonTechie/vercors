@@ -1,0 +1,10 @@
+[INFO] Robustness mode started
+[INFO] Robustness transforms: robustnessForLoopToWhileLoop
+[INFO] Robustness repeat: 1
+[ForToWhile] candidate count = 0
+[FOR_TO_WHILE_SITE] application 1: 0 candidates, skip
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c
+[WARN] Non-daemon thread UnknownThreadGroup.[VerCors] Block layout updates (#16) is still running
+[WARN] Due to this VerCors will not exit and sit idly until that thread is done. You may want to stop the program manually.

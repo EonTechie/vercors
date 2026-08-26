@@ -1,0 +1,19 @@
+[INFO] Robustness mode started
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 1
+[AddIfOne] candidate count = 8
+[AddIfOne] candidate 0 | function=bubble_sort | role=BLOCK_ITEM[1] | path=bubble_sort.body.block[1] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ loop_invariant 0 <= I_2100506144; loop_invariant I_2100506144 <= N_1822...
+[AddIfOne] candidate 1 | function=bubble_sort | role=LOOP_BODY | path=bubble_sort.body.block[1].loop.body | kind=CompoundStatement(locals=0, items=1) | { /*@ loop_invariant 0 <= J_735688652; loop_invariant J_735688652 <= N_182294...
+[AddIfOne] candidate 2 | function=bubble_sort | role=BLOCK_ITEM[0] | path=bubble_sort.body.block[1].loop.body.block[0] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ loop_invariant 0 <= J_735688652; loop_invariant J_735688652 <= N_182294...
+[AddIfOne] candidate 3 | function=bubble_sort | role=LOOP_BODY | path=bubble_sort.body.block[1].loop.body.block[0].loop.body | kind=CompoundStatement(locals=0, items=1) | { if (Arr_2136445533[J_735688652] > Arr_2136445533[J_735688652 + 1]) { int Te...
+[AddIfOne] candidate 4 | function=bubble_sort | role=BLOCK_ITEM[0] | path=bubble_sort.body.block[1].loop.body.block[0].loop.body.block[0] | kind=IfStatement(arms=1) | if (Arr_2136445533[J_735688652] > Arr_2136445533[J_735688652 + 1]) { int Temp...
+[AddIfOne] candidate 5 | function=bubble_sort | role=IF_TRUE | path=bubble_sort.body.block[1].loop.body.block[0].loop.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=3) | { int Temp_1547678950; Temp_1547678950 = Arr_2136445533[J_735688652]; Arr_213...
+[AddIfOne] candidate 6 | function=bubble_sort | role=BLOCK_ITEM[1] | path=bubble_sort.body.block[1].loop.body.block[0].loop.body.block[0].branch[0].block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | Arr_2136445533[J_735688652] = Arr_2136445533[J_735688652 + 1];
+[AddIfOne] candidate 7 | function=bubble_sort | role=BLOCK_ITEM[2] | path=bubble_sort.body.block[1].loop.body.block[0].loop.body.block[0].branch[0].block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | Arr_2136445533[J_735688652 + 1] = Temp_1547678950;
+[ADD_IF_ONE_SITE] application 1: selected 6 / 8
+[AddIfOne] SELECTED INDEX = 6
+[AddIfOne] SELECTED | function=bubble_sort | role=BLOCK_ITEM[1] | path=bubble_sort.body.block[1].loop.body.block[0].loop.body.block[0].branch[0].block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | Arr_2136445533[J_735688652] = Arr_2136445533[J_735688652 + 1];
+[AddIfOne] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | Arr_2136445533[J_735688652] = Arr_2136445533[J_735688652 + 1];
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

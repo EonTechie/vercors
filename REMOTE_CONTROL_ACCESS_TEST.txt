@@ -1,0 +1,6 @@
+Remote Control access test
+Written by Cursor agent on this PC at 2026-08-26 15:53 CEST
+Workspace: /home/filizyildizfi/VC/vercors
+Branch: robustness-post-resolution
+If you can see this file in Explorer, repo write access works.
+This file is a test only and can be deleted.

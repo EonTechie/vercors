@@ -1,0 +1,16 @@
+[INFO] Robustness mode started
+[INFO] Robustness transforms: robustnessForLoopToWhileLoop
+[INFO] Robustness repeat: 5
+[ForToWhile] candidate count = 0
+[FOR_TO_WHILE_SITE] application 1: 0 candidates, skip
+[ForToWhile] candidate count = 0
+[FOR_TO_WHILE_SITE] application 2: 0 candidates, skip
+[ForToWhile] candidate count = 0
+[FOR_TO_WHILE_SITE] application 3: 0 candidates, skip
+[ForToWhile] candidate count = 0
+[FOR_TO_WHILE_SITE] application 4: 0 candidates, skip
+[ForToWhile] candidate count = 0
+[FOR_TO_WHILE_SITE] application 5: 0 candidates, skip
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

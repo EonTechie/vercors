@@ -1,7 +1,6 @@
 package vct.main.modes
 
 import com.typesafe.scalalogging.LazyLogging
-import hre.stages.FunctionStage
 import vct.col.origin.BlameCollector
 import vct.col.print.Ctx
 import vct.col.rewrite.{
@@ -17,110 +16,73 @@ import vct.options.Options
 import vct.parsers.transform.ConstantBlameProvider
 import vct.result.VerificationError.{SystemError, UserError}
 
-import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.{Path, Paths}
 
 case object Robustness extends LazyLogging {
   private val outputPath: Path = Paths.get("robustness-transformed.c")
-  private val generatedSizeOfPrototype =
-    """\bpure\s+int\s+sizeof_[A-Za-z0-9_]*\s*\([^)]*\)\s*;""".r
 
-  private def stripGeneratedSizeOfHelpers(text: String): (String, Int) = {
-    val out = new StringBuilder
-    var cursor = 0
-    var removed = 0
-
-    while (cursor < text.length) {
-      val start = text.indexOf("/*@", cursor)
-      if (start < 0) {
-        out.append(text.substring(cursor))
-        cursor = text.length
-      } else {
-        val end = text.indexOf("@*/", start + 3)
-        if (end < 0) {
-          out.append(text.substring(cursor))
-          cursor = text.length
-        } else {
-          out.append(text.substring(cursor, start))
-          val blockEnd = end + 3
-          val block = text.substring(start, blockEnd)
-
-          if (generatedSizeOfPrototype.findFirstIn(block).nonEmpty) {
-            removed += 1
-            cursor = blockEnd
-            while (
-              cursor < text.length && text.charAt(cursor).isWhitespace
-            )
-              cursor += 1
-          } else {
-            out.append(block)
-            cursor = blockEnd
-          }
-        }
-      }
-    }
-
-    (out.toString, removed)
-  }
-
-  private def filterRobustnessOutput(path: Path): Unit = {
-    if (Files.exists(path)) {
-      val text = Files.readString(path, StandardCharsets.UTF_8)
-      val (filtered, removed) = stripGeneratedSizeOfHelpers(text)
-      if (removed > 0) {
-        Files.write(path, filtered.getBytes(StandardCharsets.UTF_8))
-        logger.info(s"Removed $removed generated sizeof helper(s) from $path")
-      }
-    }
-  }
-
-  private def selectedRobustnessPass: RewriterBuilder =
-    sys.env.get("ROBUSTNESS_TRANSFORM").map(_.trim.toLowerCase) match {
-      case None | Some("") | Some("add-if-zero") | Some("add_if_zero") |
-          Some("if0error") =>
+  private def parseTransform(name: String): RewriterBuilder =
+    name.trim.toLowerCase match {
+      case "" | "add-if-zero" | "add_if_zero" | "if0error" =>
         AddIfZero
 
-      case Some("add-if-one") | Some("add_if_one") | Some("add-if1") |
-          Some("add_if1") =>
+      case "add-if-one" | "add_if_one" | "add-if1" | "add_if1" =>
         AddIfOne
 
-      case Some("for-to-while") | Some("for_to_while") | Some("for2while") |
-          Some("for-loop-to-while") | Some("for_loop_to_while") =>
+      case "for-to-while" | "for_to_while" | "for2while" |
+          "for-loop-to-while" | "for_loop_to_while" =>
         RobustnessForLoopToWhileLoop
 
-      case Some(other) =>
+      case other =>
         throw new IllegalArgumentException(
           s"Unknown ROBUSTNESS_TRANSFORM=$other. " +
-            "Use add-if-zero, add-if-one, or for-to-while."
+            "Use add-if-zero, add-if-one, or for-to-while, " +
+            "optionally comma-separated."
         )
     }
+
+  private def selectedRobustnessPasses: Seq[RewriterBuilder] = {
+    val raw = sys.env.get("ROBUSTNESS_TRANSFORM").map(_.trim).filter(_.nonEmpty)
+      .getOrElse("add-if-zero")
+    val names = raw.split("[,\\s]+").iterator.map(_.trim).filter(_.nonEmpty)
+      .toSeq
+    if (names.isEmpty)
+      Seq(AddIfZero)
+    else
+      names.map(parseTransform)
+  }
 
   def runOptions(options: Options): Int = {
     logger.info("Robustness mode started")
 
     val collector = BlameCollector()
     val blameProvider = ConstantBlameProvider(collector)
-    val robustnessPass = selectedRobustnessPass
+    val builders = selectedRobustnessPasses
     val repeat = math.max(1, options.robustnessRepeat)
-    logger.info(s"Robustness transform: ${robustnessPass.key}")
+    // SemTransforms-style N-fold apply: cycle the listed transforms across
+    // `repeat` applications on the already-resolved AST (no C round-trip).
+    val passes = Seq.tabulate(repeat)(i => builders(i % builders.size))
+    logger.info(s"Robustness transforms: ${builders.map(_.key).mkString(",")}")
     logger.info(s"Robustness repeat: $repeat")
 
     vct.col.rewrite.RobustnessSiteSelection.reset()
 
-    // Parse and resolve once, then apply the selected robustness rewrite
+    // Parse and resolve once, then apply the selected robustness rewrite(s)
     // `repeat` times so later applications see the already-mutated AST.
+    // Generated sizeof_* helpers stay in the resolved AST for pointer-size
+    // reasoning, but C layout omits them (see Function.isGeneratedSizeOfHelper).
+    // Inter-pass typecheck is skipped for repeat > 1: 100 nested wraps would
+    // otherwise re-check the same well-formedness 100 times.
     val stages = Parsing.ofOptions[InitialGeneration](options, blameProvider)
       .thenRun(Resolution.ofOptions[InitialGeneration](options, blameProvider))
       .thenRun(new Transformation(
         onPassEvent = Nil,
-        passes = Seq.fill(repeat)(robustnessPass),
-        optimizeUnsafe = options.devUnsafeOptimization,
+        passes = passes,
+        optimizeUnsafe = options.devUnsafeOptimization || repeat > 1,
       )).thenRun(Output(
         out = Some(outputPath),
         syntax = Ctx.C,
         splitDecls = false,
-      )).thenRun(FunctionStage((_: Seq[hre.io.LiteralReadable]) =>
-        filterRobustnessOutput(outputPath)
       ))
 
     stages.run(options.inputs) match {

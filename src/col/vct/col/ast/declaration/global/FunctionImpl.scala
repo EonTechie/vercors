@@ -12,6 +12,15 @@ trait FunctionImpl[G]
     with AbstractFunctionImpl[G]
     with FunctionOps[G] {
   this: Function[G] =>
+
+  def isGeneratedSizeOfHelper: Boolean =
+    o.find[vct.col.origin.GeneratedSizeOfHelper.type].nonEmpty ||
+      (body.isEmpty &&
+        o.getPreferredName.exists { name =>
+          val snake = name.snake.toLowerCase
+          snake.startsWith("sizeof_") || snake.startsWith("size_of_")
+        })
+
   def layoutSilver(implicit ctx: Ctx): Doc =
     Group(
       Text("function") <+> ctx.name(this) <> "(" <> Doc.args(args) <> "):" <+>

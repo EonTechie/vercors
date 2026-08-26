@@ -1,0 +1,24 @@
+[INFO] Robustness mode started
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 2
+[AddIfZero] candidate count = 2
+[AddIfZero] candidate 0 | function=swap | role=BLOCK_ITEM[1] | path=swap.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_1391440696).Value_816956885 = (*Pointer2_292841327).Value_816956885;
+[AddIfZero] candidate 1 | function=swap | role=BLOCK_ITEM[2] | path=swap.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer2_292841327).Value_816956885 = Temp_1323206792;
+[ADD_IF_ZERO_SITE] application 1: default site 0 / 2
+[AddIfZero] SELECTED INDEX = 0
+[AddIfZero] SELECTED | function=swap | role=BLOCK_ITEM[1] | path=swap.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_1391440696).Value_816956885 = (*Pointer2_292841327).Value_816956885;
+[AddIfZero] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_1391440696).Value_816956885 = (*Pointer2_292841327).Value_816956885;
+[AddIfZero] candidate count = 6
+[AddIfZero] candidate 0 | function=swap | role=BLOCK_ITEM[1] | path=swap.body.block[1] | kind=AssignmentStatement | Temp_1798272295 = (*Pointer1_1963532908).Value_1285344791;
+[AddIfZero] candidate 1 | function=swap | role=BLOCK_ITEM[2] | path=swap.body.block[2] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { (*Pointer1_1963532908).Value_12853447...
+[AddIfZero] candidate 2 | function=swap | role=IF_TRUE | path=swap.body.block[2].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 3 | function=swap | role=IF_ELSE[1] | path=swap.body.block[2].branch[1] | kind=CompoundStatement(locals=0, items=1) | { (*Pointer1_1963532908).Value_1285344791 = (*Pointer2_460998960).Value_12853...
+[AddIfZero] candidate 4 | function=swap | role=BLOCK_ITEM[0] | path=swap.body.block[2].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_1963532908).Value_1285344791 = (*Pointer2_460998960).Value_1285344...
+[AddIfZero] candidate 5 | function=swap | role=BLOCK_ITEM[3] | path=swap.body.block[3] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer2_460998960).Value_1285344791 = Temp_1798272295;
+[ADD_IF_ZERO_SITE] application 2: default site 0 / 6
+[AddIfZero] SELECTED INDEX = 0
+[AddIfZero] SELECTED | function=swap | role=BLOCK_ITEM[1] | path=swap.body.block[1] | kind=AssignmentStatement | Temp_1798272295 = (*Pointer1_1963532908).Value_1285344791;
+[AddIfZero] WRAP class=AssignInitial | AssignmentStatement | Temp_1798272295 = (*Pointer1_1963532908).Value_1285344791;
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

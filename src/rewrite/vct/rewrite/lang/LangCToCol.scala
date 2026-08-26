@@ -570,7 +570,8 @@ case class LangCToCol[Pre <: Generation](rw: LangSpecificToCol[Pre])
                           case TypeSize.Exact(size) =>
                             result === sizeVar.get * c_const(size / 8)
                         }),
-                      )(o.where(name = s"sizeOf_$t"))
+                      )(o.where(name = s"sizeOf_$t")
+                        .withContent(GeneratedSizeOfHelper))
                     ))
                 },
               ).ref[Function[Post]],
@@ -592,7 +593,8 @@ case class LangCToCol[Pre <: Generation](rw: LangSpecificToCol[Pre])
                           case TypeSize.Minimally(size) =>
                             result >= c_const(size / 8)
                         }),
-                      )(o.where(name = s"sizeOf_$t"))
+                      )(o.where(name = s"sizeOf_$t")
+                        .withContent(GeneratedSizeOfHelper))
                     ))
                 },
               ).ref[Function[Post]],

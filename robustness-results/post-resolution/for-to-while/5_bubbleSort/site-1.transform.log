@@ -1,0 +1,12 @@
+[INFO] Robustness mode started
+[INFO] Robustness transforms: robustnessForLoopToWhileLoop
+[INFO] Robustness repeat: 1
+[ForToWhile] candidate count = 2
+[ForToWhile] candidate 0 | function=bubble_sort | path=bubble_sort.body.scope.block[1].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[ForToWhile] candidate 1 | function=bubble_sort | path=bubble_sort.body.scope.block[1].scope.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[FOR_TO_WHILE_SITE] application 1: selected 1 / 2
+[ForToWhile] SELECTED INDEX = 1
+[ForToWhile] SELECTED | function=bubble_sort | path=bubble_sort.body.scope.block[1].scope.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

@@ -1,0 +1,27 @@
+[INFO] Robustness mode started
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 2
+[AddIfZero] candidate count = 3
+[AddIfZero] candidate 0 | function=sum_list | role=BLOCK_ITEM[2] | path=sum_list.body.block[2] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ decreases Length_1025277563 - I_1368857906; loop_invariant 0 <= I_13688...
+[AddIfZero] candidate 1 | function=sum_list | role=LOOP_BODY | path=sum_list.body.block[2].loop.body | kind=CompoundStatement(locals=0, items=1) | { Sum_2073462343 = Sum_2073462343 + List_317149559[I_1368857906]; }
+[AddIfZero] candidate 2 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[2].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_2073462343 = Sum_2073462343 + List_317149559[I_1368857906];
+[ADD_IF_ZERO_SITE] application 1: default site 0 / 3
+[AddIfZero] SELECTED INDEX = 0
+[AddIfZero] SELECTED | function=sum_list | role=BLOCK_ITEM[2] | path=sum_list.body.block[2] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ decreases Length_1025277563 - I_1368857906; loop_invariant 0 <= I_13688...
+[AddIfZero] WRAP class=Scope | LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ decreases Length_1025277563 - I_1368857906; loop_invariant 0 <= I_13688...
+[AddIfZero] candidate count = 8
+[AddIfZero] candidate 0 | function=sum_list | role=BLOCK_ITEM[1] | path=sum_list.body.block[1] | kind=AssignmentStatement | Sum_51079645 = 0;
+[AddIfZero] candidate 1 | function=sum_list | role=BLOCK_ITEM[3] | path=sum_list.body.block[3] | kind=AssignmentStatement | I_472141361 = 0;
+[AddIfZero] candidate 2 | function=sum_list | role=BLOCK_ITEM[4] | path=sum_list.body.block[4] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { /*@ decreases Length_1654583020 - I_4...
+[AddIfZero] candidate 3 | function=sum_list | role=IF_TRUE | path=sum_list.body.block[4].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 4 | function=sum_list | role=IF_ELSE[1] | path=sum_list.body.block[4].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ decreases Length_1654583020 - I_472141361; loop_invariant 0 <= I_472141...
+[AddIfZero] candidate 5 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].branch[1].block[0] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ decreases Length_1654583020 - I_472141361; loop_invariant 0 <= I_472141...
+[AddIfZero] candidate 6 | function=sum_list | role=LOOP_BODY | path=sum_list.body.block[4].branch[1].block[0].loop.body | kind=CompoundStatement(locals=0, items=1) | { Sum_51079645 = Sum_51079645 + List_1405755439[I_472141361]; }
+[AddIfZero] candidate 7 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].branch[1].block[0].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_51079645 = Sum_51079645 + List_1405755439[I_472141361];
+[ADD_IF_ZERO_SITE] application 2: default site 0 / 8
+[AddIfZero] SELECTED INDEX = 0
+[AddIfZero] SELECTED | function=sum_list | role=BLOCK_ITEM[1] | path=sum_list.body.block[1] | kind=AssignmentStatement | Sum_51079645 = 0;
+[AddIfZero] WRAP class=AssignInitial | AssignmentStatement | Sum_51079645 = 0;
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

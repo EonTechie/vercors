@@ -33,14 +33,14 @@ object CStatementSites {
       role: Role,
       target: Statement[G],
   ) {
-    def description: String = describe(target)
+    def description: String = describe(target) + " | " + snippet(target)
   }
 
   private def blacklistedFunction(name: String): Boolean =
     name == "reach_error" || name == "abort" || name == "assume_abort_if_not" ||
       name.startsWith("__VERIFIER_")
 
-  private def abruptControl[G](stat: Statement[G]): Boolean =
+  def isAbruptStatement[G](stat: Statement[G]): Boolean =
     stat match {
       case _: Return[G] | _: Throw[G] | _: Break[G] | _: Continue[G] |
           _: Goto[G] | _: CGoto[G] =>
@@ -48,17 +48,33 @@ object CStatementSites {
       case _ => false
     }
 
-  // Peel COL Scope/Block wrappers only. Do not walk into If/Loop: those stay
-  // wrap sites even when a child is return/goto/continue.
-  private def unwrapTrivial[G](stat: Statement[G]): Statement[G] =
+  def isForbiddenWrapTarget[G](stat: Statement[G]): Boolean =
     stat match {
-      case Scope(Nil, body) => unwrapTrivial(body)
-      case Block(Seq(inner)) => unwrapTrivial(inner)
-      case other => other
+      // Robustness mode: never create an if(1) wrapper around return-like
+      // control flow, including wrappers around an if/loop/block that contains
+      // such a statement.
+      case _ if isAbruptStatement(stat) => true
+      case Scope(_, body) => isForbiddenWrapTarget(body)
+      case Block(statements) => statements.exists(isForbiddenWrapTarget)
+      case Branch(branches) =>
+        branches.exists { case (_, body) => isForbiddenWrapTarget(body) }
+      case IndetBranch(branches) => branches.exists(isForbiddenWrapTarget)
+      case Loop(_, _, _, _, body) => isForbiddenWrapTarget(body)
+      case Switch(_, body) => isForbiddenWrapTarget(body)
+      case Label(_, inner, _) => isForbiddenWrapTarget(inner)
+      case _ => false
     }
 
-  def isForbiddenWrapTarget[G](stat: Statement[G]): Boolean =
-    abruptControl(unwrapTrivial(stat))
+  // True when this node is return-like, or is only a block/scope around one.
+  // If/loop containers are allowed so wrapping `if (...) return` stays a site.
+  private def containsDirectAbrupt[G](stat: Statement[G]): Boolean =
+    stat match {
+      case _ if isAbruptStatement(stat) => true
+      case Scope(_, body) => containsDirectAbrupt(body)
+      case Block(statements) => statements.exists(containsDirectAbrupt)
+      case Label(_, inner, _) => containsDirectAbrupt(inner)
+      case _ => false
+    }
 
   private def declarationCluster[G](stat: Statement[G]): Boolean =
     stat match {
@@ -78,9 +94,14 @@ object CStatementSites {
       case _ => false
     }
 
-  private def selectableShape[G](stat: Statement[G]): Boolean =
+  private def selectableShape[G](
+      stat: Statement[G],
+      excludeContainedAbrupt: Boolean,
+  ): Boolean =
     stat match {
-      case _ if isForbiddenWrapTarget(stat) => false
+      case _ if isAbruptStatement(stat) => false
+      case _ if excludeContainedAbrupt && isForbiddenWrapTarget(stat) => false
+      case _ if !excludeContainedAbrupt && containsDirectAbrupt(stat) => false
       case _ if declarationCluster(stat) => false
       case _: NonExecutableStatement[G] => false
 
@@ -96,8 +117,26 @@ object CStatementSites {
       case _ => false
     }
 
-  private def selectable[G](role: Role, stat: Statement[G]): Boolean =
-    selectableShape(stat)
+  private def selectable[G](
+      role: Role,
+      stat: Statement[G],
+      excludeContainedAbrupt: Boolean,
+  ): Boolean = selectableShape(stat, excludeContainedAbrupt)
+
+  private def snippet[G](stat: Statement[G]): String =
+    try {
+      implicit val ctx: vct.col.print.Ctx = vct.col.print.Ctx(
+        syntax = vct.col.print.Ctx.C,
+        width = 80,
+      )
+      val text = stat.toStringWithContext.replaceAll("\\s+", " ").trim
+      if (text.length > 80)
+        text.take(77) + "..."
+      else
+        text
+    } catch {
+      case _: Throwable => stat.getClass.getSimpleName
+    }
 
   private def describe[G](stat: Statement[G]): String =
     stat match {
@@ -126,7 +165,10 @@ object CStatementSites {
       case other => other.getClass.getSimpleName
     }
 
-  def collect[G](program: Program[G]): Seq[Site[G]] = {
+  def collect[G](
+      program: Program[G],
+      excludeContainedAbrupt: Boolean = true,
+  ): Seq[Site[G]] = {
     val result = ArrayBuffer.empty[Site[G]]
 
     def add(
@@ -135,7 +177,7 @@ object CStatementSites {
         role: Role,
         target: Statement[G],
     ): Unit =
-      if (selectable(role, target)) {
+      if (selectable(role, target, excludeContainedAbrupt)) {
         result += Site(functionName, path, role, target)
       }
 
