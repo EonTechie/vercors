@@ -1,5 +1,0 @@
-[INFO] Start: VerCors (at 00:05:18)
-[WARN] The quantifier site-1.c:4-:4: 'ensures (\forall int x; 0 <= x && x < length ==> \result >= arr[x]);' contains no triggers
-[WARN] The quantifier site-1.c:19-:19: '    loop_invariant (\forall int x; 0 <= x && x < i ==> biggest >= arr[x]);' contains no triggers
-[INFO] Verification completed successfully.
-[INFO] Done: VerCors (at 00:05:50, duration: 00:00:32)

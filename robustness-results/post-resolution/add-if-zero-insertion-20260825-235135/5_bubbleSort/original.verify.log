@@ -1,12 +1,0 @@
-[INFO] Start: VerCors (at 00:10:44)
-[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
-The quantifier 5_bubbleSort.c:8-:10: '    (\forall int i;
-      0 <= i && i <= length - 2;
-      arr[i] <= arr[i + 1]);' contains no triggers
-[WARN] The quantifier 5_bubbleSort.c:17-:17: '    //@ loop_invariant (\forall int k; n - i <= k && k < n - 1; arr[k] <= arr[k + 1]);' contains no triggers
-[WARN] The quantifier 5_bubbleSort.c:18-:18: '    //@ loop_invariant (\forall int g, int h; 0 <= g && g < n - i && n - i <= h && h < n; arr[g] <= arr[h]);' contains no triggers
-[WARN] The quantifier 5_bubbleSort.c:23-:23: '        //@ loop_invariant (\forall int k; n - i <= k && k < n - 1; arr[k] <= arr[k + 1]);' contains no triggers
-[WARN] The quantifier 5_bubbleSort.c:24-:24: '        //@ loop_invariant (\forall int g, int h; 0 <= g && g < n - i && n - i <= h && h < n; arr[g] <= arr[h]);' contains no triggers
-[WARN] The quantifier 5_bubbleSort.c:25-:25: '        //@ loop_invariant (\forall int k; 0 <= k && k < j; arr[k] <= arr[j]);' contains no triggers
-[INFO] Verification completed successfully.
-[INFO] Done: VerCors (at 00:12:35, duration: 00:01:51)

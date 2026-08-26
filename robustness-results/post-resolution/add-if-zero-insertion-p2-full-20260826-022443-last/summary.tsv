@@ -1,8 +1,0 @@
-program	original	candidates	transform_pass	transform_fail	verify_pass	verify_fail
-1_absolute	PASS	4	4	0	4	0
-2_swap	PASS	4	4	0	4	0
-3_mult_add	PASS	4	4	0	4	0
-3_while_multip	PASS	7	7	0	7	0
-4_big	PASS	8	8	0	8	0
-5_bubbleSort	PASS	11	11	0	11	0
-6_pure	PASS	6	6	0	6	0

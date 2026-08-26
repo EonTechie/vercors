@@ -1,2 +1,0 @@
-[ForToWhile] candidate count = 1
-[ForToWhile] candidate 0 | function=is_biggest | path=is_biggest.body.scope.block[2].scope | kind=ForLoop(init=ExpressionStatement(expr=PreAssignExpression), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))

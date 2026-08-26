@@ -1,53 +1,0 @@
-                                                                              [INFO] Start: VerCors (at 19:42:38)
-                                                                              [0.0%] VerCors › Loading PVL library file pushin.pvl                                                                              [WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
-[0.0%] VerCors › Loading PVL library file pushin.pvl                                                                                                                                                            [0.0%] VerCors › Loading PVL library file simplify.pvl                                                                                                                                                                                                                                          [0.0%] VerCors › Parsing › site-1.c                                                                              [1.9%] VerCors › Parsing                                                                              ======================================
-At vercors-interpreted-5825539743921351931.i
---------------------------------------
-   22      );
-   23      @*/
-                                        [-
-   24      for (int i = 0;; (i) < (n) - 1; (i) = (i) + 1) {
-                                         -]
-   25          if (0) {
-   26              /*@ assert false; @*/
---------------------------------------
-[1/4] Parsing failed: missing ')' at ';'
---------------------------------------
-At vercors-interpreted-5825539743921351931.i
---------------------------------------
-   22      );
-   23      @*/
-                                                       [-
-   24      for (int i = 0;; (i) < (n) - 1; (i) = (i) + 1) {
-                                                        -]
-   25          if (0) {
-   26              /*@ assert false; @*/
---------------------------------------
-[2/4] Parsing failed: mismatched input ')' expecting {'(', '[', '<', '<=', '>', '>=', '<<', '>>', '+', '++', '-', '--', '*', '/', '%', '&', '|', '&&', '||', '^', ';', ',', '==', '!=', '->', '.', BlockStartSpecImmediate, 'then', '\in', '?.', '\', '**', BlockStartSpec, LineStartSpec}
---------------------------------------
-At vercors-interpreted-5825539743921351931.i
---------------------------------------
-   35              loop_invariant (\forall int k; 0 <= (k) && (k) < (j) ==> (arr)[k] <= (arr)[j]);
-   36              @*/
-                                                      [-
-   37              for (int j = 0;; (j) < (n) - 1 - (i); (j) = (j) + 1) {
-                                                       -]
-   38                  if ((arr)[j] > (arr)[(j) + 1]) {
-   39                      int temp = (arr)[j];
---------------------------------------
-[3/4] Parsing failed: missing ')' at ';'
---------------------------------------
-At vercors-interpreted-5825539743921351931.i
---------------------------------------
-   35              loop_invariant (\forall int k; 0 <= (k) && (k) < (j) ==> (arr)[k] <= (arr)[j]);
-   36              @*/
-                                                                     [-
-   37              for (int j = 0;; (j) < (n) - 1 - (i); (j) = (j) + 1) {
-                                                                      -]
-   38                  if ((arr)[j] > (arr)[(j) + 1]) {
-   39                      int temp = (arr)[j];
---------------------------------------
-[4/4] Parsing failed: mismatched input ')' expecting {'(', '[', '<', '<=', '>', '>=', '<<', '>>', '+', '++', '-', '--', '*', '/', '%', '&', '|', '&&', '||', '^', ';', ',', '==', '!=', '->', '.', BlockStartSpecImmediate, 'then', '\in', '?.', '\', '**', BlockStartSpec, LineStartSpec}
-======================================
-[1.9%] VerCors › Parsing                                                                              [INFO] Done: VerCors (at 19:42:48, duration: 00:00:09)
-[1.9%] VerCors › Parsing                                                                                                                                                            

@@ -1,2 +1,0 @@
-[ForToWhile] candidate count = 1
-[ForToWhile] candidate 0 | function=sum_list | path=sum_list.body.scope.block[2].scope | kind=ForLoop(init=Block(items=0), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))

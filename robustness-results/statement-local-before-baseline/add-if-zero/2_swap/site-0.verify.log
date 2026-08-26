@@ -1,27 +1,0 @@
-                                                                              [INFO] Start: VerCors (at 19:28:56)
-                                                                              [0.0%] VerCors › Loading PVL library file pushin.pvl                                                                              [WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
-[0.0%] VerCors › Loading PVL library file pushin.pvl                                                                                                                                                            [0.0%] VerCors › Loading PVL library file simplify.pvl                                                                                                                                                                                                                                          [0.0%] VerCors › Parsing › site-0.c                                                                              [1.9%] VerCors › Parsing                                                                              ======================================
-At vercors-interpreted-3481938946009297736.i
---------------------------------------
-    8  struct IntBox { int value; } ;
-    9  /*@
-                             [----
-   10  requires (pointer1) != null;
-                              ----]
-   11  requires (pointer2) != null;
-   12  requires (pointer1) != (pointer2) ==> Perm((pointer1)->value, write) ** Perm((pointer2)->value, write);
---------------------------------------
-At site-0.c
---------------------------------------
-    1  struct IntBox { int value; } ;
-    2  /*@
-      [------------------------------
-    3  requires (pointer1) != null;
-       ------------------------------]
-    4  requires (pointer2) != null;
-    5  requires (pointer1) != (pointer2) ==> Perm((pointer1)->value, write) ** Perm((pointer2)->value, write);
---------------------------------------
-Could not find local named null.
-======================================
-[1.9%] VerCors › Parsing                                                                              [INFO] Done: VerCors (at 19:29:07, duration: 00:00:11)
-[1.9%] VerCors › Parsing                                                                                                                                                            

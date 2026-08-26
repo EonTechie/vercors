@@ -1,2 +1,0 @@
-[AddIfZero] candidate count = 1
-[AddIfZero] candidate 0 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[0] | kind=IfStatement(arms=2)

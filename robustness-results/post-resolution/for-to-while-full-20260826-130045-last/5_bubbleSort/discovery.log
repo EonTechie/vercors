@@ -1,3 +1,0 @@
-[ForToWhile] candidate count = 2
-[ForToWhile] candidate 0 | function=bubble_sort | path=bubble_sort.body.scope.block[1].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
-[ForToWhile] candidate 1 | function=bubble_sort | path=bubble_sort.body.scope.block[1].scope.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))

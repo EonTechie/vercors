@@ -1,27 +1,0 @@
-                                                                              [INFO] Start: VerCors (at 19:48:08)
-                                                                              [0.0%] VerCors › Loading PVL library file pushin.pvl                                                                              [WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
-[0.0%] VerCors › Loading PVL library file pushin.pvl                                                                                                                                                            [0.0%] VerCors › Loading PVL library file simplify.pvl                                                                                                                                                                                                                                          [0.0%] VerCors › Parsing › site-1.c                                                                              [1.9%] VerCors › Parsing                                                                              [19.0%] VerCors › Name Resolution                                                                              ======================================
-At vercors-interpreted-17197588547320605527.i
---------------------------------------
-   19  context_everywhere (\forall int x; 0 <= (x) && (x) < (length) ==> (xs)[x] == (list)[x]);
-   20  requires (length) >= 0;
-                                     [--
-   21  ensures \result == (prefixSum)(xs, length);
-                                      --]
-   22  @*/
-   23  int sum_list(int *list, int length) {
---------------------------------------
-At site-1.c
---------------------------------------
-   12  context_everywhere (\forall int x; 0 <= (x) && (x) < (length) ==> (xs)[x] == (list)[x]);
-   13  requires (length) >= 0;
-      [---------------------------------------------
-   14  ensures \result == (prefixSum)(xs, length);
-       ---------------------------------------------]
-   15  @*/
-   16  int sum_list(int *list, int length) {
---------------------------------------
-Could not find local named xs.
-======================================
-[19.0%] VerCors › Name Resolution                                                                              [INFO] Done: VerCors (at 19:48:18, duration: 00:00:09)
-[19.0%] VerCors › Name Resolution                                                                                                                                                            

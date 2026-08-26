@@ -1,2 +1,0 @@
-[AddIfZero] candidate count = 1
-[AddIfZero] candidate 0 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0] | kind=IfStatement(arms=2)
