@@ -3,6 +3,7 @@ package vct.col.rewrite
 import scala.collection.mutable.ArrayBuffer
 
 import vct.col.ast._
+import vct.col.ref.Ref
 import vct.col.resolve.lang.C
 
 object CStatementSites {
@@ -39,22 +40,6 @@ object CStatementSites {
     name == "reach_error" || name == "abort" || name == "assume_abort_if_not" ||
       name.startsWith("__VERIFIER_")
 
-  private def containsAbruptControl[G](stat: Statement[G]): Boolean =
-    stat match {
-      case _: Return[G] | _: Throw[G] | _: Break[G] | _: Continue[G] |
-          _: Goto[G] | _: CGoto[G] =>
-        true
-      case Block(statements) => statements.exists(containsAbruptControl)
-      case Scope(_, body) => containsAbruptControl(body)
-      case Branch(branches) =>
-        branches.exists { case (_, body) => containsAbruptControl(body) }
-      case IndetBranch(branches) => branches.exists(containsAbruptControl)
-      case Loop(_, _, _, _, body) => containsAbruptControl(body)
-      case Switch(_, body) => containsAbruptControl(body)
-      case Label(_, inner, _) => containsAbruptControl(inner)
-      case _ => false
-    }
-
   private def abruptControl[G](stat: Statement[G]): Boolean =
     stat match {
       case _: Return[G] | _: Throw[G] | _: Break[G] | _: Continue[G] |
@@ -63,16 +48,35 @@ object CStatementSites {
       case _ => false
     }
 
+  private def declarationCluster[G](stat: Statement[G]): Boolean =
+    stat match {
+      case _: CDeclarationStatement[G] | _: LocalDecl[G] | _: HeapLocalDecl[G] =>
+        true
+
+      case Scope(Nil, body) => declarationCluster(body)
+
+      case Block(Seq(inner)) => declarationCluster(inner)
+
+      case Block(Seq(LocalDecl(local), AssignInitial(Local(Ref(v)), _))) =>
+        v eq local
+
+      case Block(Seq(LocalDecl(local), Assign(Local(Ref(v)), _))) =>
+        v eq local
+
+      case _ => false
+    }
+
   private def selectableShape[G](stat: Statement[G]): Boolean =
     stat match {
       case _ if abruptControl(stat) => false
-      case _: CDeclarationStatement[G] => false
+      case _ if declarationCluster(stat) => false
       case _: NonExecutableStatement[G] => false
 
       case _: AssignStmt[G] => true
       case _: Eval[G] => true
       case _: InvocationStatement[G] => true
       case _: Branch[G] => true
+      case Block(_) => true
       case Scope(_, Block(_)) => true
       case Scope(_, Loop(_, _, _, _, _)) => true
       case _: Loop[G] => true
@@ -80,18 +84,8 @@ object CStatementSites {
       case _ => false
     }
 
-  private def selectable[G](role: Role, stat: Statement[G]): Boolean = {
-    if (!selectableShape(stat)) { false }
-    else
-      role match {
-        case _: BranchArm =>
-          // Adjusted for robustness mode: do not wrap an if/else branch body
-          // that contains return-like control flow, but still allow the parent
-          // if statement to be selected as its own site.
-          !containsAbruptControl(stat)
-        case _ => true
-      }
-  }
+  private def selectable[G](role: Role, stat: Statement[G]): Boolean =
+    selectableShape(stat)
 
   private def describe[G](stat: Statement[G]): String =
     stat match {
@@ -135,7 +129,16 @@ object CStatementSites {
 
     def descend(functionName: String, path: String, stat: Statement[G]): Unit =
       stat match {
+        case _ if declarationCluster(stat) =>
+
         case Scope(_, Block(statements)) =>
+          statements.zipWithIndex.foreach { case (child, index) =>
+            val childPath = s"$path.block[$index]"
+            add(functionName, childPath, BlockItem(index), child)
+            descend(functionName, childPath, child)
+          }
+
+        case Block(statements) =>
           statements.zipWithIndex.foreach { case (child, index) =>
             val childPath = s"$path.block[$index]"
             add(functionName, childPath, BlockItem(index), child)
@@ -158,6 +161,18 @@ object CStatementSites {
           val bodyPath = s"$path.body"
           add(functionName, bodyPath, LoopBody, body)
           descend(functionName, bodyPath, body)
+
+        case IndetBranch(branches) =>
+          branches.zipWithIndex.foreach { case (body, index) =>
+            add(functionName, s"$path.indet[$index]", BranchArm(index), body)
+          }
+
+          branches.zipWithIndex.foreach { case (body, index) =>
+            descend(functionName, s"$path.indet[$index]", body)
+          }
+
+        case Switch(_, body) =>
+          descend(functionName, s"$path.switchBody", body)
 
         case Label(_, inner, _) =>
           descend(functionName, s"$path.labelBody", inner)

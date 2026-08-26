@@ -24,22 +24,16 @@ case class AddIfOne[
     Option[CStatementSites.Site[Pre]] =
     None
 
-  private def one(
-                   origin: Origin
-                 ): CIntegerValue[Post] = {
+  private def one(origin: Origin): BooleanValue[Post] =
+    BooleanValue[Post](true)(origin)
 
-    implicit val o: Origin =
-      origin
-
-    CIntegerValue[Post](
-      BigInt(1),
-      CPrimitiveType[Post](
-        Seq(
-          CInt[Post]()
-        )
-      )
-    )
-  }
+  private def emptyBranch(origin: Origin): Statement[Post] =
+    Scope[Post](
+      Nil,
+      Block[Post](
+        Nil
+      )(origin)
+    )(origin)
 
   private def asSourceCompound(
                                 stat: Statement[Post],
@@ -89,9 +83,18 @@ case class AddIfOne[
       if (candidates.nonEmpty) {
 
         val selectedIndex =
-          Random.nextInt(
-            candidates.size
+          sys.env.get("ADD_IF_ONE_SITE").map(_.toInt).getOrElse(
+            Random.nextInt(
+              candidates.size
+            )
           )
+
+        if (selectedIndex < 0 || selectedIndex >= candidates.size) {
+          throw new IllegalArgumentException(
+            s"Invalid AddIfOne site index: $selectedIndex. " +
+              s"Valid range: 0..${candidates.size - 1}"
+          )
+        }
 
         val site =
           candidates(selectedIndex)
@@ -134,7 +137,11 @@ case class AddIfOne[
                 stat.rewriteDefault(),
                 stat.o,
               ),
-            )
+            ),
+            (
+              BooleanValue[Post](true)(stat.o),
+              emptyBranch(stat.o),
+            ),
           )
         )(stat.o)
 
