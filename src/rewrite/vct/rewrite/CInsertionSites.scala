@@ -24,14 +24,6 @@ object CInsertionSites {
     name == "reach_error" || name == "abort" || name == "assume_abort_if_not" ||
       name.startsWith("__VERIFIER_")
 
-  private def abruptControl[G](stat: Statement[G]): Boolean =
-    stat match {
-      case _: Return[G] | _: Throw[G] | _: Break[G] | _: Continue[G] |
-          _: Goto[G] | _: CGoto[G] =>
-        true
-      case _ => false
-    }
-
   private def splitDeclarationInitializer[G](
       previous: Statement[G],
       next: Statement[G],
@@ -67,7 +59,6 @@ object CInsertionSites {
     val previous = if (index == 0) None else Some(statements(index - 1))
     val next = if (index == statements.size) None else Some(statements(index))
 
-    !previous.exists(abruptControl) &&
     !(previous.nonEmpty && next.nonEmpty &&
       splitDeclarationInitializer(previous.get, next.get))
   }

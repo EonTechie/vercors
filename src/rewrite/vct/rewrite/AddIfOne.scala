@@ -129,6 +129,13 @@ case class AddIfOne[
       case Some(site)
         if site.target eq stat =>
 
+        if (CStatementSites.containsAbruptControl(stat)) {
+          throw new IllegalStateException(
+            "AddIfOne selected a forbidden return-like control-flow site: " +
+              s"${site.path} (${site.description})"
+          )
+        }
+
         Branch[Post](
           Seq(
             (

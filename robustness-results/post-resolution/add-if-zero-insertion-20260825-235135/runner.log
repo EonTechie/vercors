@@ -1,0 +1,77 @@
+WORK=/tmp/robustness-work-6GWdDC
+OUT=/home/filizyildizfi/VC/vercors/robustness-results/post-resolution/add-if-zero-insertion-20260825-235135
+Using /home/filizyildizfi/VC/vercors/out/vercors/main/runScript.dest/vercors
+========== 1_absolute ==========
+original=PASS
+candidates=4
+---- 1_absolute site-1 ----
+---- 1_absolute site-2 ----
+---- 1_absolute site-3 ----
+done 1_absolute orig=PASS cand=4 tpass=4 tfail=0 vpass=4 vfail=0
+========== 2_swap ==========
+original=PASS
+candidates=4
+---- 2_swap site-1 ----
+---- 2_swap site-2 ----
+---- 2_swap site-3 ----
+done 2_swap orig=PASS cand=4 tpass=4 tfail=0 vpass=4 vfail=0
+========== 3_mult_add ==========
+original=PASS
+candidates=4
+---- 3_mult_add site-1 ----
+---- 3_mult_add site-2 ----
+---- 3_mult_add site-3 ----
+done 3_mult_add orig=PASS cand=4 tpass=4 tfail=0 vpass=4 vfail=0
+========== 3_while_multip ==========
+original=PASS
+candidates=7
+---- 3_while_multip site-1 ----
+---- 3_while_multip site-2 ----
+---- 3_while_multip site-3 ----
+---- 3_while_multip site-4 ----
+---- 3_while_multip site-5 ----
+---- 3_while_multip site-6 ----
+done 3_while_multip orig=PASS cand=7 tpass=7 tfail=0 vpass=7 vfail=0
+========== 4_big ==========
+original=PASS
+candidates=8
+---- 4_big site-1 ----
+---- 4_big site-2 ----
+---- 4_big site-3 ----
+---- 4_big site-4 ----
+---- 4_big site-5 ----
+---- 4_big site-6 ----
+---- 4_big site-7 ----
+done 4_big orig=PASS cand=8 tpass=8 tfail=0 vpass=8 vfail=0
+========== 5_bubbleSort ==========
+original=PASS
+candidates=11
+---- 5_bubbleSort site-1 ----
+---- 5_bubbleSort site-2 ----
+---- 5_bubbleSort site-3 ----
+---- 5_bubbleSort site-4 ----
+---- 5_bubbleSort site-5 ----
+---- 5_bubbleSort site-6 ----
+---- 5_bubbleSort site-7 ----
+---- 5_bubbleSort site-8 ----
+---- 5_bubbleSort site-9 ----
+---- 5_bubbleSort site-10 ----
+done 5_bubbleSort orig=PASS cand=11 tpass=11 tfail=0 vpass=11 vfail=0
+========== 6_pure ==========
+original=PASS
+candidates=6
+---- 6_pure site-1 ----
+---- 6_pure site-2 ----
+---- 6_pure site-3 ----
+---- 6_pure site-4 ----
+---- 6_pure site-5 ----
+done 6_pure orig=PASS cand=6 tpass=6 tfail=0 vpass=6 vfail=0
+ALL_DONE
+program	original	candidates	transform_pass	transform_fail	verify_pass	verify_fail
+1_absolute	PASS	4	4	0	4	0
+2_swap	PASS	4	4	0	4	0
+3_mult_add	PASS	4	4	0	4	0
+3_while_multip	PASS	7	7	0	7	0
+4_big	PASS	8	8	0	8	0
+5_bubbleSort	PASS	11	11	0	11	0
+6_pure	PASS	6	6	0	6	0

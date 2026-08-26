@@ -102,11 +102,21 @@ trait LoopImpl[G] extends LoopOps[G] {
     else
       layoutGenericFor
 
+  private def layoutGenericBody(implicit ctx: Ctx): Doc =
+    ctx.syntax match {
+      case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP =>
+        body match {
+          case Block(_) | Scope(_, _) => body.layoutAsBlock
+          case _ => body.show
+        }
+      case _ => body.layoutAsBlock
+    }
+
   def layoutGenericWhile(implicit ctx: Ctx): Doc =
     Doc.stack(Seq(
       contract,
       Group(Text("while") <+> "(" <> Doc.arg(cond) <> ")") <+>
-        body.layoutAsBlock,
+        layoutGenericBody,
     ))
 
   def simpleControlElements(
@@ -187,7 +197,7 @@ trait LoopImpl[G] extends LoopOps[G] {
              else
                print.Empty <+/> layoutControl(update))
         ) </> ")"
-      ) <+> body.layoutAsBlock,
+      ) <+> layoutGenericBody,
     ))
 
   override def layout(implicit ctx: Ctx): Doc =

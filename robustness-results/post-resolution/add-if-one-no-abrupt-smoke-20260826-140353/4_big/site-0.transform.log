@@ -1,0 +1,13 @@
+[INFO] Robustness mode started
+[INFO] Robustness transform: addIfOne
+[AddIfOne] candidate count = 5
+[AddIfOne] candidate 0 | function=is_biggest | role=BLOCK_ITEM[2] | path=is_biggest.body.block[2] | kind=LoopScope(init=Eval, cond=AmbiguousLess, update=Eval, body=Scope)
+[AddIfOne] candidate 1 | function=is_biggest | role=LOOP_BODY | path=is_biggest.body.block[2].loop.body | kind=CompoundStatement(locals=0, items=1)
+[AddIfOne] candidate 2 | function=is_biggest | role=BLOCK_ITEM[0] | path=is_biggest.body.block[2].loop.body.block[0] | kind=IfStatement(arms=1)
+[AddIfOne] candidate 3 | function=is_biggest | role=IF_TRUE | path=is_biggest.body.block[2].loop.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=1)
+[AddIfOne] candidate 4 | function=is_biggest | role=BLOCK_ITEM[0] | path=is_biggest.body.block[2].loop.body.block[0].branch[0].block[0] | kind=ExpressionStatement(expr=PreAssignExpression)
+[AddIfOne] SELECTED INDEX = 0
+[AddIfOne] SELECTED | function=is_biggest | role=BLOCK_ITEM[2] | path=is_biggest.body.block[2] | kind=LoopScope(init=Eval, cond=AmbiguousLess, update=Eval, body=Scope)
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

@@ -1,0 +1,8 @@
+program	transform	candidates
+1_absolute	PASS	
+2_swap	PASS	
+3_mult_add	PASS	
+3_while_multip	PASS	
+4_big	PASS	
+5_bubbleSort	PASS	
+6_pure	PASS	

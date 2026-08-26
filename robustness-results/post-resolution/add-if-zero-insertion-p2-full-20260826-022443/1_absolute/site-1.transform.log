@@ -1,0 +1,12 @@
+[INFO] Robustness mode started
+[INFO] Robustness transform: addIfZero
+[AddIfZero] candidate count = 4
+[AddIfZero] candidate 0 | function=absolute | path=absolute.body.scope.slot[0] | kind=InsertionSlot(index=0, previous=<start>, next=IfStatement(arms=2))
+[AddIfZero] candidate 1 | function=absolute | path=absolute.body.scope.slot[1] | kind=InsertionSlot(index=1, previous=IfStatement(arms=2), next=<end>)
+[AddIfZero] candidate 2 | function=absolute | path=absolute.body.scope.block[0].branch[0].scope.slot[0] | kind=InsertionSlot(index=0, previous=<start>, next=ReturnStatement)
+[AddIfZero] candidate 3 | function=absolute | path=absolute.body.scope.block[0].branch[1].scope.slot[0] | kind=InsertionSlot(index=0, previous=<start>, next=ReturnStatement)
+[AddIfZero] SELECTED INDEX = 1
+[AddIfZero] SELECTED | function=absolute | path=absolute.body.scope.slot[1] | kind=InsertionSlot(index=1, previous=IfStatement(arms=2), next=<end>)
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

@@ -1,0 +1,6 @@
+[INFO] Robustness mode started
+[INFO] Robustness transform: robustnessForLoopToWhileLoop
+[ForToWhile] candidate count = 0
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

@@ -1,0 +1,6 @@
+[INFO] Start: VerCors (at 03:10:47)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier site-0.c:4-:4: 'ensures (\forall int x; 0 <= x && x < length ==> \result >= arr[x]);' contains no triggers
+[WARN] The quantifier site-0.c:15-:15: '        loop_invariant (\forall int x; 0 <= x && x < i ==> biggest >= arr[x]);' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 03:11:09, duration: 00:00:22)

@@ -1,0 +1,4 @@
+[AddIfOne] candidate count = 3
+[AddIfOne] candidate 0 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[0] | kind=IfStatement(arms=2)
+[AddIfOne] candidate 1 | function=mult_add | role=IF_TRUE | path=mult_add.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=1)
+[AddIfOne] candidate 2 | function=mult_add | role=IF_ELSE[1] | path=mult_add.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=1)

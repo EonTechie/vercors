@@ -1,0 +1,5 @@
+[AddIfZero] candidate count = 4
+[AddIfZero] candidate 0 | function=mult_add | path=mult_add.body.scope.slot[0] | kind=InsertionSlot(index=0, previous=<start>, next=IfStatement(arms=2))
+[AddIfZero] candidate 1 | function=mult_add | path=mult_add.body.scope.slot[1] | kind=InsertionSlot(index=1, previous=IfStatement(arms=2), next=<end>)
+[AddIfZero] candidate 2 | function=mult_add | path=mult_add.body.scope.block[0].branch[0].scope.slot[0] | kind=InsertionSlot(index=0, previous=<start>, next=ReturnStatement)
+[AddIfZero] candidate 3 | function=mult_add | path=mult_add.body.scope.block[0].branch[1].scope.slot[0] | kind=InsertionSlot(index=0, previous=<start>, next=ReturnStatement)

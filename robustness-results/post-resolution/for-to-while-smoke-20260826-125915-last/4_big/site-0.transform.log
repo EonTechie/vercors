@@ -1,0 +1,9 @@
+[INFO] Robustness mode started
+[INFO] Robustness transform: robustnessForLoopToWhileLoop
+[ForToWhile] candidate count = 1
+[ForToWhile] candidate 0 | function=is_biggest | path=is_biggest.body.scope.block[2].scope | kind=ForLoop(init=ExpressionStatement(expr=PreAssignExpression), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[ForToWhile] SELECTED INDEX = 0
+[ForToWhile] SELECTED | function=is_biggest | path=is_biggest.body.scope.block[2].scope | kind=ForLoop(init=ExpressionStatement(expr=PreAssignExpression), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

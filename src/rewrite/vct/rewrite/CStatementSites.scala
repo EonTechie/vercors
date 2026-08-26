@@ -48,6 +48,22 @@ object CStatementSites {
       case _ => false
     }
 
+  def containsAbruptControl[G](stat: Statement[G]): Boolean =
+    stat match {
+      // Robustness mode: never create an if(1) wrapper around return-like
+      // control flow, even when it is hidden inside a source compound node.
+      case _ if abruptControl(stat) => true
+      case Scope(_, body) => containsAbruptControl(body)
+      case Block(statements) => statements.exists(containsAbruptControl)
+      case Branch(branches) =>
+        branches.exists { case (_, body) => containsAbruptControl(body) }
+      case IndetBranch(branches) => branches.exists(containsAbruptControl)
+      case Loop(_, _, _, _, body) => containsAbruptControl(body)
+      case Switch(_, body) => containsAbruptControl(body)
+      case Label(_, inner, _) => containsAbruptControl(inner)
+      case _ => false
+    }
+
   private def declarationCluster[G](stat: Statement[G]): Boolean =
     stat match {
       case _: CDeclarationStatement[G] | _: LocalDecl[G] | _: HeapLocalDecl[G] =>
@@ -68,7 +84,7 @@ object CStatementSites {
 
   private def selectableShape[G](stat: Statement[G]): Boolean =
     stat match {
-      case _ if abruptControl(stat) => false
+      case _ if containsAbruptControl(stat) => false
       case _ if declarationCluster(stat) => false
       case _: NonExecutableStatement[G] => false
 

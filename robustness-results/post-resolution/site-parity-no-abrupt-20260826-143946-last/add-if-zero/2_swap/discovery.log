@@ -1,0 +1,5 @@
+[AddIfZero] candidate count = 4
+[AddIfZero] candidate 0 | function=swap | path=swap.body.scope.slot[0] | kind=InsertionSlot(index=0, previous=<start>, next=Block)
+[AddIfZero] candidate 1 | function=swap | path=swap.body.scope.slot[1] | kind=InsertionSlot(index=1, previous=Block, next=ExpressionStatement(expr=PreAssignExpression))
+[AddIfZero] candidate 2 | function=swap | path=swap.body.scope.slot[2] | kind=InsertionSlot(index=2, previous=ExpressionStatement(expr=PreAssignExpression), next=ExpressionStatement(expr=PreAssignExpression))
+[AddIfZero] candidate 3 | function=swap | path=swap.body.scope.slot[3] | kind=InsertionSlot(index=3, previous=ExpressionStatement(expr=PreAssignExpression), next=<end>)
