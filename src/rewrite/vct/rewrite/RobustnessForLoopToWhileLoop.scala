@@ -14,24 +14,19 @@ case class RobustnessForLoopToWhileLoop[Pre <: Generation]()
   private var selected: Option[ForLoopToWhileLoopSites.Site[Pre]] = None
 
   private def selectedSiteIndex(candidates: Seq[_]): Int = {
-    val selectedIndex =
-      sys.env.get("FOR_TO_WHILE_SITE")
-        .orElse(sys.env.get("FOR2WHILE_SITE"))
-        .map(_.toInt)
-        .getOrElse(
-          throw new IllegalArgumentException(
-            "FOR_TO_WHILE_SITE must be specified"
-          )
-        )
+    val envName =
+      if (sys.env.contains("FOR_TO_WHILE_SITE"))
+        "FOR_TO_WHILE_SITE"
+      else if (sys.env.contains("FOR2WHILE_SITE"))
+        "FOR2WHILE_SITE"
+      else
+        "FOR_TO_WHILE_SITE"
 
-    if (selectedIndex < 0 || selectedIndex >= candidates.size) {
-      throw new IllegalArgumentException(
-        s"Invalid ForToWhile site index: $selectedIndex. " +
-          s"Valid range: 0..${candidates.size - 1}"
-      )
-    }
-
-    selectedIndex
+    RobustnessSiteSelection.nextIndex(
+      envName,
+      candidates.size,
+      required = true,
+    ).get
   }
 
   override def dispatch(program: Program[Pre]): Program[Post] = {
@@ -50,6 +45,11 @@ case class RobustnessForLoopToWhileLoop[Pre <: Generation]()
 
     selected =
       if (candidates.isEmpty) {
+        RobustnessSiteSelection.nextIndex(
+          "FOR_TO_WHILE_SITE",
+          0,
+          required = false,
+        )
         None
       } else {
         val index = selectedSiteIndex(candidates)

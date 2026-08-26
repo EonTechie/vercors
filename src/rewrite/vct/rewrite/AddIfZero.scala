@@ -57,21 +57,19 @@ case class AddIfZero[Pre <: Generation]() extends Rewriter[Pre] {
       )
     }
 
-    if (candidates.isEmpty) { selected = None }
-    else {
-      val selectedIndex = sys.env.get("ADD_IF_ZERO_SITE").map(_.toInt)
-        .getOrElse(
-          throw new IllegalArgumentException(
-            "ADD_IF_ZERO_SITE must be specified"
-          )
-        )
-
-      if (selectedIndex < 0 || selectedIndex >= candidates.size) {
-        throw new IllegalArgumentException(
-          s"Invalid AddIfZero site index: $selectedIndex. " +
-            s"Valid range: 0..${candidates.size - 1}"
-        )
-      }
+    if (candidates.isEmpty) {
+      RobustnessSiteSelection.nextIndex(
+        "ADD_IF_ZERO_SITE",
+        0,
+        required = false,
+      )
+      selected = None
+    } else {
+      val selectedIndex = RobustnessSiteSelection.nextIndex(
+        "ADD_IF_ZERO_SITE",
+        candidates.size,
+        required = true,
+      ).get
 
       val site = candidates(selectedIndex)
       selected = Some(site)

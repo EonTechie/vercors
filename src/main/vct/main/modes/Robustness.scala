@@ -101,15 +101,19 @@ case object Robustness extends LazyLogging {
     val collector = BlameCollector()
     val blameProvider = ConstantBlameProvider(collector)
     val robustnessPass = selectedRobustnessPass
+    val repeat = math.max(1, options.robustnessRepeat)
     logger.info(s"Robustness transform: ${robustnessPass.key}")
+    logger.info(s"Robustness repeat: $repeat")
 
-    // Adjusted for robustness mode: run AddIfZero after resolution, then emit
-    // the selected post-resolution mutant as C for re-verification.
+    vct.col.rewrite.RobustnessSiteSelection.reset()
+
+    // Parse and resolve once, then apply the selected robustness rewrite
+    // `repeat` times so later applications see the already-mutated AST.
     val stages = Parsing.ofOptions[InitialGeneration](options, blameProvider)
       .thenRun(Resolution.ofOptions[InitialGeneration](options, blameProvider))
       .thenRun(new Transformation(
         onPassEvent = Nil,
-        passes = Seq(robustnessPass),
+        passes = Seq.fill(repeat)(robustnessPass),
         optimizeUnsafe = options.devUnsafeOptimization,
       )).thenRun(Output(
         out = Some(outputPath),

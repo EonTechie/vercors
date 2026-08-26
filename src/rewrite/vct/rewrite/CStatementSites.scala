@@ -48,21 +48,17 @@ object CStatementSites {
       case _ => false
     }
 
-  def containsAbruptControl[G](stat: Statement[G]): Boolean =
+  // Peel COL Scope/Block wrappers only. Do not walk into If/Loop: those stay
+  // wrap sites even when a child is return/goto/continue.
+  private def unwrapTrivial[G](stat: Statement[G]): Statement[G] =
     stat match {
-      // Robustness mode: never create an if(1) wrapper around return-like
-      // control flow, even when it is hidden inside a source compound node.
-      case _ if abruptControl(stat) => true
-      case Scope(_, body) => containsAbruptControl(body)
-      case Block(statements) => statements.exists(containsAbruptControl)
-      case Branch(branches) =>
-        branches.exists { case (_, body) => containsAbruptControl(body) }
-      case IndetBranch(branches) => branches.exists(containsAbruptControl)
-      case Loop(_, _, _, _, body) => containsAbruptControl(body)
-      case Switch(_, body) => containsAbruptControl(body)
-      case Label(_, inner, _) => containsAbruptControl(inner)
-      case _ => false
+      case Scope(Nil, body) => unwrapTrivial(body)
+      case Block(Seq(inner)) => unwrapTrivial(inner)
+      case other => other
     }
+
+  def isForbiddenWrapTarget[G](stat: Statement[G]): Boolean =
+    abruptControl(unwrapTrivial(stat))
 
   private def declarationCluster[G](stat: Statement[G]): Boolean =
     stat match {
@@ -84,7 +80,7 @@ object CStatementSites {
 
   private def selectableShape[G](stat: Statement[G]): Boolean =
     stat match {
-      case _ if containsAbruptControl(stat) => false
+      case _ if isForbiddenWrapTarget(stat) => false
       case _ if declarationCluster(stat) => false
       case _: NonExecutableStatement[G] => false
 

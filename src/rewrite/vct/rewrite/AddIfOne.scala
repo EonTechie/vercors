@@ -83,18 +83,11 @@ case class AddIfOne[
       if (candidates.nonEmpty) {
 
         val selectedIndex =
-          sys.env.get("ADD_IF_ONE_SITE").map(_.toInt).getOrElse(
-            Random.nextInt(
-              candidates.size
-            )
-          )
-
-        if (selectedIndex < 0 || selectedIndex >= candidates.size) {
-          throw new IllegalArgumentException(
-            s"Invalid AddIfOne site index: $selectedIndex. " +
-              s"Valid range: 0..${candidates.size - 1}"
-          )
-        }
+          RobustnessSiteSelection.nextIndex(
+            "ADD_IF_ONE_SITE",
+            candidates.size,
+            required = false,
+          ).getOrElse(Random.nextInt(candidates.size))
 
         val site =
           candidates(selectedIndex)
@@ -114,6 +107,11 @@ case class AddIfOne[
         Some(site)
 
       } else {
+        RobustnessSiteSelection.nextIndex(
+          "ADD_IF_ONE_SITE",
+          0,
+          required = false,
+        )
         None
       }
 
@@ -129,7 +127,7 @@ case class AddIfOne[
       case Some(site)
         if site.target eq stat =>
 
-        if (CStatementSites.containsAbruptControl(stat)) {
+        if (CStatementSites.isForbiddenWrapTarget(stat)) {
           throw new IllegalStateException(
             "AddIfOne selected a forbidden return-like control-flow site: " +
               s"${site.path} (${site.description})"
