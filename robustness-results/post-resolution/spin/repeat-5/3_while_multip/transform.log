@@ -1,0 +1,107 @@
+[INFO] Robustness mode started
+[INFO] Robustness mode: spin (random kind + random site)
+[INFO] Robustness spin seed: 42
+[INFO] Robustness spin pool: addIfZero,addIfOne,robustnessForLoopToWhileLoop
+[INFO] Robustness transforms: addIfZero,addIfOne,robustnessForLoopToWhileLoop
+[INFO] Robustness repeat: 5
+[RobustnessSpin] round 1: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 1: add-if-zero: 2 / 4
+[AddIfZero] candidate count = 4
+[AddIfZero] candidate 0 | function=mult_add | role=BLOCK_ITEM[2] | path=mult_add.body.block[2] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ decreases Remaining_826322241; loop_invariant 0 <= Remaining_826322241;...
+[AddIfZero] candidate 1 | function=mult_add | role=LOOP_BODY | path=mult_add.body.block[2].loop.body | kind=CompoundStatement(locals=0, items=2) | { Sum_1713398243 = Sum_1713398243 + K_421639228; Remaining_826322241 = Remain...
+[AddIfZero] candidate 2 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[2].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_1713398243 = Sum_1713398243 + K_421639228;
+[AddIfZero] candidate 3 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[2].loop.body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | Remaining_826322241 = Remaining_826322241 - 1;
+[ADD_IF_ZERO_SITE] application 1: spin site 2 / 4
+[AddIfZero] SELECTED INDEX = 2
+[AddIfZero] SELECTED | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[2].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_1713398243 = Sum_1713398243 + K_421639228;
+[AddIfZero] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | Sum_1713398243 = Sum_1713398243 + K_421639228;
+[RobustnessSpin] round 2: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 2: add-if-zero: 7 / 9
+[AddIfZero] candidate count = 9
+[AddIfZero] candidate 0 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[1] | kind=AssignmentStatement | Sum_1217002426 = 0;
+[AddIfZero] candidate 1 | function=mult_add | role=BLOCK_ITEM[3] | path=mult_add.body.block[3] | kind=AssignmentStatement | Remaining_1612240940 = M_1462613486;
+[AddIfZero] candidate 2 | function=mult_add | role=BLOCK_ITEM[4] | path=mult_add.body.block[4] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ decreases Remaining_1612240940; loop_invariant 0 <= Remaining_161224094...
+[AddIfZero] candidate 3 | function=mult_add | role=LOOP_BODY | path=mult_add.body.block[4].loop.body | kind=CompoundStatement(locals=0, items=2) | { if (0) { /*@ assert false; @*/ } else { Sum_1217002426 = Sum_1217002426 + K...
+[AddIfZero] candidate 4 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { Sum_1217002426 = Sum_1217002426 + K_1...
+[AddIfZero] candidate 5 | function=mult_add | role=IF_TRUE | path=mult_add.body.block[4].loop.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 6 | function=mult_add | role=IF_ELSE[1] | path=mult_add.body.block[4].loop.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { Sum_1217002426 = Sum_1217002426 + K_1105683026; }
+[AddIfZero] candidate 7 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_1217002426 = Sum_1217002426 + K_1105683026;
+[AddIfZero] candidate 8 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[4].loop.body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | Remaining_1612240940 = Remaining_1612240940 - 1;
+[ADD_IF_ZERO_SITE] application 2: spin site 7 / 9
+[AddIfZero] SELECTED INDEX = 7
+[AddIfZero] SELECTED | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_1217002426 = Sum_1217002426 + K_1105683026;
+[AddIfZero] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | Sum_1217002426 = Sum_1217002426 + K_1105683026;
+[RobustnessSpin] round 3: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 3: add-if-one: 7 / 12
+[AddIfOne] candidate count = 12
+[AddIfOne] candidate 0 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[1] | kind=AssignmentStatement | Sum_1730243635 = 0;
+[AddIfOne] candidate 1 | function=mult_add | role=BLOCK_ITEM[3] | path=mult_add.body.block[3] | kind=AssignmentStatement | Remaining_1858567339 = M_209329590;
+[AddIfOne] candidate 2 | function=mult_add | role=BLOCK_ITEM[4] | path=mult_add.body.block[4] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ decreases Remaining_1858567339; loop_invariant 0 <= Remaining_185856733...
+[AddIfOne] candidate 3 | function=mult_add | role=LOOP_BODY | path=mult_add.body.block[4].loop.body | kind=CompoundStatement(locals=0, items=2) | { if (0) { /*@ assert false; @*/ } else { if (0) { /*@ assert false; @*/ } el...
+[AddIfOne] candidate 4 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (0) { /*@ assert false; @*/ } else...
+[AddIfOne] candidate 5 | function=mult_add | role=IF_TRUE | path=mult_add.body.block[4].loop.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 6 | function=mult_add | role=IF_ELSE[1] | path=mult_add.body.block[4].loop.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (0) { /*@ assert false; @*/ } else { Sum_1730243635 = Sum_1730243635 + K...
+[AddIfOne] candidate 7 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { Sum_1730243635 = Sum_1730243635 + K_3...
+[AddIfOne] candidate 8 | function=mult_add | role=IF_TRUE | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 9 | function=mult_add | role=IF_ELSE[1] | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { Sum_1730243635 = Sum_1730243635 + K_398929914; }
+[AddIfOne] candidate 10 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_1730243635 = Sum_1730243635 + K_398929914;
+[AddIfOne] candidate 11 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[4].loop.body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | Remaining_1858567339 = Remaining_1858567339 - 1;
+[ADD_IF_ONE_SITE] application 1: spin site 7 / 12
+[AddIfOne] SELECTED INDEX = 7
+[AddIfOne] SELECTED | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { Sum_1730243635 = Sum_1730243635 + K_3...
+[AddIfOne] WRAP class=Branch | IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { Sum_1730243635 = Sum_1730243635 + K_3...
+[RobustnessSpin] round 4: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 4: add-if-one: 2 / 15
+[AddIfOne] candidate count = 15
+[AddIfOne] candidate 0 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[1] | kind=AssignmentStatement | Sum_962769430 = 0;
+[AddIfOne] candidate 1 | function=mult_add | role=BLOCK_ITEM[3] | path=mult_add.body.block[3] | kind=AssignmentStatement | Remaining_830710652 = M_833096840;
+[AddIfOne] candidate 2 | function=mult_add | role=BLOCK_ITEM[4] | path=mult_add.body.block[4] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ decreases Remaining_830710652; loop_invariant 0 <= Remaining_830710652;...
+[AddIfOne] candidate 3 | function=mult_add | role=LOOP_BODY | path=mult_add.body.block[4].loop.body | kind=CompoundStatement(locals=0, items=2) | { if (0) { /*@ assert false; @*/ } else { if (1) { if (0) { /*@ assert false;...
+[AddIfOne] candidate 4 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (1) { if (0) { /*@ assert false; @...
+[AddIfOne] candidate 5 | function=mult_add | role=IF_TRUE | path=mult_add.body.block[4].loop.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 6 | function=mult_add | role=IF_ELSE[1] | path=mult_add.body.block[4].loop.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (1) { if (0) { /*@ assert false; @*/ } else { Sum_962769430 = Sum_962769...
+[AddIfOne] candidate 7 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (1) { if (0) { /*@ assert false; @*/ } else { Sum_962769430 = Sum_96276943...
+[AddIfOne] candidate 8 | function=mult_add | role=IF_TRUE | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { if (0) { /*@ assert false; @*/ } else { Sum_962769430 = Sum_962769430 + K_1...
+[AddIfOne] candidate 9 | function=mult_add | role=IF_ELSE[1] | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 10 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0].branch[0].block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { Sum_962769430 = Sum_962769430 + K_197...
+[AddIfOne] candidate 11 | function=mult_add | role=IF_TRUE | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0].branch[0].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 12 | function=mult_add | role=IF_ELSE[1] | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0].branch[0].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { Sum_962769430 = Sum_962769430 + K_1979893341; }
+[AddIfOne] candidate 13 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0].branch[1].block[0].branch[0].block[0].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_962769430 = Sum_962769430 + K_1979893341;
+[AddIfOne] candidate 14 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[4].loop.body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | Remaining_830710652 = Remaining_830710652 - 1;
+[ADD_IF_ONE_SITE] application 2: spin site 2 / 15
+[AddIfOne] SELECTED INDEX = 2
+[AddIfOne] SELECTED | function=mult_add | role=BLOCK_ITEM[4] | path=mult_add.body.block[4] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ decreases Remaining_830710652; loop_invariant 0 <= Remaining_830710652;...
+[AddIfOne] WRAP class=Scope | LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ decreases Remaining_830710652; loop_invariant 0 <= Remaining_830710652;...
+[RobustnessSpin] round 5: add-if-zero: 0 / 18
+[AddIfZero] candidate count = 18
+[AddIfZero] candidate 0 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[1] | kind=AssignmentStatement | Sum_1106645384 = 0;
+[AddIfZero] candidate 1 | function=mult_add | role=BLOCK_ITEM[3] | path=mult_add.body.block[3] | kind=AssignmentStatement | Remaining_226250699 = M_1641359276;
+[AddIfZero] candidate 2 | function=mult_add | role=BLOCK_ITEM[4] | path=mult_add.body.block[4] | kind=IfStatement(arms=2) | if (1) { /*@ decreases Remaining_226250699; loop_invariant 0 <= Remaining_226...
+[AddIfZero] candidate 3 | function=mult_add | role=IF_TRUE | path=mult_add.body.block[4].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ decreases Remaining_226250699; loop_invariant 0 <= Remaining_226250699;...
+[AddIfZero] candidate 4 | function=mult_add | role=IF_ELSE[1] | path=mult_add.body.block[4].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 5 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].branch[0].block[0] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ decreases Remaining_226250699; loop_invariant 0 <= Remaining_226250699;...
+[AddIfZero] candidate 6 | function=mult_add | role=LOOP_BODY | path=mult_add.body.block[4].branch[0].block[0].loop.body | kind=CompoundStatement(locals=0, items=2) | { if (0) { /*@ assert false; @*/ } else { if (1) { if (0) { /*@ assert false;...
+[AddIfZero] candidate 7 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (1) { if (0) { /*@ assert false; @...
+[AddIfZero] candidate 8 | function=mult_add | role=IF_TRUE | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 9 | function=mult_add | role=IF_ELSE[1] | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (1) { if (0) { /*@ assert false; @*/ } else { Sum_1106645384 = Sum_11066...
+[AddIfZero] candidate 10 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (1) { if (0) { /*@ assert false; @*/ } else { Sum_1106645384 = Sum_1106645...
+[AddIfZero] candidate 11 | function=mult_add | role=IF_TRUE | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[0].branch[1].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { if (0) { /*@ assert false; @*/ } else { Sum_1106645384 = Sum_1106645384 + K...
+[AddIfZero] candidate 12 | function=mult_add | role=IF_ELSE[1] | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[0].branch[1].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 13 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[0].branch[1].block[0].branch[0].block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { Sum_1106645384 = Sum_1106645384 + K_1...
+[AddIfZero] candidate 14 | function=mult_add | role=IF_TRUE | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[0].branch[1].block[0].branch[0].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 15 | function=mult_add | role=IF_ELSE[1] | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[0].branch[1].block[0].branch[0].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { Sum_1106645384 = Sum_1106645384 + K_1233454027; }
+[AddIfZero] candidate 16 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[0].branch[1].block[0].branch[0].block[0].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_1106645384 = Sum_1106645384 + K_1233454027;
+[AddIfZero] candidate 17 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[4].branch[0].block[0].loop.body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | Remaining_226250699 = Remaining_226250699 - 1;
+[ADD_IF_ZERO_SITE] application 3: spin site 0 / 18
+[AddIfZero] SELECTED INDEX = 0
+[AddIfZero] SELECTED | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[1] | kind=AssignmentStatement | Sum_1106645384 = 0;
+[AddIfZero] WRAP class=AssignInitial | AssignmentStatement | Sum_1106645384 = 0;
+[INFO] Writing unknown.c to robustness-transformed.c
+Robustness spin trace:
+add-if-zero: 2
+add-if-zero: 7
+add-if-one: 7
+add-if-one: 2
+add-if-zero: 0
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

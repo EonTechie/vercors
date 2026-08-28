@@ -1,0 +1,8 @@
+program	transform_status	verify	seed	repeat	trace
+1_absolute	PASS	PASS	42	5	add-if-zero: 0; add-if-zero: 3; add-if-one: 6; add-if-one: 2; add-if-zero: 6
+2_swap	PASS	PASS	42	5	add-if-zero: 1; add-if-zero: 1; add-if-one: 7; add-if-one: 2; add-if-zero: 12
+3_mult_add	PASS	PASS	42	5	add-if-zero: 0; add-if-zero: 3; add-if-one: 6; add-if-one: 2; add-if-zero: 6
+3_while_multip	PASS	PASS	42	5	add-if-zero: 2; add-if-zero: 7; add-if-one: 7; add-if-one: 2; add-if-zero: 0
+4_big	PASS	PASS	42	5	for-to-while: 0; add-if-zero: 4; add-if-zero: 4; add-if-one: 10; add-if-one: 14
+5_bubbleSort	PASS	PASS	42	5	for-to-while: 0; add-if-zero: 10; add-if-zero: 9; for-to-while: 0; add-if-one: 5
+6_pure	PASS	PASS	42	5	for-to-while: 0; add-if-zero: 0; add-if-zero: 8; add-if-one: 13; add-if-one: 12

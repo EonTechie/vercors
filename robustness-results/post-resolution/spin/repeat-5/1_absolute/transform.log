@@ -1,0 +1,84 @@
+[INFO] Robustness mode started
+[INFO] Robustness mode: spin (random kind + random site)
+[INFO] Robustness spin seed: 42
+[INFO] Robustness spin pool: addIfZero,addIfOne,robustnessForLoopToWhileLoop
+[INFO] Robustness transforms: addIfZero,addIfOne,robustnessForLoopToWhileLoop
+[INFO] Robustness repeat: 5
+[RobustnessSpin] round 1: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 1: add-if-zero: 0 / 1
+[AddIfZero] candidate count = 1
+[AddIfZero] candidate 0 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0] | kind=IfStatement(arms=2) | if (A_1471278212 >= 0) { return A_1471278212; } else { return -A_1471278212; }
+[ADD_IF_ZERO_SITE] application 1: spin site 0 / 1
+[AddIfZero] SELECTED INDEX = 0
+[AddIfZero] SELECTED | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0] | kind=IfStatement(arms=2) | if (A_1471278212 >= 0) { return A_1471278212; } else { return -A_1471278212; }
+[AddIfZero] WRAP class=Branch | IfStatement(arms=2) | if (A_1471278212 >= 0) { return A_1471278212; } else { return -A_1471278212; }
+[RobustnessSpin] round 2: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 2: add-if-zero: 3 / 4
+[AddIfZero] candidate count = 4
+[AddIfZero] candidate 0 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (A_1785631369 >= 0) { return A_178...
+[AddIfZero] candidate 1 | function=absolute | role=IF_TRUE | path=absolute.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 2 | function=absolute | role=IF_ELSE[1] | path=absolute.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (A_1785631369 >= 0) { return A_1785631369; } else { return -A_1785631369...
+[AddIfZero] candidate 3 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (A_1785631369 >= 0) { return A_1785631369; } else { return -A_1785631369; }
+[ADD_IF_ZERO_SITE] application 2: spin site 3 / 4
+[AddIfZero] SELECTED INDEX = 3
+[AddIfZero] SELECTED | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (A_1785631369 >= 0) { return A_1785631369; } else { return -A_1785631369; }
+[AddIfZero] WRAP class=Branch | IfStatement(arms=2) | if (A_1785631369 >= 0) { return A_1785631369; } else { return -A_1785631369; }
+[RobustnessSpin] round 3: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 3: add-if-one: 6 / 7
+[AddIfOne] candidate count = 7
+[AddIfOne] candidate 0 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (0) { /*@ assert false; @*/ } else...
+[AddIfOne] candidate 1 | function=absolute | role=IF_TRUE | path=absolute.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 2 | function=absolute | role=IF_ELSE[1] | path=absolute.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (0) { /*@ assert false; @*/ } else { if (A_108760389 >= 0) { return A_10...
+[AddIfOne] candidate 3 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (A_108760389 >= 0) { return A_1087...
+[AddIfOne] candidate 4 | function=absolute | role=IF_TRUE | path=absolute.body.block[0].branch[1].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 5 | function=absolute | role=IF_ELSE[1] | path=absolute.body.block[0].branch[1].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (A_108760389 >= 0) { return A_108760389; } else { return -A_108760389; } }
+[AddIfOne] candidate 6 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (A_108760389 >= 0) { return A_108760389; } else { return -A_108760389; }
+[ADD_IF_ONE_SITE] application 1: spin site 6 / 7
+[AddIfOne] SELECTED INDEX = 6
+[AddIfOne] SELECTED | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (A_108760389 >= 0) { return A_108760389; } else { return -A_108760389; }
+[AddIfOne] WRAP class=Branch | IfStatement(arms=2) | if (A_108760389 >= 0) { return A_108760389; } else { return -A_108760389; }
+[RobustnessSpin] round 4: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 4: add-if-one: 2 / 10
+[AddIfOne] candidate count = 10
+[AddIfOne] candidate 0 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (0) { /*@ assert false; @*/ } else...
+[AddIfOne] candidate 1 | function=absolute | role=IF_TRUE | path=absolute.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 2 | function=absolute | role=IF_ELSE[1] | path=absolute.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (0) { /*@ assert false; @*/ } else { if (1) { if (A_1040493509 >= 0) { r...
+[AddIfOne] candidate 3 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (1) { if (A_1040493509 >= 0) { ret...
+[AddIfOne] candidate 4 | function=absolute | role=IF_TRUE | path=absolute.body.block[0].branch[1].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 5 | function=absolute | role=IF_ELSE[1] | path=absolute.body.block[0].branch[1].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (1) { if (A_1040493509 >= 0) { return A_1040493509; } else { return -A_1...
+[AddIfOne] candidate 6 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (1) { if (A_1040493509 >= 0) { return A_1040493509; } else { return -A_104...
+[AddIfOne] candidate 7 | function=absolute | role=IF_TRUE | path=absolute.body.block[0].branch[1].block[0].branch[1].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { if (A_1040493509 >= 0) { return A_1040493509; } else { return -A_1040493509...
+[AddIfOne] candidate 8 | function=absolute | role=IF_ELSE[1] | path=absolute.body.block[0].branch[1].block[0].branch[1].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 9 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0].branch[1].block[0].branch[0].block[0] | kind=IfStatement(arms=2) | if (A_1040493509 >= 0) { return A_1040493509; } else { return -A_1040493509; }
+[ADD_IF_ONE_SITE] application 2: spin site 2 / 10
+[AddIfOne] SELECTED INDEX = 2
+[AddIfOne] SELECTED | function=absolute | role=IF_ELSE[1] | path=absolute.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (0) { /*@ assert false; @*/ } else { if (1) { if (A_1040493509 >= 0) { r...
+[AddIfOne] WRAP class=Scope | CompoundStatement(locals=0, items=1) | { if (0) { /*@ assert false; @*/ } else { if (1) { if (A_1040493509 >= 0) { r...
+[RobustnessSpin] round 5: add-if-zero: 6 / 13
+[AddIfZero] candidate count = 13
+[AddIfZero] candidate 0 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (1) { if (0) { /*@ assert false; @...
+[AddIfZero] candidate 1 | function=absolute | role=IF_TRUE | path=absolute.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 2 | function=absolute | role=IF_ELSE[1] | path=absolute.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (1) { if (0) { /*@ assert false; @*/ } else { if (1) { if (A_355677068 >...
+[AddIfZero] candidate 3 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (1) { if (0) { /*@ assert false; @*/ } else { if (1) { if (A_355677068 >= ...
+[AddIfZero] candidate 4 | function=absolute | role=IF_TRUE | path=absolute.body.block[0].branch[1].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { if (0) { /*@ assert false; @*/ } else { if (1) { if (A_355677068 >= 0) { re...
+[AddIfZero] candidate 5 | function=absolute | role=IF_ELSE[1] | path=absolute.body.block[0].branch[1].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 6 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0].branch[0].block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (1) { if (A_355677068 >= 0) { retu...
+[AddIfZero] candidate 7 | function=absolute | role=IF_TRUE | path=absolute.body.block[0].branch[1].block[0].branch[0].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 8 | function=absolute | role=IF_ELSE[1] | path=absolute.body.block[0].branch[1].block[0].branch[0].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (1) { if (A_355677068 >= 0) { return A_355677068; } else { return -A_355...
+[AddIfZero] candidate 9 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0].branch[0].block[0].branch[1].block[0] | kind=IfStatement(arms=2) | if (1) { if (A_355677068 >= 0) { return A_355677068; } else { return -A_35567...
+[AddIfZero] candidate 10 | function=absolute | role=IF_TRUE | path=absolute.body.block[0].branch[1].block[0].branch[0].block[0].branch[1].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { if (A_355677068 >= 0) { return A_355677068; } else { return -A_355677068; } }
+[AddIfZero] candidate 11 | function=absolute | role=IF_ELSE[1] | path=absolute.body.block[0].branch[1].block[0].branch[0].block[0].branch[1].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 12 | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0].branch[0].block[0].branch[1].block[0].branch[0].block[0] | kind=IfStatement(arms=2) | if (A_355677068 >= 0) { return A_355677068; } else { return -A_355677068; }
+[ADD_IF_ZERO_SITE] application 3: spin site 6 / 13
+[AddIfZero] SELECTED INDEX = 6
+[AddIfZero] SELECTED | function=absolute | role=BLOCK_ITEM[0] | path=absolute.body.block[0].branch[1].block[0].branch[0].block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (1) { if (A_355677068 >= 0) { retu...
+[AddIfZero] WRAP class=Branch | IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (1) { if (A_355677068 >= 0) { retu...
+[INFO] Writing unknown.c to robustness-transformed.c
+Robustness spin trace:
+add-if-zero: 0
+add-if-zero: 3
+add-if-one: 6
+add-if-one: 2
+add-if-zero: 6
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

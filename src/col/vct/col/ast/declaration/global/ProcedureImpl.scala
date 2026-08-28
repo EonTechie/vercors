@@ -24,11 +24,15 @@ trait ProcedureImpl[G] extends ProcedureOps[G] {
 
   def layoutC(implicit ctx: Ctx): Doc = {
     val (spec, decl) = returnType.layoutSplitDeclarator
+    val prefix = if (inline) Text("inline") <> " " else Empty
     Doc.stack(Seq(
       // Adjusted for robustness mode: post-resolution Procedure nodes must keep
       // their function contracts when emitted as C mutants.
       contract,
-      Group(spec <+> decl <> ctx.name(this) <> "(" <> Doc.args(args) <> ")") <>
+      Group(
+        prefix <> spec <+> decl <> ctx.name(this) <> "(" <>
+          Doc.args(args) <> ")"
+      ) <>
         (if (body.nonEmpty)
            Text(" ") <> body.get.layoutAsBlock
          else

@@ -1,0 +1,18 @@
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: robustnessDeepenWhile
+[INFO] Robustness repeat: 2
+[DeepenWhile] candidate count = 1
+[DeepenWhile] candidate 0 | function=mult_add | path=mult_add.body.scope.block[2].scope | kind=While(generated=false, cond=AmbiguousLess, body=Scope(locals=0, items=2))
+[DEEPEN_WHILE_SITE] application 1: selected 0 / 1
+[DeepenWhile] SELECTED INDEX = 0
+[DeepenWhile] SELECTED | function=mult_add | path=mult_add.body.scope.block[2].scope | kind=While(generated=false, cond=AmbiguousLess, body=Scope(locals=0, items=2))
+[DeepenWhile] skip generated adapter | function=mult_add | path=mult_add.body.scope.block[4].scope.body.scope.block[0]
+[DeepenWhile] candidate count = 1
+[DeepenWhile] candidate 0 | function=mult_add | path=mult_add.body.scope.block[4].scope | kind=While(generated=false, cond=AmbiguousLess, body=Scope(locals=0, items=1))
+[DEEPEN_WHILE_SITE] application 2: selected 0 / 1
+[DeepenWhile] SELECTED INDEX = 0
+[DeepenWhile] SELECTED | function=mult_add | path=mult_add.body.scope.block[4].scope | kind=While(generated=false, cond=AmbiguousLess, body=Scope(locals=0, items=1))
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

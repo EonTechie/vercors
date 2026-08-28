@@ -1,0 +1,93 @@
+[INFO] Robustness mode started
+[INFO] Robustness mode: spin (random kind + random site)
+[INFO] Robustness spin seed: 42
+[INFO] Robustness spin pool: addIfZero,addIfOne,robustnessForLoopToWhileLoop
+[INFO] Robustness transforms: addIfZero,addIfOne,robustnessForLoopToWhileLoop
+[INFO] Robustness repeat: 5
+[RobustnessSpin] round 1: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 1: add-if-zero: 1 / 2
+[AddIfZero] candidate count = 2
+[AddIfZero] candidate 0 | function=swap | role=BLOCK_ITEM[1] | path=swap.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_1469107147).Value_1683791631 = (*Pointer2_161074456).Value_1683791...
+[AddIfZero] candidate 1 | function=swap | role=BLOCK_ITEM[2] | path=swap.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer2_161074456).Value_1683791631 = Temp_370723210;
+[ADD_IF_ZERO_SITE] application 1: spin site 1 / 2
+[AddIfZero] SELECTED INDEX = 1
+[AddIfZero] SELECTED | function=swap | role=BLOCK_ITEM[2] | path=swap.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer2_161074456).Value_1683791631 = Temp_370723210;
+[AddIfZero] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | (*Pointer2_161074456).Value_1683791631 = Temp_370723210;
+[RobustnessSpin] round 2: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 2: add-if-zero: 1 / 6
+[AddIfZero] candidate count = 6
+[AddIfZero] candidate 0 | function=swap | role=BLOCK_ITEM[1] | path=swap.body.block[1] | kind=AssignmentStatement | Temp_613231852 = (*Pointer1_1568128654).Value_1436571084;
+[AddIfZero] candidate 1 | function=swap | role=BLOCK_ITEM[2] | path=swap.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_1568128654).Value_1436571084 = (*Pointer2_447863101).Value_1436571...
+[AddIfZero] candidate 2 | function=swap | role=BLOCK_ITEM[3] | path=swap.body.block[3] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { (*Pointer2_447863101).Value_143657108...
+[AddIfZero] candidate 3 | function=swap | role=IF_TRUE | path=swap.body.block[3].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 4 | function=swap | role=IF_ELSE[1] | path=swap.body.block[3].branch[1] | kind=CompoundStatement(locals=0, items=1) | { (*Pointer2_447863101).Value_1436571084 = Temp_613231852; }
+[AddIfZero] candidate 5 | function=swap | role=BLOCK_ITEM[0] | path=swap.body.block[3].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer2_447863101).Value_1436571084 = Temp_613231852;
+[ADD_IF_ZERO_SITE] application 2: spin site 1 / 6
+[AddIfZero] SELECTED INDEX = 1
+[AddIfZero] SELECTED | function=swap | role=BLOCK_ITEM[2] | path=swap.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_1568128654).Value_1436571084 = (*Pointer2_447863101).Value_1436571...
+[AddIfZero] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_1568128654).Value_1436571084 = (*Pointer2_447863101).Value_1436571...
+[RobustnessSpin] round 3: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 3: add-if-one: 7 / 9
+[AddIfOne] candidate count = 9
+[AddIfOne] candidate 0 | function=swap | role=BLOCK_ITEM[1] | path=swap.body.block[1] | kind=AssignmentStatement | Temp_1423138517 = (*Pointer1_1870436181).Value_1168882980;
+[AddIfOne] candidate 1 | function=swap | role=BLOCK_ITEM[2] | path=swap.body.block[2] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { (*Pointer1_1870436181).Value_11688829...
+[AddIfOne] candidate 2 | function=swap | role=IF_TRUE | path=swap.body.block[2].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 3 | function=swap | role=IF_ELSE[1] | path=swap.body.block[2].branch[1] | kind=CompoundStatement(locals=0, items=1) | { (*Pointer1_1870436181).Value_1168882980 = (*Pointer2_506594173).Value_11688...
+[AddIfOne] candidate 4 | function=swap | role=BLOCK_ITEM[0] | path=swap.body.block[2].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_1870436181).Value_1168882980 = (*Pointer2_506594173).Value_1168882...
+[AddIfOne] candidate 5 | function=swap | role=BLOCK_ITEM[3] | path=swap.body.block[3] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { (*Pointer2_506594173).Value_116888298...
+[AddIfOne] candidate 6 | function=swap | role=IF_TRUE | path=swap.body.block[3].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 7 | function=swap | role=IF_ELSE[1] | path=swap.body.block[3].branch[1] | kind=CompoundStatement(locals=0, items=1) | { (*Pointer2_506594173).Value_1168882980 = Temp_1423138517; }
+[AddIfOne] candidate 8 | function=swap | role=BLOCK_ITEM[0] | path=swap.body.block[3].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer2_506594173).Value_1168882980 = Temp_1423138517;
+[ADD_IF_ONE_SITE] application 1: spin site 7 / 9
+[AddIfOne] SELECTED INDEX = 7
+[AddIfOne] SELECTED | function=swap | role=IF_ELSE[1] | path=swap.body.block[3].branch[1] | kind=CompoundStatement(locals=0, items=1) | { (*Pointer2_506594173).Value_1168882980 = Temp_1423138517; }
+[AddIfOne] WRAP class=Scope | CompoundStatement(locals=0, items=1) | { (*Pointer2_506594173).Value_1168882980 = Temp_1423138517; }
+[RobustnessSpin] round 4: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 4: add-if-one: 2 / 12
+[AddIfOne] candidate count = 12
+[AddIfOne] candidate 0 | function=swap | role=BLOCK_ITEM[1] | path=swap.body.block[1] | kind=AssignmentStatement | Temp_996471089 = (*Pointer1_1225628737).Value_1205343271;
+[AddIfOne] candidate 1 | function=swap | role=BLOCK_ITEM[2] | path=swap.body.block[2] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { (*Pointer1_1225628737).Value_12053432...
+[AddIfOne] candidate 2 | function=swap | role=IF_TRUE | path=swap.body.block[2].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 3 | function=swap | role=IF_ELSE[1] | path=swap.body.block[2].branch[1] | kind=CompoundStatement(locals=0, items=1) | { (*Pointer1_1225628737).Value_1205343271 = (*Pointer2_1012812460).Value_1205...
+[AddIfOne] candidate 4 | function=swap | role=BLOCK_ITEM[0] | path=swap.body.block[2].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_1225628737).Value_1205343271 = (*Pointer2_1012812460).Value_120534...
+[AddIfOne] candidate 5 | function=swap | role=BLOCK_ITEM[3] | path=swap.body.block[3] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (1) { (*Pointer2_1012812460).Value...
+[AddIfOne] candidate 6 | function=swap | role=IF_TRUE | path=swap.body.block[3].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 7 | function=swap | role=IF_ELSE[1] | path=swap.body.block[3].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (1) { (*Pointer2_1012812460).Value_1205343271 = Temp_996471089; } else {...
+[AddIfOne] candidate 8 | function=swap | role=BLOCK_ITEM[0] | path=swap.body.block[3].branch[1].block[0] | kind=IfStatement(arms=2) | if (1) { (*Pointer2_1012812460).Value_1205343271 = Temp_996471089; } else { /...
+[AddIfOne] candidate 9 | function=swap | role=IF_TRUE | path=swap.body.block[3].branch[1].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { (*Pointer2_1012812460).Value_1205343271 = Temp_996471089; }
+[AddIfOne] candidate 10 | function=swap | role=IF_ELSE[1] | path=swap.body.block[3].branch[1].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 11 | function=swap | role=BLOCK_ITEM[0] | path=swap.body.block[3].branch[1].block[0].branch[0].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer2_1012812460).Value_1205343271 = Temp_996471089;
+[ADD_IF_ONE_SITE] application 2: spin site 2 / 12
+[AddIfOne] SELECTED INDEX = 2
+[AddIfOne] SELECTED | function=swap | role=IF_TRUE | path=swap.body.block[2].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] WRAP class=Scope | CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[RobustnessSpin] round 5: add-if-zero: 12 / 15
+[AddIfZero] candidate count = 15
+[AddIfZero] candidate 0 | function=swap | role=BLOCK_ITEM[1] | path=swap.body.block[1] | kind=AssignmentStatement | Temp_1676857380 = (*Pointer1_2066600797).Value_1079124964;
+[AddIfZero] candidate 1 | function=swap | role=BLOCK_ITEM[2] | path=swap.body.block[2] | kind=IfStatement(arms=2) | if (0) { if (1) { /*@ assert false; @*/ } else { /*@ assert false; @*/ } } el...
+[AddIfZero] candidate 2 | function=swap | role=IF_TRUE | path=swap.body.block[2].branch[0] | kind=CompoundStatement(locals=0, items=1) | { if (1) { /*@ assert false; @*/ } else { /*@ assert false; @*/ } }
+[AddIfZero] candidate 3 | function=swap | role=IF_ELSE[1] | path=swap.body.block[2].branch[1] | kind=CompoundStatement(locals=0, items=1) | { (*Pointer1_2066600797).Value_1079124964 = (*Pointer2_757150717).Value_10791...
+[AddIfZero] candidate 4 | function=swap | role=BLOCK_ITEM[0] | path=swap.body.block[2].branch[0].block[0] | kind=IfStatement(arms=2) | if (1) { /*@ assert false; @*/ } else { /*@ assert false; @*/ }
+[AddIfZero] candidate 5 | function=swap | role=IF_TRUE | path=swap.body.block[2].branch[0].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 6 | function=swap | role=IF_ELSE[1] | path=swap.body.block[2].branch[0].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 7 | function=swap | role=BLOCK_ITEM[0] | path=swap.body.block[2].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer1_2066600797).Value_1079124964 = (*Pointer2_757150717).Value_1079124...
+[AddIfZero] candidate 8 | function=swap | role=BLOCK_ITEM[3] | path=swap.body.block[3] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { if (1) { (*Pointer2_757150717).Value_...
+[AddIfZero] candidate 9 | function=swap | role=IF_TRUE | path=swap.body.block[3].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 10 | function=swap | role=IF_ELSE[1] | path=swap.body.block[3].branch[1] | kind=CompoundStatement(locals=0, items=1) | { if (1) { (*Pointer2_757150717).Value_1079124964 = Temp_1676857380; } else {...
+[AddIfZero] candidate 11 | function=swap | role=BLOCK_ITEM[0] | path=swap.body.block[3].branch[1].block[0] | kind=IfStatement(arms=2) | if (1) { (*Pointer2_757150717).Value_1079124964 = Temp_1676857380; } else { /...
+[AddIfZero] candidate 12 | function=swap | role=IF_TRUE | path=swap.body.block[3].branch[1].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { (*Pointer2_757150717).Value_1079124964 = Temp_1676857380; }
+[AddIfZero] candidate 13 | function=swap | role=IF_ELSE[1] | path=swap.body.block[3].branch[1].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 14 | function=swap | role=BLOCK_ITEM[0] | path=swap.body.block[3].branch[1].block[0].branch[0].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pointer2_757150717).Value_1079124964 = Temp_1676857380;
+[ADD_IF_ZERO_SITE] application 3: spin site 12 / 15
+[AddIfZero] SELECTED INDEX = 12
+[AddIfZero] SELECTED | function=swap | role=IF_TRUE | path=swap.body.block[3].branch[1].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { (*Pointer2_757150717).Value_1079124964 = Temp_1676857380; }
+[AddIfZero] WRAP class=Scope | CompoundStatement(locals=0, items=1) | { (*Pointer2_757150717).Value_1079124964 = Temp_1676857380; }
+[INFO] Writing unknown.c to robustness-transformed.c
+Robustness spin trace:
+add-if-zero: 1
+add-if-zero: 1
+add-if-one: 7
+add-if-one: 2
+add-if-zero: 12
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

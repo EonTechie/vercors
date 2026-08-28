@@ -1,0 +1,4 @@
+Post-resolution spin: mixed random kind + random site, SemTransforms spin_config selection.
+Pool: add-if-zero, add-if-one, for-to-while.
+--robustness-repeat 5, seed 42.
+Parse+resolve once, then 5 spin steps on COL; C dump; second vct run for Silicon.

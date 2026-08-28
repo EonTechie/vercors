@@ -41,10 +41,16 @@ case class AddIfZero[Pre <: Generation]() extends Rewriter[Pre] {
     println(s"[AddIfZero] candidate count = ${candidates.size}")
 
     candidates.zipWithIndex.foreach { case (site, index) =>
+      val deepenGenerated = site.target match {
+        case loop: Loop[Pre] =>
+          s" | deepenGenerated=${DeepenWhileSites.isGenerated(loop)}"
+        case _ =>
+          ""
+      }
       println(
         s"[AddIfZero] candidate $index" + s" | function=${site.functionName}" +
           s" | role=${site.role.label}" + s" | path=${site.path}" +
-          s" | kind=${site.description}"
+          s" | kind=${site.description}" + deepenGenerated
       )
     }
 

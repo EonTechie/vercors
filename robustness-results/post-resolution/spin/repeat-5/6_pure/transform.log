@@ -1,0 +1,97 @@
+[INFO] Robustness mode started
+[INFO] Robustness mode: spin (random kind + random site)
+[INFO] Robustness spin seed: 42
+[INFO] Robustness spin pool: addIfZero,addIfOne,robustnessForLoopToWhileLoop
+[INFO] Robustness transforms: addIfZero,addIfOne,robustnessForLoopToWhileLoop
+[INFO] Robustness repeat: 5
+[RobustnessSpin] round 1: for-to-while: 0 / 1
+[ForToWhile] candidate count = 1
+[ForToWhile] candidate 0 | function=sum_list | path=sum_list.body.scope.block[2].scope | kind=ForLoop(init=Block(items=0), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[FOR_TO_WHILE_SITE] application 1: spin site 0 / 1
+[ForToWhile] SELECTED INDEX = 0
+[ForToWhile] SELECTED | function=sum_list | path=sum_list.body.scope.block[2].scope | kind=ForLoop(init=Block(items=0), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[RobustnessSpin] round 2: add-if-zero: 0 / 8
+[AddIfZero] candidate count = 8
+[AddIfZero] candidate 0 | function=sum_list | role=BLOCK_ITEM[1] | path=sum_list.body.block[1] | kind=AssignmentStatement | Sum_667971646 = 0;
+[AddIfZero] candidate 1 | function=sum_list | role=BLOCK_ITEM[3] | path=sum_list.body.block[3] | kind=AssignmentStatement | I_42923868 = 0;
+[AddIfZero] candidate 2 | function=sum_list | role=BLOCK_ITEM[4] | path=sum_list.body.block[4] | kind=CompoundStatement(locals=0, items=1) | { /*@ decreases Length_1569212186 - I_42923868; loop_invariant 0 <= I_4292386...
+[AddIfZero] candidate 3 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0] | kind=LoopStatement(init=Block, cond=AmbiguousLess, update=Block, body=Block) | /*@ decreases Length_1569212186 - I_42923868; loop_invariant 0 <= I_42923868;...
+[AddIfZero] candidate 4 | function=sum_list | role=LOOP_BODY | path=sum_list.body.block[4].block[0].body | kind=Block | { Sum_667971646 = Sum_667971646 + List_1783608600[I_42923868]; I_42923868 = I...
+[AddIfZero] candidate 5 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[0] | kind=CompoundStatement(locals=0, items=1) | { Sum_667971646 = Sum_667971646 + List_1783608600[I_42923868]; }
+[AddIfZero] candidate 6 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[0].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_667971646 = Sum_667971646 + List_1783608600[I_42923868];
+[AddIfZero] candidate 7 | function=sum_list | role=BLOCK_ITEM[1] | path=sum_list.body.block[4].block[0].body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | I_42923868 = I_42923868 + 1;
+[ADD_IF_ZERO_SITE] application 1: spin site 0 / 8
+[AddIfZero] SELECTED INDEX = 0
+[AddIfZero] SELECTED | function=sum_list | role=BLOCK_ITEM[1] | path=sum_list.body.block[1] | kind=AssignmentStatement | Sum_667971646 = 0;
+[AddIfZero] WRAP class=AssignInitial | AssignmentStatement | Sum_667971646 = 0;
+[RobustnessSpin] round 3: add-if-zero: 8 / 11
+[AddIfZero] candidate count = 11
+[AddIfZero] candidate 0 | function=sum_list | role=BLOCK_ITEM[1] | path=sum_list.body.block[1] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { Sum_411502966 = 0; }
+[AddIfZero] candidate 1 | function=sum_list | role=IF_TRUE | path=sum_list.body.block[1].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfZero] candidate 2 | function=sum_list | role=IF_ELSE[1] | path=sum_list.body.block[1].branch[1] | kind=CompoundStatement(locals=0, items=1) | { Sum_411502966 = 0; }
+[AddIfZero] candidate 3 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[1].branch[1].block[0] | kind=AssignmentStatement | Sum_411502966 = 0;
+[AddIfZero] candidate 4 | function=sum_list | role=BLOCK_ITEM[3] | path=sum_list.body.block[3] | kind=AssignmentStatement | I_146136603 = 0;
+[AddIfZero] candidate 5 | function=sum_list | role=BLOCK_ITEM[4] | path=sum_list.body.block[4] | kind=CompoundStatement(locals=0, items=1) | { /*@ decreases Length_498744418 - I_146136603; loop_invariant 0 <= I_1461366...
+[AddIfZero] candidate 6 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0] | kind=LoopStatement(init=Block, cond=AmbiguousLess, update=Block, body=Block) | /*@ decreases Length_498744418 - I_146136603; loop_invariant 0 <= I_146136603...
+[AddIfZero] candidate 7 | function=sum_list | role=LOOP_BODY | path=sum_list.body.block[4].block[0].body | kind=Block | { Sum_411502966 = Sum_411502966 + List_1037453850[I_146136603]; I_146136603 =...
+[AddIfZero] candidate 8 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[0] | kind=CompoundStatement(locals=0, items=1) | { Sum_411502966 = Sum_411502966 + List_1037453850[I_146136603]; }
+[AddIfZero] candidate 9 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[0].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_411502966 = Sum_411502966 + List_1037453850[I_146136603];
+[AddIfZero] candidate 10 | function=sum_list | role=BLOCK_ITEM[1] | path=sum_list.body.block[4].block[0].body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | I_146136603 = I_146136603 + 1;
+[ADD_IF_ZERO_SITE] application 2: spin site 8 / 11
+[AddIfZero] SELECTED INDEX = 8
+[AddIfZero] SELECTED | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[0] | kind=CompoundStatement(locals=0, items=1) | { Sum_411502966 = Sum_411502966 + List_1037453850[I_146136603]; }
+[AddIfZero] WRAP class=Scope | CompoundStatement(locals=0, items=1) | { Sum_411502966 = Sum_411502966 + List_1037453850[I_146136603]; }
+[RobustnessSpin] round 4: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 4: add-if-one: 13 / 14
+[AddIfOne] candidate count = 14
+[AddIfOne] candidate 0 | function=sum_list | role=BLOCK_ITEM[1] | path=sum_list.body.block[1] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { Sum_1489821748 = 0; }
+[AddIfOne] candidate 1 | function=sum_list | role=IF_TRUE | path=sum_list.body.block[1].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 2 | function=sum_list | role=IF_ELSE[1] | path=sum_list.body.block[1].branch[1] | kind=CompoundStatement(locals=0, items=1) | { Sum_1489821748 = 0; }
+[AddIfOne] candidate 3 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[1].branch[1].block[0] | kind=AssignmentStatement | Sum_1489821748 = 0;
+[AddIfOne] candidate 4 | function=sum_list | role=BLOCK_ITEM[3] | path=sum_list.body.block[3] | kind=AssignmentStatement | I_1484983089 = 0;
+[AddIfOne] candidate 5 | function=sum_list | role=BLOCK_ITEM[4] | path=sum_list.body.block[4] | kind=CompoundStatement(locals=0, items=1) | { /*@ decreases Length_1367332706 - I_1484983089; loop_invariant 0 <= I_14849...
+[AddIfOne] candidate 6 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0] | kind=LoopStatement(init=Block, cond=AmbiguousLess, update=Block, body=Block) | /*@ decreases Length_1367332706 - I_1484983089; loop_invariant 0 <= I_1484983...
+[AddIfOne] candidate 7 | function=sum_list | role=LOOP_BODY | path=sum_list.body.block[4].block[0].body | kind=Block | { if (0) { /*@ assert false; @*/ } else { Sum_1489821748 = Sum_1489821748 + L...
+[AddIfOne] candidate 8 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[0] | kind=CompoundStatement(locals=0, items=1) | { if (0) { /*@ assert false; @*/ } else { Sum_1489821748 = Sum_1489821748 + L...
+[AddIfOne] candidate 9 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[0].block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { Sum_1489821748 = Sum_1489821748 + Lis...
+[AddIfOne] candidate 10 | function=sum_list | role=IF_TRUE | path=sum_list.body.block[4].block[0].body.block[0].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 11 | function=sum_list | role=IF_ELSE[1] | path=sum_list.body.block[4].block[0].body.block[0].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { Sum_1489821748 = Sum_1489821748 + List_1279585609[I_1484983089]; }
+[AddIfOne] candidate 12 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[0].block[0].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_1489821748 = Sum_1489821748 + List_1279585609[I_1484983089];
+[AddIfOne] candidate 13 | function=sum_list | role=BLOCK_ITEM[1] | path=sum_list.body.block[4].block[0].body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | I_1484983089 = I_1484983089 + 1;
+[ADD_IF_ONE_SITE] application 1: spin site 13 / 14
+[AddIfOne] SELECTED INDEX = 13
+[AddIfOne] SELECTED | function=sum_list | role=BLOCK_ITEM[1] | path=sum_list.body.block[4].block[0].body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | I_1484983089 = I_1484983089 + 1;
+[AddIfOne] WRAP class=Eval | ExpressionStatement(expr=PostAssignExpression) | I_1484983089 = I_1484983089 + 1;
+[RobustnessSpin] round 5: for-to-while has 0 candidates, retry
+[RobustnessSpin] round 5: add-if-one: 12 / 17
+[AddIfOne] candidate count = 17
+[AddIfOne] candidate 0 | function=sum_list | role=BLOCK_ITEM[1] | path=sum_list.body.block[1] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { Sum_1256033165 = 0; }
+[AddIfOne] candidate 1 | function=sum_list | role=IF_TRUE | path=sum_list.body.block[1].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 2 | function=sum_list | role=IF_ELSE[1] | path=sum_list.body.block[1].branch[1] | kind=CompoundStatement(locals=0, items=1) | { Sum_1256033165 = 0; }
+[AddIfOne] candidate 3 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[1].branch[1].block[0] | kind=AssignmentStatement | Sum_1256033165 = 0;
+[AddIfOne] candidate 4 | function=sum_list | role=BLOCK_ITEM[3] | path=sum_list.body.block[3] | kind=AssignmentStatement | I_305507250 = 0;
+[AddIfOne] candidate 5 | function=sum_list | role=BLOCK_ITEM[4] | path=sum_list.body.block[4] | kind=CompoundStatement(locals=0, items=1) | { /*@ decreases Length_99546480 - I_305507250; loop_invariant 0 <= I_30550725...
+[AddIfOne] candidate 6 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0] | kind=LoopStatement(init=Block, cond=AmbiguousLess, update=Block, body=Block) | /*@ decreases Length_99546480 - I_305507250; loop_invariant 0 <= I_305507250;...
+[AddIfOne] candidate 7 | function=sum_list | role=LOOP_BODY | path=sum_list.body.block[4].block[0].body | kind=Block | { if (0) { /*@ assert false; @*/ } else { Sum_1256033165 = Sum_1256033165 + L...
+[AddIfOne] candidate 8 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[0] | kind=CompoundStatement(locals=0, items=1) | { if (0) { /*@ assert false; @*/ } else { Sum_1256033165 = Sum_1256033165 + L...
+[AddIfOne] candidate 9 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[0].block[0] | kind=IfStatement(arms=2) | if (0) { /*@ assert false; @*/ } else { Sum_1256033165 = Sum_1256033165 + Lis...
+[AddIfOne] candidate 10 | function=sum_list | role=IF_TRUE | path=sum_list.body.block[4].block[0].body.block[0].block[0].branch[0] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 11 | function=sum_list | role=IF_ELSE[1] | path=sum_list.body.block[4].block[0].body.block[0].block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { Sum_1256033165 = Sum_1256033165 + List_1679041515[I_305507250]; }
+[AddIfOne] candidate 12 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[0].block[0].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_1256033165 = Sum_1256033165 + List_1679041515[I_305507250];
+[AddIfOne] candidate 13 | function=sum_list | role=BLOCK_ITEM[1] | path=sum_list.body.block[4].block[0].body.block[1] | kind=IfStatement(arms=2) | if (1) { I_305507250 = I_305507250 + 1; } else { /*@ assert false; @*/ }
+[AddIfOne] candidate 14 | function=sum_list | role=IF_TRUE | path=sum_list.body.block[4].block[0].body.block[1].branch[0] | kind=CompoundStatement(locals=0, items=1) | { I_305507250 = I_305507250 + 1; }
+[AddIfOne] candidate 15 | function=sum_list | role=IF_ELSE[1] | path=sum_list.body.block[4].block[0].body.block[1].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert false; @*/ }
+[AddIfOne] candidate 16 | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[1].branch[0].block[0] | kind=ExpressionStatement(expr=PostAssignExpression) | I_305507250 = I_305507250 + 1;
+[ADD_IF_ONE_SITE] application 2: spin site 12 / 17
+[AddIfOne] SELECTED INDEX = 12
+[AddIfOne] SELECTED | function=sum_list | role=BLOCK_ITEM[0] | path=sum_list.body.block[4].block[0].body.block[0].block[0].branch[1].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_1256033165 = Sum_1256033165 + List_1679041515[I_305507250];
+[AddIfOne] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | Sum_1256033165 = Sum_1256033165 + List_1679041515[I_305507250];
+[INFO] Writing unknown.c to robustness-transformed.c
+Robustness spin trace:
+for-to-while: 0
+add-if-zero: 0
+add-if-zero: 8
+add-if-one: 13
+add-if-one: 12
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

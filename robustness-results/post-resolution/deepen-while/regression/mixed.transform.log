@@ -1,0 +1,31 @@
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: robustnessDeepenWhile,addIfZero,robustnessDeepenWhile
+[INFO] Robustness repeat: 3
+[DeepenWhile] candidate count = 1
+[DeepenWhile] candidate 0 | function=mult_add | path=mult_add.body.scope.block[2].scope | kind=While(generated=false, cond=AmbiguousLess, body=Scope(locals=0, items=2))
+[DEEPEN_WHILE_SITE] application 1: selected 0 / 1
+[DeepenWhile] SELECTED INDEX = 0
+[DeepenWhile] SELECTED | function=mult_add | path=mult_add.body.scope.block[2].scope | kind=While(generated=false, cond=AmbiguousLess, body=Scope(locals=0, items=2))
+[AddIfZero] candidate count = 8
+[AddIfZero] candidate 0 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[1] | kind=AssignmentStatement | Sum_1073640666 = 0;
+[AddIfZero] candidate 1 | function=mult_add | role=BLOCK_ITEM[3] | path=mult_add.body.block[3] | kind=AssignmentStatement | Remaining_291875154 = M_461803248;
+[AddIfZero] candidate 2 | function=mult_add | role=BLOCK_ITEM[4] | path=mult_add.body.block[4] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Block, body=Scope) | { /*@ loop_invariant 0 <= Remaining_291875154; loop_invariant Remaining_29187...
+[AddIfZero] candidate 3 | function=mult_add | role=LOOP_BODY | path=mult_add.body.block[4].loop.body | kind=CompoundStatement(locals=0, items=1) | { /*@ decreases Remaining_291875154; loop_invariant 0 <= Remaining_291875154;...
+[AddIfZero] candidate 4 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0] | kind=LoopStatement(init=Block, cond=And, update=Block, body=Scope) | /*@ decreases Remaining_291875154; loop_invariant 0 <= Remaining_291875154; l... | deepenGenerated=true
+[AddIfZero] candidate 5 | function=mult_add | role=LOOP_BODY | path=mult_add.body.block[4].loop.body.block[0].body | kind=CompoundStatement(locals=0, items=2) | { Sum_1073640666 = Sum_1073640666 + K_1535482311; Remaining_291875154 = Remai...
+[AddIfZero] candidate 6 | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0].body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_1073640666 = Sum_1073640666 + K_1535482311;
+[AddIfZero] candidate 7 | function=mult_add | role=BLOCK_ITEM[1] | path=mult_add.body.block[4].loop.body.block[0].body.block[1] | kind=ExpressionStatement(expr=PostAssignExpression) | Remaining_291875154 = Remaining_291875154 - 1;
+[ADD_IF_ZERO_SITE] application 1: selected 4 / 8
+[AddIfZero] SELECTED INDEX = 4
+[AddIfZero] SELECTED | function=mult_add | role=BLOCK_ITEM[0] | path=mult_add.body.block[4].loop.body.block[0] | kind=LoopStatement(init=Block, cond=And, update=Block, body=Scope) | /*@ decreases Remaining_291875154; loop_invariant 0 <= Remaining_291875154; l...
+[AddIfZero] WRAP class=Loop | LoopStatement(init=Block, cond=And, update=Block, body=Scope) | /*@ decreases Remaining_291875154; loop_invariant 0 <= Remaining_291875154; l...
+[DeepenWhile] skip generated adapter | function=mult_add | path=mult_add.body.scope.block[4].scope.body.scope.block[0].branch[1].scope.block[0]
+[DeepenWhile] candidate count = 1
+[DeepenWhile] candidate 0 | function=mult_add | path=mult_add.body.scope.block[4].scope | kind=While(generated=false, cond=AmbiguousLess, body=Scope(locals=0, items=1))
+[DEEPEN_WHILE_SITE] application 2: selected 0 / 1
+[DeepenWhile] SELECTED INDEX = 0
+[DeepenWhile] SELECTED | function=mult_add | path=mult_add.body.scope.block[4].scope | kind=While(generated=false, cond=AmbiguousLess, body=Scope(locals=0, items=1))
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

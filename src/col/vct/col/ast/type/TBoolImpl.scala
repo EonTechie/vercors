@@ -13,6 +13,7 @@ trait TBoolImpl[G] extends TBoolOps[G] {
       case Ctx.PVL => Text("boolean")
       case Ctx.Silver => Text("Bool")
       case Ctx.Java => Text("boolean")
-      case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP => Text("bool")
+      case Ctx.C => Text("_Bool")
+      case Ctx.Cuda | Ctx.OpenCL | Ctx.CPP => Text("bool")
     }
 }

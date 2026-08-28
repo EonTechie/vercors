@@ -1,0 +1,7 @@
+deepen-while (no spin, transform only, no verify)
+
+7 programs from examples/concepts/basic/EXAMPLES:
+1_absolute, 2_swap, 3_mult_add, 3_while_multip, 4_big, 5_bubbleSort, 6_pure
+
+Only 3_while_multip has a while -> site-0.c
+The others have 0 candidates (for-only or no loop).

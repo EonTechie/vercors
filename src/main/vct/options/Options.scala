@@ -107,7 +107,21 @@ case object Options {
         .action((amount, c) => c.copy(robustnessRepeat = amount))
         .text(
           "Apply the robustness transform this many times on the resolved AST. " +
-            "Comma-separated ROBUSTNESS_TRANSFORM values cycle across applications."
+            "Without --robustness-spin, comma-separated ROBUSTNESS_TRANSFORM values cycle across applications."
+        ),
+
+      opt[Unit]("robustness-spin")
+        .action((_, c) => c.copy(robustnessSpin = true))
+        .text(
+          "Each --robustness-repeat step picks a random transform from the pool and a random site, " +
+            "retrying kinds with no sites (SemTransforms spin_config). Default pool is " +
+            "add-if-zero, add-if-one, for-to-while; ROBUSTNESS_TRANSFORM narrows the pool."
+        ),
+
+      opt[Long]("robustness-seed")
+        .action((seed, c) => c.copy(robustnessSeed = Some(seed)))
+        .text(
+          "RNG seed for --robustness-spin. If unset, a seed is chosen and printed."
         ),
 
       opt[Unit]("more").abbr("m").action((_, c) => c.copy(more = true))
@@ -496,6 +510,8 @@ case class Options(
     showHidden: Boolean = false,
     mode: Mode = Mode.Verify,
     robustnessRepeat: Int = 1,
+    robustnessSpin: Boolean = false,
+    robustnessSeed: Option[Long] = None,
     inputs: Seq[PathOrStd] = Nil,
     logLevels: Seq[(String, Verbosity)] = Seq(
       ("vct", Verbosity.Info),

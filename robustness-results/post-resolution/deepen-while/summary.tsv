@@ -1,0 +1,8 @@
+program	candidates	transform_ok
+1_absolute	0	1
+2_swap	0	1
+3_mult_add	0	1
+3_while_multip	1	1
+4_big	0	1
+5_bubbleSort	0	1
+6_pure	0	1

@@ -1,0 +1,9 @@
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: robustnessDeepenWhile
+[INFO] Robustness repeat: 1
+[DeepenWhile] candidate count = 0
+[DEEPEN_WHILE_SITE] application 1: 0 candidates, skip
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c
