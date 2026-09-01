@@ -4,14 +4,14 @@ import vct.col.ast._
 import vct.col.ast.RewriteHelpers._
 import vct.col.origin.{Origin, PanicBlame}
 
-case object AddIfOne extends CSourceRewriterBuilder {
+case object AddIfOne extends RewriterBuilder {
   override def key: String = "addIfOne"
 
   override def desc: String =
     "Wrap a C statement as if (1) { original } else { assert false }."
 }
 
-case class AddIfOne[Pre <: Generation]() extends CSourceRewriter[Pre] {
+case class AddIfOne[Pre <: Generation]() extends Rewriter[Pre] {
   private var selected: Option[CStatementSites.Site[Pre]] = None
   private var wrapped: Boolean = false
 
@@ -50,7 +50,6 @@ case class AddIfOne[Pre <: Generation]() extends CSourceRewriter[Pre] {
     selected = RobustnessSiteSelection.nextIndex(
       "ADD_IF_ONE_SITE",
       candidates.size,
-      required = false,
     ).map { selectedIndex =>
       val site = candidates(selectedIndex)
       println(s"[AddIfOne] SELECTED INDEX = $selectedIndex")

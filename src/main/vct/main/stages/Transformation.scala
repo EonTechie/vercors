@@ -177,8 +177,6 @@ object Transformation extends LazyLogging {
           simplifyAfterRelations = options.simplifyPathsAfterRelations
             .map(simplifierFor(_, options)),
           checkSat = options.devCheckSat,
-          devAddIfOne = options.devAddIfOne,
-          devAddIfZero = options.devAddIfZero,
           inferHeapContextIntoFrame = options.inferHeapContextIntoFrame,
           bipResults = bipResults,
           splitVerificationByProcedure =
@@ -362,8 +360,6 @@ case class SilverTransformation(
     inferHeapContextIntoFrame: Boolean = true,
     bipResults: BIP.VerificationResults,
     checkSat: Boolean = true,
-    devAddIfOne: Boolean = false,
-    devAddIfZero: Boolean = false,
     splitVerificationByProcedure: Boolean = false,
     override val optimizeUnsafe: Boolean = false,
     generatePermissions: Boolean = false,
@@ -375,10 +371,7 @@ case class SilverTransformation(
     unsetTarget: Boolean = true,
 ) extends Transformation(
       onPassEvent,
-      Seq[RewriterBuilder](AddIfOne).filter(_ => devAddIfOne) ++
-        // Adjusted for robustness mode: let AddIfZero run through the normal
-        // post-resolution transformation stage instead of a C-source rewrite.
-        Seq[RewriterBuilder](AddIfZero).filter(_ => devAddIfZero) ++ Seq(
+      Seq(
           CTypeConversions.withArg(checkIntegerBounds, unsetTarget),
           EncodeBoundsChecks,
           // Replace leftover SYCL types

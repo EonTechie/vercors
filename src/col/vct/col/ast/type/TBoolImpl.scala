@@ -13,6 +13,8 @@ trait TBoolImpl[G] extends TBoolOps[G] {
       case Ctx.PVL => Text("boolean")
       case Ctx.Silver => Text("Bool")
       case Ctx.Java => Text("boolean")
+      // Post-resolution C pretty-print: ISO C uses `_Bool`; `bool` is not
+      // a C99 keyword. Cuda / OpenCL / CPP keep `bool`.
       case Ctx.C => Text("_Bool")
       case Ctx.Cuda | Ctx.OpenCL | Ctx.CPP => Text("bool")
     }

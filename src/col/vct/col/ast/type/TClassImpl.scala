@@ -44,7 +44,7 @@ trait TClassImpl[G] extends NodeImpl[G] {
   private def layoutCName(implicit ctx: Ctx): Doc =
     cls.decl match {
       case _: ByValueClass[G] =>
-        // Adjusted for robustness mode: by-value classes originate from C
+        // Post-resolution C pretty-print: by-value classes originate from C
         // structs, so references to them must be emitted as `struct T`.
         Text("struct") <+> ctx.name(cls)
       case _ => Text(ctx.name(cls))

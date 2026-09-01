@@ -13,21 +13,11 @@ case class RobustnessForLoopToWhileLoop[Pre <: Generation]()
     extends Rewriter[Pre] {
   private var selected: Option[ForLoopToWhileLoopSites.Site[Pre]] = None
 
-  private def selectedSiteIndex(candidates: Seq[_]): Int = {
-    val envName =
-      if (sys.env.contains("FOR_TO_WHILE_SITE"))
-        "FOR_TO_WHILE_SITE"
-      else if (sys.env.contains("FOR2WHILE_SITE"))
-        "FOR2WHILE_SITE"
-      else
-        "FOR_TO_WHILE_SITE"
-
+  private def selectedSiteIndex(candidates: Seq[_]): Int =
     RobustnessSiteSelection.nextIndex(
-      envName,
+      "FOR_TO_WHILE_SITE",
       candidates.size,
-      required = false,
     ).getOrElse(0)
-  }
 
   override def dispatch(program: Program[Pre]): Program[Post] = {
     val candidates = ForLoopToWhileLoopSites.collect(program)
@@ -48,7 +38,6 @@ case class RobustnessForLoopToWhileLoop[Pre <: Generation]()
         RobustnessSiteSelection.nextIndex(
           "FOR_TO_WHILE_SITE",
           0,
-          required = false,
         )
         None
       } else {

@@ -1,116 +1,238 @@
-# Adding a robustness transform
+# Adding a robustness transform that does not exist yet
 
-## What `--robustness` does
+This file is an instruction for wiring a **new** rewrite into
+`--robustness`. It is not a catalogue of the five rewrites that already
+exist. Those are recorded in [`ROBUSTNESS-FILES.md`](ROBUSTNESS-FILES.md).
 
-VerCors reads the C file, resolves names and types, then runs the chosen
-rewrite one or more times on that tree. It writes `robustness-transformed.c`
-in the directory you ran from. It does not run Silicon. To check the dump,
-run ordinary `vercors` on `robustness-transformed.c`.
+`--robustness` does not run Silicon. After a dump exists, verification is
+a separate ordinary `vercors` invocation, or the driver script.
 
-`--robustness` is a mode (`Mode.Robustness` in `Mode.scala`, handled in
-`Main.scala`). It is not `--dev-add-if-zero`. That hidden option, if passed,
-puts AddIfZero into the normal Verify rewrite list in `Transformation.scala`.
-Robustness does not read it. A new transform does not go there.
+Do not add the new rewrite to `Transformation.scala`. That object is the
+ordinary Verify pass list. None of the robustness rewrites are on it.
 
-## Two parts of one transform
+Do not add a new flag in `Options.scala`. The name is the environment
+variable `ROBUSTNESS_TRANSFORM`. The site index is a second environment
+variable that you pass to `RobustnessSiteSelection.nextIndex`.
 
-1. A list of places in the tree that this rewrite is allowed to touch.
-   AddIfZero and AddIfOne both call `CStatementSites.collect`.
-   For-to-while calls `ForLoopToWhileLoopSites.collect`.
-2. A `Rewriter` that changes exactly one of those places: the index from
-   `RobustnessSiteSelection.nextIndex`. If that env var is unset, the index
-   is 0. The place is the tree node itself (`eq`), not a line number and not
-   the printed C text.
+---
 
-`--robustness-repeat N` runs that rewrite N times on the same tree.
-`--robustness-spin` picks a rewrite name and an index at random each time
-(`RobustnessSpin.scala`). Without spin, `ROBUSTNESS_TRANSFORM` chooses the
-name (comma-separated names cycle). Default without the env var is AddIfZero.
+## What the engine requires
 
-AddIfZero and AddIfOne use the same place-list because they both put a
-statement inside an `if`. They only differ in the `if` they build.
-For-to-while cannot use that list: it only accepts `for` loops without
-`continue`. It calls `ForLoopToWhileLoop.rewriteLoop`.
+A robustness transform is three things that must agree:
 
-AddIfOne extends `CSourceRewriter`. That is leftover. A new transform should
-extend `Rewriter`, like AddIfZero.
+1. A **collector** that returns the AST nodes this rewrite is allowed to
+   change, in a stable order, so index `0` is always the first node in that
+   list.
+2. A **rewriter** (`RewriterBuilder` + `Rewriter`) that, on each
+   application, asks `RobustnessSiteSelection.nextIndex` for one index,
+   changes that node once, and leaves every other node to
+   `rewriteDefault`.
+3. A **name** in `parseTransform` in
+   `src/main/vct/main/modes/Robustness.scala`, so
+   `ROBUSTNESS_TRANSFORM=<name>` selects that builder.
 
-If you replace a `{ ... }` body with an `if`, call
-`RobustnessStatementWrap.keepSurroundingBraces`. Otherwise the printed C can
-look like `for (...) if (0)` with no braces around the loop body.
+The selected node is identified by reference (`eq` on the tree node), not
+by line number and not by printed C text.
 
-After resolve, `int x = e` is not a place in `CStatementSites`.
-`return` / `goto` / `break` / `continue` themselves are not places; a parent
-`if` or loop still can be.
+If the collector returns no nodes, `nextIndex(env, 0)` returns `None` and
+the rewriter must not change the program. Call `nextIndex` even in that
+case: spin may have stored a forced index, and that call consumes it.
 
-## Current names
+---
 
-| `ROBUSTNESS_TRANSFORM` | Place list | What it does |
-|---|---|---|
-| `add-if-zero` (`if0error`) | `CStatementSites` | `if (0) { assert false } else { S }` |
-| `add-if-one` (`add_if1`) | `CStatementSites` | `if (1) { S } else { assert false }` |
-| `for-to-while` (`for2while`) | `ForLoopToWhileLoopSites` | `ForLoopToWhileLoop.rewriteLoop` |
-| `deepen-while` (`deepen_while`) | `DeepenWhileSites` | nest `while (c) { while (nondet() && c) S }`. Only `while` with `LoopInvariant`. Outer drops `decreases`; inner keeps it. Only the inner adapter is excluded from later DeepenWhile collects; the outer `while (C)` stays eligible |
+## 1. Choose the two strings
 
-`if0error`, `add_if1`, `for2while` only rename the VerCors rewrites. They are
-not the SemTransforms Python inserts.
+Pick the string that will appear in `ROBUSTNESS_TRANSFORM`, and the
+environment variable that will hold the site index.
 
-## How to run
+Example: name `my-transform`, site variable `MY_TRANSFORM_SITE`.
+
+`parseTransform` matches on `name.trim.toLowerCase`. Put in the `case`
+exactly the strings you will export. If you only list `"my-transform"`,
+then `ROBUSTNESS_TRANSFORM=my_transform` is unknown and the process stops
+with `Unknown ROBUSTNESS_TRANSFORM=...`.
+
+Update the error text in that same `match` so it lists the new name.
+Otherwise a typo still tells the user only the old five names.
+
+`RewriterBuilder.key` is a separate Scala string (used in logs and in the
+spin error `Robustness spin pool cannot include …`). It must not collide
+with another builder’s `key` in the same run.
+
+---
+
+## 2. Write the collector
+
+Add a Scala object whose `collect(program)` returns the allowed nodes.
+
+After `--robustness` has parsed and resolved, C functions appear as
+`CFunctionDefinition` or `Procedure` under `program.declarations`,
+sometimes nested in `CTranslationUnit`. Every collector that exists today
+walks those declarations and skips function names `reach_error`, `abort`,
+`assume_abort_if_not`, and names that start with `__VERIFIER_`. Do the
+same unless you have a documented reason not to: otherwise you will
+rewrite error-sink helpers.
+
+Which **node type** you collect is the definition of this transform. That
+decision is yours. Do not call another transform’s collector unless that
+list is exactly the set of nodes you intend to change. A wrong collector
+selects the wrong node and the rewrite is still “successful” as far as
+the engine is concerned.
+
+Each site must hold the target node (for `eq`) and whatever you need to
+log. The engine only cares that `candidates(index).target` is the node
+the rewriter will test with `eq`.
+
+---
+
+## 3. Write the rewriter
+
+Add a `RewriterBuilder` and a `Rewriter[Pre]` in
+`src/rewrite/vct/rewrite/`. The `rewrite` mill module takes all Scala
+under `src/rewrite`. `build.sc` does not list individual rewriter files.
+
+In `dispatch(program: Program[Pre])`:
+
+1. `val candidates = YourSites.collect(program)`
+2. `selected = RobustnessSiteSelection.nextIndex("YOUR_SITE", candidates.size)`
+   mapped to `candidates(index)` when the `Option` is `Some`
+3. `super.dispatch(program)`
+
+In `dispatch` for the node kind you change: if the stored target `eq` this
+node, apply the AST edit once; otherwise `rewriteDefault`.
+
+The AST edit is the meaning of this transform. The engine does not
+constrain it beyond: one selected node per application, identity by `eq`.
+
+Printer constraint, verified in `RobustnessStatementWrap` and the C loop
+printer: `if` and `for`/`while` only emit `{ }` when the body is a
+`Block` or `Scope`. If you replace a `Block`/`Scope` body with a node that
+is neither, the dump can drop the braces. In that situation call
+`RobustnessStatementWrap.keepSurroundingBraces(original, replacement)`.
+If the replacement is already a `Block` or `Scope`, you do not need it.
+
+---
+
+## 4. Register the name (required for any use)
+
+In `src/main/vct/main/modes/Robustness.scala`:
+
+- import the `RewriterBuilder`
+- add a `case` in `parseTransform`
+- add the name to the `Unknown ROBUSTNESS_TRANSFORM` message
+
+After a compile, this is enough for a non-spin run:
 
 ```bash
-ROBUSTNESS_TRANSFORM=add-if-zero \
-  out/vercors/main/runScript.dest/vercors --robustness --robustness-repeat 5 file.c
-
-ADD_IF_ZERO_SITE=2 \
+ROBUSTNESS_TRANSFORM=my-transform \
   out/vercors/main/runScript.dest/vercors --robustness file.c
-
-out/vercors/main/runScript.dest/vercors \
-  --robustness --robustness-spin --robustness-repeat 5 --robustness-seed 42 file.c
 ```
 
-Use `out/vercors/main/runScript.dest/vercors`, not `bin/vct`, while mill is
-compiling. Unset leftover `*_SITE` env vars first.
+`file.c` must actually contain at least one collected site. If it does
+not, the dump is the resolved program with no rewrite applied.
 
-## Steps to add a new transform
+Compile:
 
-Copy `AddIfZero.scala`. If the change is `for` → `while`, copy
-`RobustnessForLoopToWhileLoop.scala` instead.
+```bash
+./mill vercors.main.compile
+```
 
-1. Place list. Same statements as AddIfZero → `CStatementSites.collect`.
-   Same `for` loops as for-to-while → `ForLoopToWhileLoopSites.collect`.
-   Otherwise a new `collect` in `src/rewrite/vct/rewrite/`, visiting
-   `Procedure` and `CFunctionDefinition` like those two files, skipping
-   `reach_error`, `abort`, `__VERIFIER_*`. The three transforms that exist
-   all pick a `Statement` and override `dispatch(stat)`.
+Use `out/vercors/main/runScript.dest/vercors`, not `bin/vct`, while that
+compile is the binary you intend to run.
 
-2. Rewriter file in `src/rewrite/vct/rewrite/`.
-   `case object Foo extends RewriterBuilder` and
-   `case class Foo[Pre <: Generation]() extends Rewriter[Pre]`.
-   In `dispatch(program)`: `collect`, then
-   `RobustnessSiteSelection.nextIndex("FOO_SITE", candidates.size, required = false)`,
-   then `super.dispatch`.
-   In `dispatch(stat)`: if `selected.exists(_.target eq stat)`, change that
-   node once; else `rewriteDefault`.
+---
 
-3. `src/main/vct/main/modes/Robustness.scala`: import; a case in
-   `parseTransform` (this is `ROBUSTNESS_TRANSFORM=...`); and if
-   `--robustness-spin` with no `ROBUSTNESS_TRANSFORM` should include it, the
-   `Seq` inside `selectedBuilders` when spin is true (today: AddIfZero,
-   AddIfOne, RobustnessForLoopToWhileLoop).
+## 5. Register spin (`kindOf`) if the name will be used with `--robustness-spin`
 
-4. `src/rewrite/vct/rewrite/RobustnessSpin.scala`, only for
-   `--robustness-spin`: a `Kind` (`candidateCount` = the `collect` from step 1,
-   `apply` = the rewriter from step 2); a case in `kindOf`; `defaultPool` if
-   it should run when `ROBUSTNESS_TRANSFORM` is unset. Skip this file and
-   `ROBUSTNESS_TRANSFORM=your-name` still works after step 3.
-   `--robustness-spin` then errors with
-   `Robustness spin pool cannot include …`.
+Non-spin runs never call `RobustnessSpin.kindOf`.
 
-5. `./mill vercors.main.compile`, then
-   `out/vercors/main/runScript.dest/vercors`. A new file under
-   `src/rewrite/vct/rewrite/` compiled without changing `build.sc` when
-   `RobustnessSpin.scala` was added. There is no robustness test directory.
-   There is no extra flag in `Options.scala` for AddIfZero / AddIfOne /
-   for-to-while; the name is `ROBUSTNESS_TRANSFORM`, the place is the string
-   given to `nextIndex`. Do not add the new rewriter to
-   `Transformation.scala`.
+`--robustness-spin` (and the driver’s `MODE=mixed`) builds the pool with
+`builders.map(RobustnessSpin.kindOf)`. If `kindOf` has no case for the
+new builder, the process throws:
+
+`Robustness spin pool cannot include <key>`
+
+In `src/rewrite/vct/rewrite/RobustnessSpin.scala`:
+
+- a `Kind` with `label` equal to the `ROBUSTNESS_TRANSFORM` name,
+  `candidateCount` equal to `YourSites.collect(program).size`,
+  `apply` equal to `YourRewriter[Pre]().dispatch(program)`
+- `case YourRewriter => YourKind` in `kindOf`
+
+Default pool when `ROBUSTNESS_TRANSFORM` is **unset** and spin is on is
+the `Seq` in `selectedBuilders` in `Robustness.scala` (currently four
+builders; not `to-method`). Put the new builder in that `Seq` only if an
+unset env var must include it. If the driver will list the name in
+`TRANSFORM`, you do not add it to that default `Seq`.
+
+`RobustnessSpin.defaultPool` is used only when `kindOf` is given an empty
+list. The mode does not pass an empty list when `selectedBuilders`
+returns the four-builder `Seq`. Do not edit `defaultPool` instead of
+`kindOf` and expect `MODE=mixed` with `TRANSFORM=my-transform` to work.
+
+---
+
+## 6. Register the driver if `run-benchmark.sh` must accept the name
+
+`vercors --robustness` does not read the script. The script is required
+only for folder runs.
+
+In `util/robustness/run-benchmark.sh`:
+
+- add `YOUR_SITE` to `ALL_SITE_VARS` (otherwise a leftover value in the
+  shell is not cleared)
+- add the name in `site_var_for` so it prints `YOUR_SITE`
+- add the name on the `--transform` line in `usage`
+
+`preferred` calls `site_var_for` and stops with `unknown transform` if
+that function returns empty.
+
+In `util/robustness/config.env`, set `TRANSFORM` to the new name when you
+want that run. Mixed uses that list as the spin pool, so step 5 must
+already be done.
+
+---
+
+## 7. Check the dump
+
+```bash
+./mill vercors.main.compile
+
+unset YOUR_SITE
+ROBUSTNESS_TRANSFORM=my-transform \
+  out/vercors/main/runScript.dest/vercors --robustness file.c
+```
+
+The mode writes `robustness-transformed.c` in the current working
+directory. Inspect that file. Site `0` is the first element of your
+collector’s list for that program.
+
+A later index:
+
+```bash
+YOUR_SITE=1 \
+ROBUSTNESS_TRANSFORM=my-transform \
+  out/vercors/main/runScript.dest/vercors --robustness file.c
+```
+
+If the collector has fewer than two sites, `YOUR_SITE=1` throws
+`Invalid YOUR_SITE index 1` with the valid range in the message.
+
+Verification of the dump is not `--robustness`:
+
+```bash
+out/vercors/main/runScript.dest/vercors robustness-transformed.c
+```
+
+There is no robustness test directory in this repository.
+
+---
+
+## Do not
+
+- Do not put the rewriter on the Verify list in `Transformation.scala`.
+- Do not add `--my-transform` in `Options.scala`.
+- Do not reuse another transform’s collector unless the allowed nodes are
+  the same set.
+- Do not skip `kindOf` if the name will appear in a spin pool.
+- Do not skip `ALL_SITE_VARS` if the driver will set `YOUR_SITE`.

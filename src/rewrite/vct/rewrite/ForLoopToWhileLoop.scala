@@ -11,6 +11,9 @@ case object ForLoopToWhileLoop extends RewriterBuilder {
   override def desc: String =
     "Translate for loops into while loops by putting initialization and the update before and in the loop."
 
+  /** Shared for → while rewrite. The Verify `forLoop` pass and the
+    * robustness for-to-while rewriter both call this.
+    */
   def rewriteLoop[Pre <: Generation, Post <: Generation](
       loop: Loop[Pre],
       rewriteDefaultLoop: Loop[Pre] => Statement[Post],

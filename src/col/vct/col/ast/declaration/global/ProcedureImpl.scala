@@ -26,7 +26,7 @@ trait ProcedureImpl[G] extends ProcedureOps[G] {
     val (spec, decl) = returnType.layoutSplitDeclarator
     val prefix = if (inline) Text("inline") <> " " else Empty
     Doc.stack(Seq(
-      // Adjusted for robustness mode: post-resolution Procedure nodes must keep
+      // Post-resolution C pretty-print: post-resolution Procedure nodes must keep
       // their function contracts when emitted as C mutants.
       contract,
       Group(

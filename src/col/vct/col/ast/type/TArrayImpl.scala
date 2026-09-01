@@ -11,7 +11,7 @@ trait TArrayImpl[G] extends TArrayOps[G] {
   override def layoutSplitDeclarator(implicit ctx: Ctx): (Doc, Doc) =
     ctx.syntax match {
       case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
-        // Adjusted for robustness mode: post-resolution arrays in C function
+        // Post-resolution C pretty-print: post-resolution arrays in C function
         // parameters are emitted in the parseable array-to-pointer form.
         val (spec, decl) = element.layoutSplitDeclarator
         (spec, decl <> "*")

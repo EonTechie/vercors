@@ -30,7 +30,7 @@ trait BooleanValueImpl[G] extends BooleanValueOps[G] {
   override def layout(implicit ctx: Ctx): Doc =
     ctx.syntax match {
       case Ctx.C if !ctx.inSpec =>
-        // Adjusted for robustness mode: executable C conditions must be
+        // Post-resolution C pretty-print: executable C conditions must be
         // printed as C integer booleans, while specifications keep true/false.
         Text(
           if (value)

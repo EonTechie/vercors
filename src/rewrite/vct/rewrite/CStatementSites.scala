@@ -6,6 +6,10 @@ import vct.col.ast._
 import vct.col.ref.Ref
 import vct.col.resolve.lang.C
 
+/** Wrap sites for add-if-zero and add-if-one. `return` / `goto` / `break` /
+  * `continue` themselves are not sites; a parent if, loop, or block still can
+  * be.
+  */
 object CStatementSites {
   sealed trait Role {
     def label: String
@@ -50,9 +54,8 @@ object CStatementSites {
 
   def isForbiddenWrapTarget[G](stat: Statement[G]): Boolean =
     stat match {
-      // Robustness mode: never create an if(1) wrapper around return-like
-      // control flow, including wrappers around an if/loop/block that contains
-      // such a statement.
+      // Do not wrap return-like control flow, including an if/loop/block that
+      // contains such a statement.
       case _ if isAbruptStatement(stat) => true
       case Scope(_, body) => isForbiddenWrapTarget(body)
       case Block(statements) => statements.exists(isForbiddenWrapTarget)

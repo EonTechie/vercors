@@ -5,13 +5,14 @@ import scala.util.Random
 
 import vct.col.ast.Program
 
-/** One SemTransforms-style spin step: pick a transform kind, then a site.
+/** One mixed-mode spin step: pick a transform kind, then a site.
   *
-  * Mirrors `Transformer.transform` in FlorianDyck/semtransforms: weighted
-  * choice of kind, skip a kind with no sites and retry, abort remaining
-  * repetitions if nothing in the pool applies, then uniform choice among
-  * that kind's current candidates. The chosen rewriter is the existing
-  * AddIfZero / AddIfOne / RobustnessForLoopToWhileLoop pass.
+  * Each kind in the pool has weight 1, so the pick among remaining kinds is
+  * uniform. A kind with no sites is dropped and another kind is tried. If
+  * nothing in the pool applies, later repeats are no-ops. The site index is
+  * uniform among that kind's current candidates. The rewriter is one of
+  * AddIfZero, AddIfOne, RobustnessForLoopToWhileLoop, RobustnessDeepenWhile,
+  * or RobustnessToMethod (the last only if it is in the pool).
   */
 object RobustnessSpin {
   sealed trait Kind {

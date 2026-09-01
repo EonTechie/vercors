@@ -93,7 +93,7 @@ trait ClassImpl[G] extends Declarator[G] {
   def layoutC(implicit ctx: Ctx): Doc =
     this match {
       case _: ByValueClass[G] =>
-        // Adjusted for robustness mode: resolved C structs are represented as
+        // Post-resolution C pretty-print: resolved C structs are represented as
         // by-value classes, but generated mutants must be valid C source.
         Text("struct") <+> ctx.name(this) <+> "{" <>> Doc.stack2(decls) <+/>
           "};"

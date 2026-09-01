@@ -25,6 +25,8 @@ trait ProgramImpl[G]
     val decls =
       ctx.syntax match {
         case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP =>
+          // Post-resolution C pretty-print: omit generated sizeof_* helpers.
+          // They stay in the AST for pointer-size encoding.
           declarations.filterNot {
             case f: vct.col.ast.Function[_] => f.isGeneratedSizeOfHelper
             case _ => false

@@ -162,7 +162,6 @@ case class RobustnessDeepenWhile[Pre <: Generation]() extends Rewriter[Pre] {
     selected = RobustnessSiteSelection.nextIndex(
       "DEEPEN_WHILE_SITE",
       candidates.size,
-      required = false,
     ).map { index =>
       val site = candidates(index)
       println(s"[DeepenWhile] SELECTED INDEX = $index")

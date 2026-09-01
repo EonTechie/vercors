@@ -57,7 +57,6 @@ case class AddIfZero[Pre <: Generation]() extends Rewriter[Pre] {
     selected = RobustnessSiteSelection.nextIndex(
       "ADD_IF_ZERO_SITE",
       candidates.size,
-      required = false,
     ).map { selectedIndex =>
       val site = candidates(selectedIndex)
       println(s"[AddIfZero] SELECTED INDEX = $selectedIndex")

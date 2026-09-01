@@ -20,7 +20,7 @@ trait TPointerArrayImpl[G] extends TPointerArrayOps[G] {
   override def layoutSplitDeclarator(implicit ctx: Ctx): (Doc, Doc) =
     ctx.syntax match {
       case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
-        // Adjusted for robustness mode: emit parseable C pointer syntax instead
+        // Post-resolution C pretty-print: emit parseable C pointer syntax instead
         // of generic COL array syntax in generated mutants.
         val (spec, decl) = element.layoutSplitDeclarator
         (spec, decl <> "*")

@@ -27,31 +27,28 @@ import scala.util.Random
 case object Robustness extends LazyLogging {
   private val outputPath: Path = Paths.get("robustness-transformed.c")
 
-  private val spinNames: Set[String] = Set("spin", "spin_config", "spin-config")
-
   private def parseTransform(name: String): RewriterBuilder =
     name.trim.toLowerCase match {
-      case "" | "add-if-zero" | "add_if_zero" | "if0error" =>
+      case "" | "add-if-zero" | "add_if_zero" =>
         AddIfZero
 
-      case "add-if-one" | "add_if_one" | "add-if1" | "add_if1" =>
+      case "add-if-one" | "add_if_one" =>
         AddIfOne
 
-      case "for-to-while" | "for_to_while" | "for2while" |
-          "for-loop-to-while" | "for_loop_to_while" =>
+      case "for-to-while" | "for_to_while" =>
         RobustnessForLoopToWhileLoop
 
-      case "deepen-while" | "deepen_while" | "deepenwhile" =>
+      case "deepen-while" | "deepen_while" =>
         RobustnessDeepenWhile
 
-      case "to-method" | "to_method" | "tomethod" =>
+      case "to-method" | "to_method" =>
         RobustnessToMethod
 
       case other =>
         throw new IllegalArgumentException(
           s"Unknown ROBUSTNESS_TRANSFORM=$other. " +
             "Use add-if-zero, add-if-one, for-to-while, deepen-while, or to-method, " +
-            "optionally comma-separated, or spin_config for mixed random selection."
+            "optionally comma-separated."
         )
     }
 
@@ -69,7 +66,7 @@ case object Robustness extends LazyLogging {
   }
 
   private def selectedBuilders(spin: Boolean): Seq[RewriterBuilder] = {
-    val names = envNames.filterNot(spinNames.contains)
+    val names = envNames
     if (names.isEmpty) {
       if (spin)
         Seq(
@@ -86,8 +83,7 @@ case object Robustness extends LazyLogging {
   }
 
   private def spinEnabled(options: Options): Boolean =
-    options.robustnessSpin || envFlag("ROBUSTNESS_SPIN") ||
-    envNames.exists(spinNames.contains)
+    options.robustnessSpin || envFlag("ROBUSTNESS_SPIN")
 
   private def spinSeed(options: Options): Long =
     options.robustnessSeed.orElse {
@@ -125,7 +121,7 @@ case object Robustness extends LazyLogging {
         Seq.fill(repeat)(RobustnessSpinStep)
       } else {
         // Same-kind (or cycling) N-fold apply on the resolved AST, site 0
-        // unless ADD_IF_ZERO_SITE / ADD_IF_ONE_SITE / FOR_TO_WHILE_SITE is set.
+        // unless the matching *_SITE env var is set.
         logger.info("Robustness mode: sequential")
         Seq.tabulate(repeat)(i => builders(i % builders.size))
       }

@@ -13,6 +13,9 @@ trait FunctionImpl[G]
     with FunctionOps[G] {
   this: Function[G] =>
 
+  /** True for LangCToCol `sizeof_*` helpers. The origin marker is the
+    * primary test; the name fallback covers helpers printed without it.
+    */
   def isGeneratedSizeOfHelper: Boolean =
     o.find[vct.col.origin.GeneratedSizeOfHelper.type].nonEmpty ||
       (body.isEmpty &&

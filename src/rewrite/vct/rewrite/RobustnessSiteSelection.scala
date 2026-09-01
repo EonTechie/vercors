@@ -8,13 +8,12 @@ import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
   * `ADD_IF_ZERO_SITE=0,2,1` with `--robustness-repeat 3` uses 0 then 2 then 1.
   * A shorter list reuses its last index on later applications.
   *
-  * If the env var is unset, each application selects site 0 (deterministic,
-  * suitable for same-kind N-fold repeats). Counters are per env name so mixed
-  * transform chains do not share site lists.
+  * If the env var is unset, each application selects site 0. Counters are
+  * per env name so mixed transform chains do not share site lists.
   *
   * `forceNext` is consumed once by the following `nextIndex` call and wins
-  * over the env list. Robustness spin uses that so a random site can ride
-  * the existing AddIfZero / AddIfOne / for-to-while rewriters.
+  * over the env list. Spin uses that so a random site can ride the existing
+  * rewriters.
   *
   * If an application has no remaining candidates, it is a no-op.
   */
@@ -32,7 +31,6 @@ object RobustnessSiteSelection {
   def nextIndex(
       envName: String,
       candidateCount: Int,
-      required: Boolean,
   ): Option[Int] = {
     val round = applications.computeIfAbsent(
       envName,
@@ -94,9 +92,6 @@ object RobustnessSiteSelection {
           s"[$envName] application ${round + 1}: selected $selected / $candidateCount"
         )
         Some(selected)
-
-      case None if required =>
-        throw new IllegalArgumentException(s"$envName must be specified")
 
       case None =>
         println(

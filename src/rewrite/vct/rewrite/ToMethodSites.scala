@@ -7,7 +7,7 @@ import vct.col.ref.Ref
 import vct.col.resolve.ctx.{RefCLocalDeclaration, RefCParam, RefVariable}
 import vct.col.resolve.lang.C
 
-/** Places SemTransforms `to_method` may touch: a `{ ... }` that has no
+/** Places the to-method rewrite may touch: a `{ ... }` that has no
   * `return`/`break`/`continue`/`goto`, no declaration, and no nested loop.
   * An `if` inside is fine. Assignments and `--`/`++` are not sites by
   * themselves (only the surrounding braces).

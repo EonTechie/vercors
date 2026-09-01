@@ -21,7 +21,7 @@ trait TNonNullPointerArrayImpl[G] extends TNonNullPointerArrayOps[G] {
   override def layoutSplitDeclarator(implicit ctx: Ctx): (Doc, Doc) =
     ctx.syntax match {
       case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
-        // Adjusted for robustness mode: non-null is a verifier property, not
+        // Post-resolution C pretty-print: non-null is a verifier property, not
         // C declarator syntax, so keep the emitted mutant parseable as C.
         val (spec, decl) = element.layoutSplitDeclarator
         (spec, decl <> "*")

@@ -54,7 +54,7 @@ case class Ctx(
       decl,
       s"${decl.o.getPreferredNameOrElse().ucamel}_${decl.hashCode()}",
     )
-    // Adjusted for robustness mode: post-resolution C output can synthesize
+    // Post-resolution C pretty-print: post-resolution C output can synthesize
     // names from type layouts, so keep them valid C identifiers.
     val printableName =
       if (usesCIdentifiers)

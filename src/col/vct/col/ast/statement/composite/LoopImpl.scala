@@ -132,7 +132,7 @@ trait LoopImpl[G] extends LoopOps[G] {
 
       case Scope(_, Block(Seq(LocalDecl(local), Assign(Local(Ref(v)), value))))
           if local == v =>
-        // Adjusted for robustness mode: post-resolution C for-loop initializers
+        // Post-resolution C pretty-print: post-resolution C for-loop initializers
         // can become a scoped local declaration plus assignment.
         Some(local.show <+> "=" <+> value)
 
@@ -140,31 +140,31 @@ trait LoopImpl[G] extends LoopOps[G] {
             _,
             Block(Seq(LocalDecl(local), AssignInitial(Local(Ref(v)), value))),
           ) if local == v =>
-        // Adjusted for robustness mode: keep scoped C loop initializers in
+        // Post-resolution C pretty-print: keep scoped C loop initializers in
         // parseable declarator form when emitting mutants.
         Some(local.show <+> "=" <+> value)
 
       case Scope(Seq(local), Block(Seq(Assign(Local(Ref(v)), value))))
           if local == v =>
-        // Adjusted for robustness mode: post-resolution C for-loop initializers
+        // Post-resolution C pretty-print: post-resolution C for-loop initializers
         // can become a local scope plus assignment; print them as `int i = 0`.
         Some(local.show <+> "=" <+> value)
 
       case Scope(Seq(local), Block(Seq(AssignInitial(Local(Ref(v)), value))))
           if local == v =>
-        // Adjusted for robustness mode: keep scoped C loop initializers in
+        // Post-resolution C pretty-print: keep scoped C loop initializers in
         // parseable declarator form when emitting mutants.
         Some(local.show <+> "=" <+> value)
 
       case Block(Seq(LocalDecl(local), Assign(Local(Ref(v)), value)))
           if local == v =>
-        // Adjusted for robustness mode: C for-loop initialization cannot be a
+        // Post-resolution C pretty-print: C for-loop initialization cannot be a
         // compound block, so fold declaration plus assignment together.
         Some(local.show <+> "=" <+> value)
 
       case Block(Seq(LocalDecl(local), AssignInitial(Local(Ref(v)), value)))
           if local == v =>
-        // Adjusted for robustness mode: C for-loop initialization cannot be a
+        // Post-resolution C pretty-print: C for-loop initialization cannot be a
         // compound block, so fold declaration plus assignment together.
         Some(local.show <+> "=" <+> value)
 

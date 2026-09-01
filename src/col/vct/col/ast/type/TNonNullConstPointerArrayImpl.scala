@@ -18,7 +18,7 @@ trait TNonNullConstPointerArrayImpl[G] extends TNonNullConstPointerArrayOps[G] {
   override def layoutSplitDeclarator(implicit ctx: Ctx): (Doc, Doc) =
     ctx.syntax match {
       case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
-        // Adjusted for robustness mode: non-null is kept in contracts, while
+        // Post-resolution C pretty-print: non-null is kept in contracts, while
         // the generated source itself must stay valid C.
         val (spec, decl) = element.layoutSplitDeclarator
         (Text("const") <+> spec, decl <> "*")

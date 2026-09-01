@@ -18,7 +18,7 @@ trait TConstPointerArrayImpl[G] extends TConstPointerArrayOps[G] {
   override def layoutSplitDeclarator(implicit ctx: Ctx): (Doc, Doc) =
     ctx.syntax match {
       case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
-        // Adjusted for robustness mode: keep const pointer arrays in C
+        // Post-resolution C pretty-print: keep const pointer arrays in C
         // declarator form when post-resolution mutants are printed.
         val (spec, decl) = element.layoutSplitDeclarator
         (Text("const") <+> spec, decl <> "*")

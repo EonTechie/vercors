@@ -66,6 +66,8 @@ __pycache__
 *.vpr
 test.pvl
 a.java
+*:Zone.Identifier
+/robustness-transformed.c
 
 # Pallas
 .include-pallas

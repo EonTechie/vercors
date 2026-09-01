@@ -40,7 +40,6 @@ case class RobustnessToMethod[Pre <: Generation]() extends Rewriter[Pre] {
     selected = RobustnessSiteSelection.nextIndex(
       "TO_METHOD_SITE",
       candidates.size,
-      required = false,
     ).map { index =>
       val site = candidates(index)
       println(s"[ToMethod] SELECTED INDEX = $index")
@@ -125,10 +124,10 @@ case class RobustnessToMethod[Pre <: Generation]() extends Rewriter[Pre] {
     )
   }
 
-  /** SemTransforms: `{ S }` using locals/params `x` becomes
-    * `void f(T *x) { S[x := *x] }` and the site becomes `f(&x)`.
-    * VerCors: `\pointer(x, 1, write)` on each arg, and `inline` so the
-    * original loop contracts still prove after dump+verify.
+  /** `{ S }` using locals/params `x` becomes `void f(T *x) { S[x := *x] }`
+    * and the site becomes `f(&x)`. Each argument gets `\pointer(x, 1, write)`.
+    * The procedure is `inline` so original loop contracts still prove after
+    * dump and verify.
     */
   private def extract(stat: Statement[Pre]): Statement[Post] = {
     implicit val funcO: Origin = Origin(

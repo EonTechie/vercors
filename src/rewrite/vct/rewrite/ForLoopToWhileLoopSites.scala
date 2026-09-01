@@ -5,6 +5,7 @@ import scala.collection.mutable.ArrayBuffer
 import vct.col.ast._
 import vct.col.resolve.lang.C
 
+/** Sites for for-to-while: `for` loops that do not contain `continue`. */
 object ForLoopToWhileLoopSites {
   final case class Site[G](
       functionName: String,

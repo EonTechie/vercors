@@ -3,7 +3,7 @@ package vct.col.rewrite
 import vct.col.ast._
 import vct.col.origin.Origin
 
-/** Shared wrap helpers for AddIfZero / AddIfOne. */
+/** Shared wrap helpers for AddIfZero, AddIfOne, deepen-while, and to-method. */
 object RobustnessStatementWrap {
   def asCompound[G](stat: Statement[G], origin: Origin): Statement[G] =
     stat match {
