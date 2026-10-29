@@ -11,7 +11,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 DUMP_NAME="robustness-transformed.c"
 DEFAULT_VCT="$ROOT/out/vercors/main/runScript.dest/vercors"
-DEFAULT_INPUT="$ROOT/benchmark"
+DEFAULT_INPUT="$ROOT/robustness-benchmarks/pilot/inputs"
 DEFAULT_OUT="$ROOT/robustness-results/post-resolution"
 ALL_SITE_VARS=(
   ADD_IF_ZERO_SITE ADD_IF_ONE_SITE FOR_TO_WHILE_SITE
@@ -35,9 +35,22 @@ STAMP=0
 DRY_RUN=0
 FORCE_ORIGINAL=0
 CONFIG_FILE="$SCRIPT_DIR/config.env"
+STARTED=""
+FINISHED=""
+RUN_ID=""
+RUN_LOG=""
+RUN_DESC=""
+RUN_FILES=""
+OUT_REQUESTED=""
 
 die() { echo "ERROR: $*" >&2; exit 1; }
-log() { echo "[$(date +%H:%M:%S)] $*"; }
+log() {
+  local line="[$(date '+%Y-%m-%d %H:%M:%S')] $*"
+  echo "$line"
+  if [[ -n "$RUN_LOG" ]]; then
+    echo "$line" >> "$RUN_LOG"
+  fi
+}
 
 resolve_path() {
   local p="$1"
@@ -119,6 +132,60 @@ clear_robustness_env() {
   done
 }
 
+# Full run descriptor. Always written under OUT/logs/run-YYYYMMDD-HHMMSS.env
+# even when STAMP=0 (output folder has no date in its name).
+write_run_env() {
+  local dest="$1" names="" f
+  for f in "${FILES[@]}"; do
+    [[ -n "$names" ]] && names+=","
+    names+="$(basename "$f" .c)"
+  done
+  cat > "$dest" <<EOF
+STARTED=$STARTED
+FINISHED=${FINISHED:-}
+RUN_ID=$RUN_ID
+CONFIG_FILE=$(resolve_path "$CONFIG_FILE")
+MODE=$MODE
+TRANSFORM=$TRANSFORM
+REPEAT=$REPEAT
+SEED=$SEED
+SITES=$SITES
+INPUT=$INPUT
+OUT_REQUESTED=$OUT_REQUESTED
+OUT=$OUT
+PROGRAMS=$PROGRAMS
+FILE_COUNT=${#FILES[@]}
+FILES=$names
+VCT=$VCT
+TIMEOUT=$TIMEOUT
+VERIFY_MUTANTS=$VERIFY_MUTANTS
+VERIFY_ORIGINALS=$VERIFY_ORIGINALS
+FORCE_ORIGINAL=$FORCE_ORIGINAL
+STAMP=$STAMP
+DRY_RUN=$DRY_RUN
+EOF
+  if [[ -n "$RUN_DESC" && "$dest" != "$RUN_DESC" ]]; then
+    cp -f "$dest" "$RUN_DESC"
+  fi
+  if [[ -n "$RUN_FILES" ]]; then
+    printf '%s\n' "${FILES[@]}" > "$RUN_FILES"
+  fi
+}
+
+finalize_run() {
+  local ec=$?
+  if [[ -z "$STARTED" || -z "${OUT:-}" || ! -d "${OUT:-}" ]]; then
+    return
+  fi
+  FINISHED="$(date -Iseconds)"
+  write_run_env "$OUT/run.env" || true
+  if [[ "$ec" -eq 0 ]]; then
+    log "done  $OUT" || true
+  else
+    log "failed  $OUT  exit=$ec" || true
+  fi
+}
+
 verify_status() {
   local logf="$1"
   if [[ "$DRY_RUN" == "1" ]]; then echo DRY; return; fi
@@ -153,11 +220,15 @@ spin_trace() {
 }
 
 verdict() {
-  local original="$1" tstatus="$2" vstatus="$3" ncand="$4"
+  local original="$1" tstatus="$2" vstatus="$3" ncand="$4" vlog="${5:-}"
   if [[ "$ncand" == "0" ]]; then echo NO_SITE
   elif [[ "$tstatus" != "PASS" ]]; then echo TRANSFORM_FAIL
   elif [[ "$original" != "PASS" ]]; then echo SKIP
   elif [[ "$vstatus" == "PASS" ]]; then echo ROBUST
+  elif [[ -n "$vlog" ]] && grep -q "VerCors has crashed" "$vlog" 2>/dev/null; then echo VERIFY_CRASH
+  elif [[ -n "$vlog" ]] && grep -q "VERCORS_PROCESS_TIMEOUT" "$vlog" 2>/dev/null; then echo VERIFY_TIMEOUT
+  elif [[ -n "$vlog" ]] && grep -q "Parsing failed" "$vlog" 2>/dev/null; then echo VERIFY_PARSE_FAIL
+  elif [[ -n "$vlog" ]] && grep -Eq "Resolution failed|Type checking failed|typecheck" "$vlog" 2>/dev/null; then echo VERIFY_FRONTEND_FAIL
   else echo NOT_ROBUST
   fi
 }
@@ -204,10 +275,13 @@ run_verify() {
     echo "DRY  $VCT ${extra[*]} $src"
     return 0
   fi
+  local verify_work
+  verify_work="$(mktemp -d)"
   clear_robustness_env
   set +e
-  "$VCT" "${extra[@]}" "$src" > "$logf" 2>&1
+  (cd "$verify_work" && "$VCT" "${extra[@]}" "$src") > "$logf" 2>&1
   set -e
+  rm -rf "$verify_work"
 }
 
 run_transform() {
@@ -279,19 +353,35 @@ PROGRAMS="${PROGRAMS// /}"
 TRANSFORM="${TRANSFORM// /}"
 INPUT="$(resolve_path "$INPUT")"
 OUT="$(resolve_path "$OUT")"
+OUT_REQUESTED="$OUT"
 if [[ -n "$VCT" ]]; then VCT="$(resolve_path "$VCT")"; fi
+RUN_ID="$(date +%Y%m%d-%H%M%S)"
+STARTED="$(date -Iseconds)"
 if [[ "$STAMP" == "1" ]]; then
-  OUT="$OUT/run-$(date +%Y%m%d-%H%M%S)"
+  OUT="$OUT/run-$RUN_ID"
 fi
 
 find_vct
 collect_files "$INPUT"
-mkdir -p "$OUT"
+mkdir -p "$OUT/logs"
+if [[ -e "$OUT/logs/run-$RUN_ID.env" ]]; then
+  RUN_ID="${RUN_ID}-$$"
+fi
+RUN_LOG="$OUT/logs/run-$RUN_ID.log"
+RUN_DESC="$OUT/logs/run-$RUN_ID.env"
+RUN_FILES="$OUT/logs/run-$RUN_ID.files"
+trap finalize_run EXIT
+write_run_env "$OUT/run.env"
+if [[ -f "$CONFIG_FILE" ]]; then
+  cp -f "$CONFIG_FILE" "$OUT/config.env"
+fi
 {
-  echo "date=$(date -Iseconds)"
-  echo "mode=$MODE transform=$TRANSFORM repeat=$REPEAT seed=${SEED:-}"
-  echo "sites=$SITES input=$INPUT out=$OUT vct=$VCT files=${#FILES[@]}"
-} > "$OUT/run.txt"
+  echo "---- run descriptor ----"
+  cat "$OUT/run.env"
+  echo "---- files ----"
+  cat "$RUN_FILES"
+  echo "---- log ----"
+} >> "$RUN_LOG"
 
 log "mode=$MODE  transform=$TRANSFORM  files=${#FILES[@]}  out=$OUT"
 
@@ -420,7 +510,7 @@ run_preferred() {
         vst="$(verify_status "$vlog")"
         if [[ "$vst" == "PASS" ]]; then vpass=$((vpass + 1)); else vfail=$((vfail + 1)); fi
       fi
-      vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "$n")"
+      vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "$n" "$vlog")"
       echo "$base	$i	${ORIG_STATUS[$base]}	$tst	$vst	$vd" >> "$verdicts"
       log "  $vd  $base site=$i"
     done
@@ -465,7 +555,7 @@ run_multiple() {
       vst="$(verify_status "$vlog")"
     else vst="FAIL"
     fi
-    vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "$n")"
+    vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "$n" "$vlog")"
     echo "$first_tf	$REPEAT	$base	$tst	$vst	$n	$vd" >> "$summary"
     log "  $vd  $base"
   done
@@ -503,7 +593,7 @@ run_mixed() {
       vst="$(verify_status "$vlog")"
     else vst="FAIL"
     fi
-    vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "1")"
+    vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "1" "$vlog")"
     echo "$base	$tst	$vst	${SEED:-auto}	$REPEAT	$trace	$vd" >> "$summary"
     log "  $vd  $base"
   done
@@ -548,7 +638,7 @@ run_chain() {
       vst="$(verify_status "$vlog")"
     else vst="FAIL"
     fi
-    vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "1")"
+    vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "1" "$vlog")"
     echo "$TRANSFORM	$REPEAT	$base	$tst	$vst	$n	$vd" >> "$summary"
     log "  $vd  $base"
   done
@@ -562,5 +652,3 @@ case "$MODE" in
   mixed)     run_mixed ;;
   chain)     run_chain ;;
 esac
-
-log "done  $OUT"

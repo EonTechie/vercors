@@ -1,0 +1,19 @@
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: robustnessToMethod
+[INFO] Robustness repeat: 1
+[ToMethod] candidate count = 8
+[ToMethod] candidate 0 | function=zero_array | path=zero_array.body.block[0].loop.body | kind=Compound(locals=0, items=1)
+[ToMethod] candidate 1 | function=copy_array | path=copy_array.body.block[0].loop.body | kind=Compound(locals=0, items=1)
+[ToMethod] candidate 2 | function=vector_add | path=vector_add.body.block[0].loop.body | kind=Compound(locals=0, items=1)
+[ToMethod] candidate 3 | function=indep_drf | path=indep_drf.body.block[0].loop.body | kind=Compound(locals=0, items=2)
+[ToMethod] candidate 4 | function=forward_drf | path=forward_drf.body.block[0].loop.body.block[3].branch[0] | kind=Compound(locals=0, items=1)
+[ToMethod] candidate 5 | function=forward_full | path=forward_full.body.block[0].loop.body.block[3].branch[0] | kind=Compound(locals=0, items=1)
+[ToMethod] candidate 6 | function=backward_drf | path=backward_drf.body.block[0].loop.body.block[2].branch[0] | kind=Compound(locals=0, items=1)
+[ToMethod] candidate 7 | function=backward_full | path=backward_full.body.block[0].loop.body.block[2].branch[0] | kind=Compound(locals=0, items=1)
+[TO_METHOD_SITE] application 1: selected 3 / 8
+[ToMethod] SELECTED INDEX = 3
+[ToMethod] SELECTED | function=indep_drf | path=indep_drf.body.block[0].loop.body | kind=Compound(locals=0, items=2)
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

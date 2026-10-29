@@ -74,3 +74,16 @@ a.java
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/settings.json
+
+# Published initial-run and latest-recheck records are included.
+# Additional local attempts and archived attempts stay local.
+/robustness-benchmarks/**/runs/
+/robustness-benchmarks/latest-recheck/archive/
+
+# Local correspondence and working notes
+/email.html
+/email.txt
+/AGENTS.md
+/IMPLEMENTATION-HISTORY.md
+/docs/
+/backlog.md

@@ -1,0 +1,34 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 1
+[AddIfOne] candidate count = 15
+[AddIfOne] candidate 0 | function=vector_add | role=BLOCK_ITEM[0] | path=vector_add.body.block[0] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ loop_invariant 0 <= I_1238667249; loop_invariant I_1238667249 <= N_2119...
+[AddIfOne] candidate 1 | function=vector_add | role=LOOP_BODY | path=vector_add.body.block[0].loop.body | kind=CompoundStatement(locals=0, items=8) | { __opencl_vector_type__(int, 4) A4_14386442; A4_14386442 = (__opencl_vector_...
+[AddIfOne] candidate 2 | function=vector_add | role=BLOCK_ITEM[4] | path=vector_add.body.block[0].loop.body.block[4] | kind=ExpressionStatement(expr=PreAssignExpression) | C_484267477[I_1238667249] = C4_1488871792[0];
+[AddIfOne] candidate 3 | function=vector_add | role=BLOCK_ITEM[5] | path=vector_add.body.block[0].loop.body.block[5] | kind=ExpressionStatement(expr=PreAssignExpression) | C_484267477[I_1238667249 + 1] = C4_1488871792[1];
+[AddIfOne] candidate 4 | function=vector_add | role=BLOCK_ITEM[6] | path=vector_add.body.block[0].loop.body.block[6] | kind=ExpressionStatement(expr=PreAssignExpression) | C_484267477[I_1238667249 + 2] = C4_1488871792[2];
+[AddIfOne] candidate 5 | function=vector_add | role=BLOCK_ITEM[7] | path=vector_add.body.block[0].loop.body.block[7] | kind=ExpressionStatement(expr=PreAssignExpression) | C_484267477[I_1238667249 + 3] = C4_1488871792[3];
+[AddIfOne] candidate 6 | function=main | role=BLOCK_ITEM[2] | path=main.body.block[2] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ loop_invariant 0 <= I_61056079; loop_invariant I_61056079 <= 4 * 100; l...
+[AddIfOne] candidate 7 | function=main | role=LOOP_BODY | path=main.body.block[2].loop.body | kind=CompoundStatement(locals=0, items=2) | { A_756519696[I_61056079] = I_61056079; B_1814239989[I_61056079] = 400 - I_61...
+[AddIfOne] candidate 8 | function=main | role=BLOCK_ITEM[0] | path=main.body.block[2].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | A_756519696[I_61056079] = I_61056079;
+[AddIfOne] candidate 9 | function=main | role=BLOCK_ITEM[1] | path=main.body.block[2].loop.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | B_1814239989[I_61056079] = 400 - I_61056079;
+[AddIfOne] candidate 10 | function=main | role=BLOCK_ITEM[4] | path=main.body.block[4] | kind=ExpressionStatement(expr=ProcedureInvocation) | VectorAdd_1977149131(A_756519696, B_1814239989, C_474899637, 4 * 100);
+[AddIfOne] candidate 11 | function=main | role=BLOCK_ITEM[5] | path=main.body.block[5] | kind=Block | { /*@ assert (\forall int J_610637687; 0 <= J_610637687 && J_610637687 < 4 * ...
+[AddIfOne] candidate 12 | function=main | role=BLOCK_ITEM[6] | path=main.body.block[6] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ loop_invariant 0 <= I_942867520; loop_invariant I_942867520 <= 4 * 100;...
+[AddIfOne] candidate 13 | function=main | role=LOOP_BODY | path=main.body.block[6].loop.body | kind=CompoundStatement(locals=0, items=1) | { Assert_1582217307(C_474899637[I_942867520] == 400); }
+[AddIfOne] candidate 14 | function=main | role=BLOCK_ITEM[0] | path=main.body.block[6].loop.body.block[0] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1582217307(C_474899637[I_942867520] == 400);
+[ADD_IF_ONE_SITE] application 1: selected 2 / 15
+[AddIfOne] SELECTED INDEX = 2
+[AddIfOne] SELECTED | function=vector_add | role=BLOCK_ITEM[4] | path=vector_add.body.block[0].loop.body.block[4] | kind=ExpressionStatement(expr=PreAssignExpression) | C_484267477[I_1238667249] = C4_1488871792[0];
+[AddIfOne] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | C_484267477[I_1238667249] = C4_1488871792[0];
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

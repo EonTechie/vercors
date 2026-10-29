@@ -1,0 +1,22 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 3
+[AddIfZero] candidate 0 | function=zero_array | role=BLOCK_ITEM[0] | path=zero_array.body.block[0] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ requires Ar_565678786 != NULL; requires Perm(Ar_565678786[I_137463816],...
+[AddIfZero] candidate 1 | function=zero_array | role=LOOP_BODY | path=zero_array.body.block[0].loop.body | kind=CompoundStatement(locals=0, items=1) | { Ar_565678786[I_137463816] = 0; }
+[AddIfZero] candidate 2 | function=zero_array | role=BLOCK_ITEM[0] | path=zero_array.body.block[0].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Ar_565678786[I_137463816] = 0;
+[ADD_IF_ZERO_SITE] application 1: selected 0 / 3
+[AddIfZero] SELECTED INDEX = 0
+[AddIfZero] SELECTED | function=zero_array | role=BLOCK_ITEM[0] | path=zero_array.body.block[0] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ requires Ar_565678786 != NULL; requires Perm(Ar_565678786[I_137463816],...
+[AddIfZero] WRAP class=Scope | LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ requires Ar_565678786 != NULL; requires Perm(Ar_565678786[I_137463816],...
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

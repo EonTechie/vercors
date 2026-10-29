@@ -1,0 +1,26 @@
+[INFO] Start: VerCors (at 01:28:20)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-16717799790039739362.i
+--------------------------------------
+   42  //@ pure
+   43  _Bool is_aligned(void *p) {
+                  [---------------------
+   44      return ((uintptr_t)p & (7ULL)) == 0;
+                   ---------------------]
+   45  }
+   46  //@ resource has_tag(void *p, int t) = p != NULL && ((uintptr_t)p & (7ULL)) == t;
+--------------------------------------
+At pointer_tag.c
+--------------------------------------
+   12  //@ pure
+   13  bool is_aligned(void *p) {
+      [------------------------------------------
+   14      return ((uintptr_t)p & (7ULL)) == 0;
+       ------------------------------------------]
+   15  }
+   16  //@ resource has_tag(void *p, int t) = p != NULL && ((uintptr_t)p & (7ULL)) == t;
+--------------------------------------
+Could not determine the size of the bit vector for this bitwise operation
+======================================
+[INFO] Done: VerCors (at 01:28:33, duration: 00:00:13)

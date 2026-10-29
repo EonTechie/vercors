@@ -16,14 +16,21 @@ trait TPointerImpl[G] extends TPointerOps[G] {
   }
 
   override def layout(implicit ctx: Ctx): Doc =
-    Group(
-      Text(
-        (if (unique.isDefined)
-           "unique<" + unique.get.toString + ">"
-         else
-           "") + "pointer"
-      ) <> open <> element <> close
-    )
+    ctx.syntax match {
+      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
+        // Post-resolution C dump: print as C pointer syntax, not COL pointer<T>.
+        val (spec, decl) = layoutSplitDeclarator
+        Group(spec <> decl)
+      case _ =>
+        Group(
+          Text(
+            (if (unique.isDefined)
+               "unique<" + unique.get.toString + ">"
+             else
+               "") + "pointer"
+          ) <> open <> element <> close
+        )
+    }
 
   override def asNullable: Type[G] = this
 }

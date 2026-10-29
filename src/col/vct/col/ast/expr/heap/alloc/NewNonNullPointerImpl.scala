@@ -9,9 +9,17 @@ trait NewNonNullPointerImpl[G] extends NewNonNullPointerOps[G] {
   override lazy val t: Type[G] = TNonNullPointer(element, unique)
 
   override def layout(implicit ctx: Ctx): Doc =
-    Text("new") <>
-      (if (unique.nonEmpty)
-         Text(" unique<" + unique.get.toString + ">")
-       else
-         Text("")) <+> element <> "[" <> size <> "]"
+    ctx.syntax match {
+      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
+        // Post-resolution C dump: malloc form, not COL `new T[n]`.
+        val (spec, decl) = element.layoutSplitDeclarator
+        Text("(") <> spec <> decl <> "*)" <+> "vercorsMallocNonNull" <> "(" <>
+          "sizeof" <> "(" <> spec <> decl <> ")" <+> "*" <+> size <> ")"
+      case _ =>
+        Text("new") <>
+          (if (unique.nonEmpty)
+             Text(" unique<" + unique.get.toString + ">")
+           else
+             Text("")) <+> element <> "[" <> size <> "]"
+    }
 }

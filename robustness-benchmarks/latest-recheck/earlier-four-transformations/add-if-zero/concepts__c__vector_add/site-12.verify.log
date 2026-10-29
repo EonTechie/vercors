@@ -1,0 +1,59 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 05:58:26)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier site-12.c:73-:73: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-12.c:84-:84: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-12.c:95-:95: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-12.c:104-:104: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-12.c:119-:119: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(((int*)P)[i], read));' contains no triggers
+[WARN] The quantifier site-12.c:128-:128: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(((int*)P)[i], read));' contains no triggers
+[WARN] The quantifier site-12.c:137-:137: 'requires (\forall* int i; 0 <= i && i < 8 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-12.c:152-:152: 'requires (\forall* int i; 0 <= i && i < 8 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-12.c:167-:167: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-12.c:178-:178: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-12.c:189-:189: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(((int*)P)[i], read));' contains no triggers
+[WARN] The quantifier site-12.c:200-:200: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(((int*)P)[i], read));' contains no triggers
+[WARN] The quantifier site-12.c:211-:211: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:214-:214: 'ensures (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:225-:225: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:228-:228: 'ensures (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:239-:239: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:242-:242: 'ensures (\forall* int i; 0 <= i && i < 2 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:251-:251: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:254-:254: 'ensures (\forall* int i; 0 <= i && i < 2 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:263-:263: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:266-:266: 'ensures (\forall* int i; 0 <= i && i < 2 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:275-:275: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:278-:278: 'ensures (\forall* int i; 0 <= i && i < 2 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:287-:287: 'requires (\forall* int i; 0 <= i && i < 8 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:290-:290: 'ensures (\forall* int i; 0 <= i && i < 8 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:305-:305: 'requires (\forall* int i; 0 <= i && i < 8 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:308-:308: 'ensures (\forall* int i; 0 <= i && i < 8 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:323-:323: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:326-:326: 'ensures (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:337-:337: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:340-:340: 'ensures (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:351-:351: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:354-:354: 'ensures (\forall* int i; 0 <= i && i < 4 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:365-:365: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:368-:368: 'ensures (\forall* int i; 0 <= i && i < 4 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:491-:491: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(a[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-12.c:492-:492: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(b[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-12.c:493-:493: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(c[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:491-:491: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(a[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-12.c:492-:492: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(b[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-12.c:493-:493: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(c[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:491-:491: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(a[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-12.c:492-:492: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(b[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-12.c:493-:493: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(c[i], write));' contains no triggers
+[WARN] The quantifier site-12.c:527-:527: '    loop_invariant (\forall* int j; 0 <= j && j < 4 * 100 ==> Perm(a[j], write));' contains no triggers
+[WARN] The quantifier site-12.c:528-:528: '    loop_invariant (\forall* int j; 0 <= j && j < 4 * 100 ==> Perm(b[j], write));' contains no triggers
+[WARN] The quantifier site-12.c:546-:546: '        loop_invariant (\forall* int j; 0 <= j && j < 4 * 100 ==> Perm(c[j], write));' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 05:59:15, duration: 00:00:49)

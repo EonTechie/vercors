@@ -1,0 +1,12 @@
+[INFO] Start: VerCors (at 22:54:24)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier backward-dep-e1.c:17-:17: '    requires Perm(a[i],1\2);' contains no triggers
+[WARN] The quantifier backward-dep-e1.c:18-:18: '    requires i==0 ==> Perm(a[i],1\2);' contains no triggers
+[WARN] The quantifier backward-dep-e1.c:19-:19: '    requires i < len-1 ==> Perm(a[i+1],1\2);' contains no triggers
+[WARN] The quantifier backward-dep-e1.c:20-:20: '    requires Perm(b[i],1\2);' contains no triggers
+[WARN] The quantifier backward-dep-e1.c:21-:21: '    requires Perm(c[i],write);' contains no triggers
+[WARN] The quantifier backward-dep-e1.c:23-:23: '    ensures  Perm(a[i],write);' contains no triggers
+[WARN] The quantifier backward-dep-e1.c:24-:24: '    ensures  Perm(b[i],1\2);' contains no triggers
+[WARN] The quantifier backward-dep-e1.c:25-:25: '    ensures  Perm(c[i],write);' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 22:55:18, duration: 00:00:54)

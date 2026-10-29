@@ -1,0 +1,45 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 11:08:05)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-12635163919434398504.i
+--------------------------------------
+   86      int i;
+   87      i = 0;
+          [-----
+   88      /*@
+   89      requires i == 8 ==> Perm(*pointerToInteger, write);
+   90      ensures i == 8 ==> Perm(*pointerToInteger, write);
+       ... (5 lines omitted)
+   96          }
+   97          i = i + 1;
+   98      }
+       -----]
+   99      /*@ assert (*StructB_111100227).structA.integer == 0; @*/
+  100  }
+--------------------------------------
+At site-2.c
+--------------------------------------
+   79      int i;
+   80      i = 0;
+      [---------
+   81      /*@
+   82      requires i == 8 ==> Perm(*pointerToInteger, write);
+   83      ensures i == 8 ==> Perm(*pointerToInteger, write);
+       ... (5 lines omitted)
+   89          }
+   90          i = i + 1;
+   91      }
+       -------]
+   92      /*@ assert (*StructB_111100227).structA.integer == 0; @*/
+   93  }
+--------------------------------------
+This loop has an iteration contract, but we could not derive the iteration variable or its lower bound from the initialization portion of the loop.
+======================================
+[INFO] Done: VerCors (at 11:08:18, duration: 00:00:12)

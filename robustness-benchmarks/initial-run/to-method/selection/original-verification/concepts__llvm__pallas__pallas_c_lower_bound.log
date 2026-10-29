@@ -1,0 +1,40 @@
+[INFO] Start: VerCors (at 01:33:57)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-5549845568105652959.i
+--------------------------------------
+    9  
+   10  /*@
+      [-------
+   11  declare DEF_BV(int);
+       -------]
+   12  declare DEF_RESULT(int);
+   13  @*/
+--------------------------------------
+[1/3] Parsing failed: no viable alternative at input '/*@declare'
+--------------------------------------
+At vercors-interpreted-5549845568105652959.i
+--------------------------------------
+   10  /*@
+   11  declare DEF_BV(int);
+      [-------
+   12  declare DEF_RESULT(int);
+       -------]
+   13  @*/
+   14
+--------------------------------------
+[2/3] Parsing failed: rule typedefName failed predicate: {isTypedefName($ctx)}?
+--------------------------------------
+At vercors-interpreted-5549845568105652959.i
+--------------------------------------
+   11  declare DEF_BV(int);
+   12  declare DEF_RESULT(int);
+       [--
+   13  @*/
+        --]
+   14  
+   15  /*@
+--------------------------------------
+[3/3] Parsing failed: mismatched input '*/' expecting {'auto', 'char', 'const', 'double', 'enum', 'extern', 'float', 'inline', 'int', 'long', 'register', 'restrict', 'short', 'signed', 'static', 'struct', 'typedef', 'union', 'unsigned', 'void', 'volatile', '_Alignas', '_Atomic', '_Bool', '_Complex', '_Noreturn', '_Thread_local', '(', ')', '[', '*', '^', ',', BlockStartSpecImmediate, '__typeof__', '__inline__', '__stdcall', '__declspec', '__attribute__', NEVER, 'resource', 'process', 'frac', 'zfrac', 'bool', 'ref', 'rational', 'seq', 'set', 'vector', 'bag', 'pointer', 'map', 'option', 'either', 'tuple', 'type', 'any', 'nothing', 'string', 'pure', 'thread_local', 'bip_annotation', 'opaque', 'unique', 'unique_pointer_field', '**', '__opencl_kernel__', '__cuda_kernel__', '__vercors_global_memory__', '__vercors_local_memory__', '__opencl_vector_type__', Identifier, BlockStartSpec, LineStartSpec}
+======================================
+[INFO] Done: VerCors (at 01:34:50, duration: 00:00:52)

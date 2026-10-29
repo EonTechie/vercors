@@ -1,0 +1,25 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 1
+[AddIfOne] candidate count = 6
+[AddIfOne] candidate 0 | function=foo | role=BLOCK_ITEM[1] | path=foo.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | OldN_1592099291 = OldN_1592099291 + 1;
+[AddIfOne] candidate 1 | function=foo | role=BLOCK_ITEM[2] | path=foo.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | OldN_1592099291 = OldN_1592099291 - 1;
+[AddIfOne] candidate 2 | function=foo | role=BLOCK_ITEM[3] | path=foo.body.block[3] | kind=IfStatement(arms=1) | if (N_739241900 < 42) { return N_739241900; }
+[AddIfOne] candidate 3 | function=foo | role=BLOCK_ITEM[5] | path=foo.body.block[5] | kind=LoopScope(init=Block, cond=AmbiguousLessEq, update=Eval, body=Scope) | { /*@ loop_invariant 0 <= I_433321645; loop_invariant I_433321645 <= N_739241...
+[AddIfOne] candidate 4 | function=foo | role=LOOP_BODY | path=foo.body.block[5].loop.body | kind=CompoundStatement(locals=0, items=1) | { Res_164365573 = Res_164365573 + I_433321645; }
+[AddIfOne] candidate 5 | function=foo | role=BLOCK_ITEM[0] | path=foo.body.block[5].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Res_164365573 = Res_164365573 + I_433321645;
+[ADD_IF_ONE_SITE] application 1: selected 1 / 6
+[AddIfOne] SELECTED INDEX = 1
+[AddIfOne] SELECTED | function=foo | role=BLOCK_ITEM[2] | path=foo.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | OldN_1592099291 = OldN_1592099291 - 1;
+[AddIfOne] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | OldN_1592099291 = OldN_1592099291 - 1;
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

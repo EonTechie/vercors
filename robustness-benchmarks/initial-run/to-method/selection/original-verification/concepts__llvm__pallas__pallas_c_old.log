@@ -1,0 +1,28 @@
+[INFO] Start: VerCors (at 01:34:10)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-5758671132259920112.i
+--------------------------------------
+   32  
+   33  /*@
+      [-------
+   34  declare DEF_OLD(int);
+       -------]
+   35  @*/
+   36
+--------------------------------------
+[1/2] Parsing failed: no viable alternative at input '/*@declare'
+--------------------------------------
+At vercors-interpreted-5758671132259920112.i
+--------------------------------------
+   33  /*@
+   34  declare DEF_OLD(int);
+       [--
+   35  @*/
+        --]
+   36  
+   37
+--------------------------------------
+[2/2] Parsing failed: mismatched input '*/' expecting {'auto', 'char', 'const', 'double', 'enum', 'extern', 'float', 'inline', 'int', 'long', 'register', 'restrict', 'short', 'signed', 'static', 'struct', 'typedef', 'union', 'unsigned', 'void', 'volatile', '_Alignas', '_Atomic', '_Bool', '_Complex', '_Noreturn', '_Thread_local', '(', ')', '[', '*', '^', ',', BlockStartSpecImmediate, '__typeof__', '__inline__', '__stdcall', '__declspec', '__attribute__', NEVER, 'resource', 'process', 'frac', 'zfrac', 'bool', 'ref', 'rational', 'seq', 'set', 'vector', 'bag', 'pointer', 'map', 'option', 'either', 'tuple', 'type', 'any', 'nothing', 'string', 'pure', 'thread_local', 'bip_annotation', 'opaque', 'unique', 'unique_pointer_field', '**', '__opencl_kernel__', '__cuda_kernel__', '__vercors_global_memory__', '__vercors_local_memory__', '__opencl_vector_type__', Identifier, BlockStartSpec, LineStartSpec}
+======================================
+[INFO] Done: VerCors (at 01:35:05, duration: 00:00:54)

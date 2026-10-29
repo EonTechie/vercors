@@ -1,0 +1,15 @@
+[INFO] Start: VerCors (at 00:46:53)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier arrays.c:2-:2: '  context_everywhere x0 != NULL ** \pointer_length(x0) == n ** (\forall* int i; 0<=i && i<n; Perm(x0[i], write));' contains no triggers
+[WARN] The quantifier arrays.c:3-:3: '  context_everywhere x1 != NULL ** \pointer_length(x1) == n ** (\forall* int i; 0<=i && i<n; Perm(x1[i], 1\2));' contains no triggers
+[WARN] The quantifier arrays.c:4-:4: '  context_everywhere x2 != NULL ** \pointer_length(x2) == n ** (\forall* int i; 0<=i && i<n; Perm(x2[i], 1\2));' contains no triggers
+[WARN] The quantifier arrays.c:2-:2: '  context_everywhere x0 != NULL ** \pointer_length(x0) == n ** (\forall* int i; 0<=i && i<n; Perm(x0[i], write));' contains no triggers
+[WARN] The quantifier arrays.c:3-:3: '  context_everywhere x1 != NULL ** \pointer_length(x1) == n ** (\forall* int i; 0<=i && i<n; Perm(x1[i], 1\2));' contains no triggers
+[WARN] The quantifier arrays.c:4-:4: '  context_everywhere x2 != NULL ** \pointer_length(x2) == n ** (\forall* int i; 0<=i && i<n; Perm(x2[i], 1\2));' contains no triggers
+[WARN] The quantifier arrays.c:5-:5: '  ensures (\forall int i; 0<=i && i<n; x0[i] == x1[i] + x2[i] );' contains no triggers
+[WARN] The quantifier arrays.c:2-:2: '  context_everywhere x0 != NULL ** \pointer_length(x0) == n ** (\forall* int i; 0<=i && i<n; Perm(x0[i], write));' contains no triggers
+[WARN] The quantifier arrays.c:3-:3: '  context_everywhere x1 != NULL ** \pointer_length(x1) == n ** (\forall* int i; 0<=i && i<n; Perm(x1[i], 1\2));' contains no triggers
+[WARN] The quantifier arrays.c:4-:4: '  context_everywhere x2 != NULL ** \pointer_length(x2) == n ** (\forall* int i; 0<=i && i<n; Perm(x2[i], 1\2));' contains no triggers
+[WARN] The quantifier arrays.c:10-:10: '    loop_invariant (\forall int i; 0<=i && i<j; x0[i] == x1[i] + x2[i] );' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 00:48:02, duration: 00:01:09)

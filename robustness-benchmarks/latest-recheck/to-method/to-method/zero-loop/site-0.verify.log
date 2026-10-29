@@ -1,0 +1,8 @@
+[INFO] Start: VerCors (at 16:27:58)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier site-0.c:21-:21: 'ensures (\forall int k; 0 <= k && k < len ==> ar[k] == 0);' contains no triggers
+[WARN] The quantifier site-0.c:26-:26: '    requires Perm(ar[i], write);' contains no triggers
+[WARN] The quantifier site-0.c:28-:28: '    ensures Perm(ar[i], write);' contains no triggers
+[WARN] The quantifier site-0.c:29-:29: '    ensures ar[i] == 0;' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 16:28:33, duration: 00:00:35)

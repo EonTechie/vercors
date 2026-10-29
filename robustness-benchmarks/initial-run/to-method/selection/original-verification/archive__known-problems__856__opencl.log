@@ -1,0 +1,26 @@
+[INFO] Start: VerCors (at 01:13:49)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-1093909106068553649.i
+--------------------------------------
+  221      context \pointer_index(b, \ltid, write);
+  222  @*/
+                                     [-------
+  223  __opencl_kernel__ void example(int a[], int b[], int len) {
+                                      -------]
+  224      int tid = get_local_id(0);
+  225      a[tid*2] = tid;
+--------------------------------------
+At opencl.c
+--------------------------------------
+   10      context \pointer_index(b, \ltid, write);
+   11  @*/
+      [----------------------------------------------------
+   12  __kernel void example(int a[], int b[], int len) {
+       ----------------------------------------------------]
+   13      int tid = get_local_id(0);
+   14      a[tid*2] = tid;
+--------------------------------------
+This parameter has a type that is not allowed as parameter in a GPU kernel.
+======================================
+[INFO] Done: VerCors (at 01:15:15, duration: 00:01:26)

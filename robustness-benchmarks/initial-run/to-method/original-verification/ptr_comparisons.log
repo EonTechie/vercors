@@ -1,0 +1,5 @@
+[INFO] Start: VerCors (at 20:15:50)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier ptr_comparisons.c:15-:15: '    //@ loop_invariant (\forall* int i=0 .. 4; Perm(a[i], write));' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 20:16:17, duration: 00:00:26)

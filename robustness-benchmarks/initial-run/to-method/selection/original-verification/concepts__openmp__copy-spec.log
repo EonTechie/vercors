@@ -1,0 +1,26 @@
+[INFO] Start: VerCors (at 01:38:57)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-914482837351342318.i
+--------------------------------------
+   59    int i;
+   60  
+               [-----
+   61    printf("a: ");
+                -----]
+   62    for(i=0;i<16;i++){printf("%4d",a[i]);}
+   63    printf("\n");
+--------------------------------------
+At copy-spec.c
+--------------------------------------
+   35    int i;
+   36  
+      [------------------
+   37    printf("a: ");
+       ------------------]
+   38    for(i=0;i<16;i++){printf("%4d",a[i]);}
+   39    printf("\n");
+--------------------------------------
+Parsing failed: This construct (PrimaryExpression3Context) is syntactically valid, but not supported by VerCors.
+======================================
+[INFO] Done: VerCors (at 01:39:41, duration: 00:00:44)

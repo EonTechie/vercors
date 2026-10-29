@@ -1,0 +1,43 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 24
+[AddIfZero] candidate 0 | function=main | role=BLOCK_ITEM[1] | path=main.body.block[1] | kind=IfStatement(arms=1) | if (Xs_252780183 == NULL) { return 1; }
+[AddIfZero] candidate 1 | function=main | role=BLOCK_ITEM[2] | path=main.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | Xs_252780183[0] = 3;
+[AddIfZero] candidate 2 | function=main | role=BLOCK_ITEM[3] | path=main.body.block[3] | kind=ExpressionStatement(expr=PreAssignExpression) | Xs_252780183[1] = 2;
+[AddIfZero] candidate 3 | function=main | role=BLOCK_ITEM[4] | path=main.body.block[4] | kind=ExpressionStatement(expr=PreAssignExpression) | Xs_252780183[2] = 1;
+[AddIfZero] candidate 4 | function=main | role=BLOCK_ITEM[5] | path=main.body.block[5] | kind=ExpressionStatement(expr=FreePointer) | vercorsFree((void*)Xs_252780183);
+[AddIfZero] candidate 5 | function=main | role=BLOCK_ITEM[7] | path=main.body.block[7] | kind=IfStatement(arms=1) | if (Xxs_1400879039 == NULL) { return 1; }
+[AddIfZero] candidate 6 | function=main | role=BLOCK_ITEM[8] | path=main.body.block[8] | kind=Block | { int *Temp_1146805207; Temp_1146805207 = (int*) vercorsMalloc(sizeof(int) * ...
+[AddIfZero] candidate 7 | function=main | role=BLOCK_ITEM[0] | path=main.body.block[8].block[0] | kind=Block | { int *Temp_1146805207; Temp_1146805207 = (int*) vercorsMalloc(sizeof(int) * ...
+[AddIfZero] candidate 8 | function=main | role=BLOCK_ITEM[1] | path=main.body.block[8].block[0].block[1] | kind=AssignmentStatement | Temp_1146805207 = (int*) vercorsMalloc(sizeof(int) * 3);
+[AddIfZero] candidate 9 | function=main | role=BLOCK_ITEM[9] | path=main.body.block[9] | kind=ExpressionStatement(expr=PreAssignExpression) | Xxs_1400879039[0] = Temp_1146805207;
+[AddIfZero] candidate 10 | function=main | role=BLOCK_ITEM[10] | path=main.body.block[10] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1963269381(Xxs_1400879039[0][0] == 1);
+[AddIfZero] candidate 11 | function=main | role=BLOCK_ITEM[11] | path=main.body.block[11] | kind=ExpressionStatement(expr=FreePointer) | vercorsFree((void*)Xxs_1400879039);
+[AddIfZero] candidate 12 | function=main | role=BLOCK_ITEM[13] | path=main.body.block[13] | kind=IfStatement(arms=1) | if (Ys_1087422449 == NULL) { return 1; }
+[AddIfZero] candidate 13 | function=main | role=BLOCK_ITEM[14] | path=main.body.block[14] | kind=ExpressionStatement(expr=PreAssignExpression) | Ys_1087422449[0].X_1274201751 = 3;
+[AddIfZero] candidate 14 | function=main | role=BLOCK_ITEM[15] | path=main.body.block[15] | kind=ExpressionStatement(expr=PreAssignExpression) | Ys_1087422449[1].X_1274201751 = 2;
+[AddIfZero] candidate 15 | function=main | role=BLOCK_ITEM[16] | path=main.body.block[16] | kind=ExpressionStatement(expr=PreAssignExpression) | Ys_1087422449[2].X_1274201751 = 1;
+[AddIfZero] candidate 16 | function=main | role=BLOCK_ITEM[17] | path=main.body.block[17] | kind=ExpressionStatement(expr=FreePointer) | vercorsFree((void*)Ys_1087422449);
+[AddIfZero] candidate 17 | function=main | role=BLOCK_ITEM[19] | path=main.body.block[19] | kind=IfStatement(arms=1) | if (A_2064047328 == NULL) { return 1; }
+[AddIfZero] candidate 18 | function=main | role=BLOCK_ITEM[20] | path=main.body.block[20] | kind=ExpressionStatement(expr=PreAssignExpression) | (*A_2064047328).S_379836839.X_1274201751 = 1;
+[AddIfZero] candidate 19 | function=main | role=BLOCK_ITEM[22] | path=main.body.block[22] | kind=ExpressionStatement(expr=FreePointer) | vercorsFree((void*)A_2064047328);
+[AddIfZero] candidate 20 | function=main | role=BLOCK_ITEM[24] | path=main.body.block[24] | kind=IfStatement(arms=1) | if (Z_1207739241 == NULL) { return 1; }
+[AddIfZero] candidate 21 | function=main | role=BLOCK_ITEM[25] | path=main.body.block[25] | kind=ExpressionStatement(expr=PreAssignExpression) | Z_1207739241[0] = 3.0;
+[AddIfZero] candidate 22 | function=main | role=BLOCK_ITEM[26] | path=main.body.block[26] | kind=ExpressionStatement(expr=PreAssignExpression) | *Z_1207739241 = 2.0;
+[AddIfZero] candidate 23 | function=main | role=BLOCK_ITEM[27] | path=main.body.block[27] | kind=ExpressionStatement(expr=FreePointer) | vercorsFree((void*)Z_1207739241);
+[ADD_IF_ZERO_SITE] application 1: selected 21 / 24
+[AddIfZero] SELECTED INDEX = 21
+[AddIfZero] SELECTED | function=main | role=BLOCK_ITEM[25] | path=main.body.block[25] | kind=ExpressionStatement(expr=PreAssignExpression) | Z_1207739241[0] = 3.0;
+[AddIfZero] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | Z_1207739241[0] = 3.0;
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

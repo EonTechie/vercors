@@ -1,0 +1,52 @@
+[INFO] Start: VerCors (at 01:35:51)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-17548426683127345886.i
+--------------------------------------
+   11  
+   12  /*@
+      [-------
+   13  declare DEF_BV(int);
+       -------]
+   14  declare DEF_UNFOLDING(bool);
+   15  @*/
+--------------------------------------
+[1/4] Parsing failed: no viable alternative at input '/*@declare'
+--------------------------------------
+At vercors-interpreted-17548426683127345886.i
+--------------------------------------
+   12  /*@
+   13  declare DEF_BV(int);
+      [-------
+   14  declare DEF_UNFOLDING(bool);
+       -------]
+   15  @*/
+   16
+--------------------------------------
+[2/4] Parsing failed: rule typedefName failed predicate: {isTypedefName($ctx)}?
+--------------------------------------
+At vercors-interpreted-17548426683127345886.i
+--------------------------------------
+   12  /*@
+   13  declare DEF_BV(int);
+                            [----
+   14  declare DEF_UNFOLDING(bool);
+                             ----]
+   15  @*/
+   16
+--------------------------------------
+[3/4] Parsing failed: no viable alternative at input 'bool'
+--------------------------------------
+At vercors-interpreted-17548426683127345886.i
+--------------------------------------
+   13  declare DEF_BV(int);
+   14  declare DEF_UNFOLDING(bool);
+       [--
+   15  @*/
+        --]
+   16  
+   17  /*@
+--------------------------------------
+[4/4] Parsing failed: mismatched input '*/' expecting {'(', '[', ';', ',', '__asm', '__attribute__'}
+======================================
+[INFO] Done: VerCors (at 01:36:27, duration: 00:00:35)

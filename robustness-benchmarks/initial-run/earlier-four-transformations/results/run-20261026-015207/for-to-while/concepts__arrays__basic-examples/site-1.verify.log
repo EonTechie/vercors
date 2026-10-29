@@ -1,0 +1,47 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 12:03:44)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-2614540612009453408.i
+--------------------------------------
+   41      int i;
+   42      i = 0;
+          [-----
+   43      /*@
+   44      requires a != NULL;
+   45      requires Perm(a[i], write);
+       ... (6 lines omitted)
+   52          a[i] = a[i];
+   53          i = i + 1;
+   54      }
+       -----]
+   55  }
+   56
+--------------------------------------
+At site-1.c
+--------------------------------------
+   34      int i;
+   35      i = 0;
+      [---------
+   36      /*@
+   37      requires a != NULL;
+   38      requires Perm(a[i], write);
+       ... (6 lines omitted)
+   45          a[i] = a[i];
+   46          i = i + 1;
+   47      }
+       -------]
+   48  }
+   49
+--------------------------------------
+This loop has an iteration contract, but we could not derive the iteration variable or its lower bound from the initialization portion of the loop.
+======================================
+[INFO] Done: VerCors (at 12:03:57, duration: 00:00:13)
+[WARN] Non-daemon thread UnknownThreadGroup.[VerCors] Block layout updates (#16) is still running
+[WARN] Due to this VerCors will not exit and sit idly until that thread is done. You may want to stop the program manually.

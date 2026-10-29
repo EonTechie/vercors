@@ -1,0 +1,33 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 08:06:03)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-11175071796576040698.i
+--------------------------------------
+  223      for (int i = 0; i < n; i = i + 1) {
+  224          if (1) {
+                      [-------
+  225              /*@ recv t; @*/
+                       -------]
+  226              a[i] = b[i] + 1;
+  227              if (i < n - 1) {
+--------------------------------------
+At site-30.c
+--------------------------------------
+  216      for (int i = 0; i < n; i = i + 1) {
+  217          if (1) {
+      [-----------------------------
+  218              /*@ recv t; @*/
+       -----------------------------]
+  219              a[i] = b[i] + 1;
+  220              if (i < n - 1) {
+--------------------------------------
+Send and recv may only occur within a parallel block, or loop with an iteration contract, and must be unconditionally executed.
+======================================
+[INFO] Done: VerCors (at 08:06:16, duration: 00:00:12)

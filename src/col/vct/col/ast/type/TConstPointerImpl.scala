@@ -11,8 +11,19 @@ trait TConstPointerImpl[G] extends TConstPointerOps[G] {
   val isConst = true
   val isNonNull = false
 
+  override def layoutSplitDeclarator(implicit ctx: Ctx): (Doc, Doc) = {
+    val (spec, decl) = element.layoutSplitDeclarator
+    (Text("const") <+> spec, decl <> "*")
+  }
+
   override def layout(implicit ctx: Ctx): Doc =
-    Text("const_pointer") <> open <> element <> close
+    ctx.syntax match {
+      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
+        // Post-resolution C dump: print as const T*, not COL const_pointer<T>.
+        val (spec, decl) = layoutSplitDeclarator
+        Group(spec <> decl)
+      case _ => Text("const_pointer") <> open <> element <> close
+    }
 
   override def asNullable: Type[G] = this
 }

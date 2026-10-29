@@ -1,0 +1,16 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 09:33:57)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier site-15.c:158-:158: 'requires (\forall* int i; 0 <= i && i < n ==> Perm(inp[i].x, 1 \ 10));' contains no triggers
+[WARN] The quantifier site-15.c:161-:161: 'ensures (\forall int i; 0 <= i && i < n ==> \result[i] == inp[i].x);' contains no triggers
+[WARN] The quantifier site-15.c:181-:181: 'requires (\forall* int i; 0 <= i && i < len ==> Perm((*p).ps[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-15.c:189-:189: 'ensures (\forall* int i; 0 <= i && i < len ==> Perm((*p).ps[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-15.c:205-:205: '    loop_invariant (\forall* int i1; 0 <= i1 && i1 < len ==> Perm((*p).ps[i1], 1 \ 2));' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 09:34:52, duration: 00:00:54)

@@ -1,0 +1,34 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 10:15:13)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier site-4.c:59-:59: '    loop_invariant (\forall* int i; i \in [0 .. 4] ==> Perm(a[i], write));' contains no triggers
+======================================
+At vercors-interpreted-13347501636966703399.i
+--------------------------------------
+   45      int *a;
+   46      a = (int*) vercorsMalloc(sizeof(int) * 4);
+                     [-
+   47      /*@ assume a[0] == 1; @*/
+                      -]
+   48      /*@ assume a[1] == 2; @*/
+   49      /*@ assume a[2] == 3; @*/
+--------------------------------------
+At site-4.c
+--------------------------------------
+   38      int *a;
+   39      a = (int*) vercorsMalloc(sizeof(int) * 4);
+      [-------------------------------
+   40      /*@ assume a[0] == 1; @*/
+       -------------------------------]
+   41      /*@ assume a[1] == 2; @*/
+   42      /*@ assume a[2] == 3; @*/
+--------------------------------------
+Pointer may be null. (https://utwente.nl/vercors#ptrNull)
+======================================
+[INFO] Done: VerCors (at 10:15:37, duration: 00:00:23)

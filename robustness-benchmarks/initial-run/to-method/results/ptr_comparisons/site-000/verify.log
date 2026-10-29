@@ -1,0 +1,5 @@
+[INFO] Start: VerCors (at 15:09:36)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier transformed.c:60-:60: '    loop_invariant (\forall* int i; i \in [0 .. 4] ==> Perm(a[i], write));' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 15:12:16, duration: 00:02:40)

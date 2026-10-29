@@ -1,0 +1,29 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 10
+[AddIfZero] candidate 0 | function=foo | role=BLOCK_ITEM[0] | path=foo.body.block[0] | kind=Block | { int *A_1648701502; A_1648701502 = (int*) vercorsMalloc(sizeof(int) * 4); /*...
+[AddIfZero] candidate 1 | function=foo | role=BLOCK_ITEM[0] | path=foo.body.block[0].block[0] | kind=Block | { int *A_1648701502; A_1648701502 = (int*) vercorsMalloc(sizeof(int) * 4); /*...
+[AddIfZero] candidate 2 | function=foo | role=BLOCK_ITEM[1] | path=foo.body.block[0].block[0].block[1] | kind=AssignmentStatement | A_1648701502 = (int*) vercorsMalloc(sizeof(int) * 4);
+[AddIfZero] candidate 3 | function=foo | role=BLOCK_ITEM[4] | path=foo.body.block[4] | kind=Block | { /*@ assert End_207802506 >= Start_2064603156; @*/ }
+[AddIfZero] candidate 4 | function=foo | role=BLOCK_ITEM[5] | path=foo.body.block[5] | kind=Block | { /*@ assert Start_2064603156 < End_207802506; @*/ }
+[AddIfZero] candidate 5 | function=foo | role=BLOCK_ITEM[6] | path=foo.body.block[6] | kind=LoopScope(init=Block, cond=AmbiguousLessEq, update=Block, body=Scope) | { /*@ loop_invariant Start_2064603156 <= P_1324295458; loop_invariant P_13242...
+[AddIfZero] candidate 6 | function=foo | role=LOOP_BODY | path=foo.body.block[6].loop.body | kind=CompoundStatement(locals=0, items=1) | { if (P_1324295458 == End_207802506) { break; } else { /*@ assert End_2078025...
+[AddIfZero] candidate 7 | function=foo | role=BLOCK_ITEM[0] | path=foo.body.block[6].loop.body.block[0] | kind=IfStatement(arms=2) | if (P_1324295458 == End_207802506) { break; } else { /*@ assert End_207802506...
+[AddIfZero] candidate 8 | function=foo | role=IF_ELSE[1] | path=foo.body.block[6].loop.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert End_207802506 > P_1324295458; @*/ }
+[AddIfZero] candidate 9 | function=foo | role=BLOCK_ITEM[0] | path=foo.body.block[6].loop.body.block[0].branch[1].block[0] | kind=Block | { /*@ assert End_207802506 > P_1324295458; @*/ }
+[ADD_IF_ZERO_SITE] application 1: selected 7 / 10
+[AddIfZero] SELECTED INDEX = 7
+[AddIfZero] SELECTED | function=foo | role=BLOCK_ITEM[0] | path=foo.body.block[6].loop.body.block[0] | kind=IfStatement(arms=2) | if (P_1324295458 == End_207802506) { break; } else { /*@ assert End_207802506...
+[AddIfZero] WRAP class=Branch | IfStatement(arms=2) | if (P_1324295458 == End_207802506) { break; } else { /*@ assert End_207802506...
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

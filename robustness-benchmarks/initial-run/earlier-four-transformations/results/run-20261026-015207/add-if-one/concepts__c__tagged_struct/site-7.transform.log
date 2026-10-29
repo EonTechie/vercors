@@ -1,0 +1,231 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 1
+[AddIfOne] candidate count = 14
+[AddIfOne] candidate 0 | function=baz | role=BLOCK_ITEM[3] | path=baz.body.block[3] | kind=ExpressionStatement(expr=PreAssignExpression) | (*E1_2116948345).E_1155732770.Tag_89816131 = IntTag_235859134;
+[AddIfOne] candidate 1 | function=baz | role=BLOCK_ITEM[4] | path=baz.body.block[4] | kind=ExpressionStatement(expr=PreAssignExpression) | (*E1_2116948345).D_1940281106 = &A_750346989;
+[AddIfOne] candidate 2 | function=baz | role=BLOCK_ITEM[6] | path=baz.body.block[6] | kind=ExpressionStatement(expr=PreAssignExpression) | (*E2_434612827).E_173972961.Tag_89816131 = FloatTag_530913105;
+[AddIfOne] candidate 3 | function=baz | role=BLOCK_ITEM[7] | path=baz.body.block[7] | kind=ExpressionStatement(expr=PreAssignExpression) | (*E2_434612827).D_1160284354 = &F_1460731048;
+[AddIfOne] candidate 4 | function=baz | role=BLOCK_ITEM[8] | path=baz.body.block[8] | kind=Block | { /*@ assert Perm(*(*E1_2116948345).D_1940281106, write); @*/ }
+[AddIfOne] candidate 5 | function=baz | role=BLOCK_ITEM[9] | path=baz.body.block[9] | kind=Block | { /*@ assert Perm(*(*E2_434612827).D_1160284354, write); @*/ }
+[AddIfOne] candidate 6 | function=baz | role=BLOCK_ITEM[10] | path=baz.body.block[10] | kind=Block | { struct Element_334004405 **Elems_862869926; Elems_862869926 = (struct Eleme...
+[AddIfOne] candidate 7 | function=baz | role=BLOCK_ITEM[0] | path=baz.body.block[10].block[0] | kind=Block | { struct Element_334004405 **Elems_862869926; Elems_862869926 = (struct Eleme...
+[AddIfOne] candidate 8 | function=baz | role=BLOCK_ITEM[1] | path=baz.body.block[10].block[0].block[1] | kind=AssignmentStatement | Elems_862869926 = (struct Element_334004405**) vercorsMalloc(sizeof(struct El...
+[AddIfOne] candidate 9 | function=baz | role=BLOCK_ITEM[11] | path=baz.body.block[11] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ loop_invariant 0 <= I_686691212; loop_invariant I_686691212 <= 2; loop_...
+[AddIfOne] candidate 10 | function=baz | role=LOOP_BODY | path=baz.body.block[11].loop.body | kind=CompoundStatement(locals=0, items=1) | { if ((*Elems_862869926[I_686691212]).Tag_89816131 == IntTag_235859134) { str...
+[AddIfOne] candidate 11 | function=baz | role=BLOCK_ITEM[0] | path=baz.body.block[11].loop.body.block[0] | kind=IfStatement(arms=1) | if ((*Elems_862869926[I_686691212]).Tag_89816131 == IntTag_235859134) { struc...
+[AddIfOne] candidate 12 | function=baz | role=IF_TRUE | path=baz.body.block[11].loop.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=3) | { struct IElement_1298670930 *Ie_914605183; Ie_914605183 = (struct IElement_1...
+[AddIfOne] candidate 13 | function=baz | role=BLOCK_ITEM[2] | path=baz.body.block[11].loop.body.block[0].branch[0].block[2] | kind=ExpressionStatement(expr=ProcedureInvocation) | PrintInt_801447344(*Ip_426605726);
+[ADD_IF_ONE_SITE] application 1: selected 7 / 14
+[AddIfOne] SELECTED INDEX = 7
+[AddIfOne] SELECTED | function=baz | role=BLOCK_ITEM[0] | path=baz.body.block[10].block[0] | kind=Block | { struct Element_334004405 **Elems_862869926; Elems_862869926 = (struct Eleme...
+[AddIfOne] WRAP class=Block | Block | { struct Element_334004405 **Elems_862869926; Elems_862869926 = (struct Eleme...
+vct.main.stages.Transformation$TransformationCheckError: The addIfOne rewrite caused the AST to no longer typecheck:
+======================================
+70     loop_invariant 0 <= i;
+   71     loop_invariant i <= 2;
+                                 [-----
+   72     loop_invariant \pointer(elems, 2, write);
+                                  -----]
+   73     loop_invariant Perm(*E1_338152470, write);
+   74     loop_invariant (*E1_338152470).d != null;
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+61     assert Perm(*(*E2_1408503469).d, write);
+   62     if (true) {
+             [---------------------------------
+   63         NonNull pointer<Element>[2] elems;
+              ---------------------------------]
+   64         elems = new pointer<Element>[2];
+   65         assume elems[0] == (pointer<Element>)&*E1_338152470;
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+======================================
+77     loop_invariant (*E2_1408503469).d != null;
+   78     loop_invariant Perm(*(*E2_1408503469).d, write);
+                        [-----
+   79     loop_invariant elems[0] == (pointer<Element>)&*E1_338152470;
+                         -----]
+   80     loop_invariant elems[1] == (pointer<Element>)&*E2_1408503469;
+   81     loop_invariant (*elems[0]).tag == IntTag;
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+61     assert Perm(*(*E2_1408503469).d, write);
+   62     if (true) {
+             [---------------------------------
+   63         NonNull pointer<Element>[2] elems;
+              ---------------------------------]
+   64         elems = new pointer<Element>[2];
+   65         assume elems[0] == (pointer<Element>)&*E1_338152470;
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+======================================
+78     loop_invariant Perm(*(*E2_1408503469).d, write);
+   79     loop_invariant elems[0] == (pointer<Element>)&*E1_338152470;
+                        [-----
+   80     loop_invariant elems[1] == (pointer<Element>)&*E2_1408503469;
+                         -----]
+   81     loop_invariant (*elems[0]).tag == IntTag;
+   82     loop_invariant (*elems[1]).tag == FloatTag;
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+61     assert Perm(*(*E2_1408503469).d, write);
+   62     if (true) {
+             [---------------------------------
+   63         NonNull pointer<Element>[2] elems;
+              ---------------------------------]
+   64         elems = new pointer<Element>[2];
+   65         assume elems[0] == (pointer<Element>)&*E1_338152470;
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+======================================
+79     loop_invariant elems[0] == (pointer<Element>)&*E1_338152470;
+   80     loop_invariant elems[1] == (pointer<Element>)&*E2_1408503469;
+                          [-----
+   81     loop_invariant (*elems[0]).tag == IntTag;
+                           -----]
+   82     loop_invariant (*elems[1]).tag == FloatTag;
+   83     for (int i = 0; i < 2; i = i + 1) {
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+61     assert Perm(*(*E2_1408503469).d, write);
+   62     if (true) {
+             [---------------------------------
+   63         NonNull pointer<Element>[2] elems;
+              ---------------------------------]
+   64         elems = new pointer<Element>[2];
+   65         assume elems[0] == (pointer<Element>)&*E1_338152470;
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+======================================
+80     loop_invariant elems[1] == (pointer<Element>)&*E2_1408503469;
+   81     loop_invariant (*elems[0]).tag == IntTag;
+                          [-----
+   82     loop_invariant (*elems[1]).tag == FloatTag;
+                           -----]
+   83     for (int i = 0; i < 2; i = i + 1) {
+   84         if ((*elems[i]).tag == IntTag) {
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+61     assert Perm(*(*E2_1408503469).d, write);
+   62     if (true) {
+             [---------------------------------
+   63         NonNull pointer<Element>[2] elems;
+              ---------------------------------]
+   64         elems = new pointer<Element>[2];
+   65         assume elems[0] == (pointer<Element>)&*E1_338152470;
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+======================================
+82     loop_invariant (*elems[1]).tag == FloatTag;
+   83     for (int i = 0; i < 2; i = i + 1) {
+                   [-----
+   84         if ((*elems[i]).tag == IntTag) {
+                    -----]
+   85             pointer<IElement> ie;
+   86             ie = (pointer<IElement>)elems[i];
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+61     assert Perm(*(*E2_1408503469).d, write);
+   62     if (true) {
+             [---------------------------------
+   63         NonNull pointer<Element>[2] elems;
+              ---------------------------------]
+   64         elems = new pointer<Element>[2];
+   65         assume elems[0] == (pointer<Element>)&*E1_338152470;
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+======================================
+84         if ((*elems[i]).tag == IntTag) {
+   85             pointer<IElement> ie;
+                                         [-----
+   86             ie = (pointer<IElement>)elems[i];
+                                          -----]
+   87             pointer<int> ip;
+   88             ip = (*ie).d;
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+61     assert Perm(*(*E2_1408503469).d, write);
+   62     if (true) {
+             [---------------------------------
+   63         NonNull pointer<Element>[2] elems;
+              ---------------------------------]
+   64         elems = new pointer<Element>[2];
+   65         assume elems[0] == (pointer<Element>)&*E1_338152470;
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+	at vct.main.stages.Transformation.$anonfun$run$4(Transformation.scala:303)
+	at vct.main.stages.Transformation.$anonfun$run$4$adapted(Transformation.scala:278)
+	at hre.progress.Progress$.$anonfun$foreach$2(Progress.scala:25)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at hre.progress.task.AbstractTask.frame(AbstractTask.scala:166)
+	at hre.progress.Progress$.$anonfun$foreach$1(Progress.scala:25)
+	at hre.progress.Progress$.$anonfun$foreach$1$adapted(Progress.scala:24)
+	at scala.collection.IterableOnceOps.foreach(IterableOnce.scala:576)
+	at scala.collection.IterableOnceOps.foreach$(IterableOnce.scala:574)
+	at scala.collection.AbstractIterator.foreach(Iterator.scala:1300)
+	at hre.progress.Progress$.foreach(Progress.scala:24)
+	at vct.main.stages.Transformation.$anonfun$run$2(Transformation.scala:278)
+	at hre.debug.TimeTravel$.safelyRepeatable(TimeTravel.scala:32)
+	at vct.main.stages.Transformation.run(Transformation.scala:272)
+	at vct.main.stages.Transformation.run(Transformation.scala:245)
+	at hre.stages.Stages.$anonfun$run$3(Stages.scala:104)
+	at hre.stages.Stages.$anonfun$run$3$adapted(Stages.scala:101)
+	at scala.collection.IterableOnceOps.foreach(IterableOnce.scala:576)
+	at scala.collection.IterableOnceOps.foreach$(IterableOnce.scala:574)
+	at scala.collection.AbstractIterable.foreach(Iterable.scala:933)
+	at scala.collection.IterableOps$WithFilter.foreach(Iterable.scala:903)
+	at hre.stages.Stages.$anonfun$run$1(Stages.scala:101)
+	at hre.progress.task.NameSequenceTask.scope(NameSequenceTask.scala:16)
+	at hre.progress.Progress$.stages(Progress.scala:47)
+	at hre.stages.Stages.run(Stages.scala:98)
+	at hre.stages.Stages.run$(Stages.scala:95)
+	at hre.stages.StagesPair.run(Stages.scala:145)
+	at vct.main.modes.Robustness$.runOptions(Robustness.scala:150)
+	at vct.main.Main$.runMode(Main.scala:109)
+	at vct.main.Main$.$anonfun$runOptions$3(Main.scala:101)
+	at scala.runtime.java8.JFunction0$mcI$sp.apply(JFunction0$mcI$sp.scala:17)
+	at hre.middleware.Middleware$.using(Middleware.scala:78)
+	at vct.main.Main$.$anonfun$runOptions$2(Main.scala:101)
+	at scala.runtime.java8.JFunction0$mcI$sp.apply(JFunction0$mcI$sp.scala:17)
+	at hre.io.Watch$.booleanWithWatch(Watch.scala:58)
+	at vct.main.Main$.$anonfun$runOptions$1(Main.scala:101)
+	at scala.runtime.java8.JFunction0$mcI$sp.apply(JFunction0$mcI$sp.scala:17)
+	at hre.middleware.Middleware$.using(Middleware.scala:78)
+	at vct.main.Main$.runOptions(Main.scala:96)
+	at vct.main.Main$.main(Main.scala:51)
+	at vct.main.Main.main(Main.scala)
+[ERROR] !*!*!*!*!*!*!*!*!*!*!*!
+[ERROR] ! VerCors has crashed !
+[ERROR] !*!*!*!*!*!*!*!*!*!*!*!
+[ERROR] Please report this as a bug here:
+[ERROR] https://github.com/utwente-fmt/vercors/issues/new?labels=A-Bug&title=Crash+report%3A+The+addIfOne+rewrite+caused+the+AST+to+no+longer+typecheck%3A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A7&body=%23+Crash+Message%0A%60%60%60%0AThe+addIfOne+rewrite+caused+the+AST+to+no+longer+typecheck%3A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A70+++++loop_invariant+0+%3C%3D+i%3B%0A+++71+++++loop_invariant+i+%3C%3D+2%3B%0A+++++++++++++++++++++++++++++++++%5B-----%0A+++72+++++loop_invariant+%5Cpointer%28elems%2C+2%2C+write%29%3B%0A++++++++++++++++++++++++++++++++++-----%5D%0A+++73+++++loop_invariant+Perm%28*E1_338152470%2C+write%29%3B%0A+++74+++++loop_invariant+%28*E1_338152470%29.d+%21%3D+null%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A61+++++assert+Perm%28*%28*E2_1408503469%29.d%2C+write%29%3B%0A+++62+++++if+%28true%29+%7B%0A+++++++++++++%5B---------------------------------%0A+++63+++++++++NonNull+pointer%3CElement%3E%5B2%5D+elems%3B%0A++++++++++++++---------------------------------%5D%0A+++64+++++++++elems+%3D+new+pointer%3CElement%3E%5B2%5D%3B%0A+++65+++++++++assume+elems%5B0%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E1_338152470%3B%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A77+++++loop_invariant+%28*E2_1408503469%29.d+%21%3D+null%3B%0A+++78+++++loop_invariant+Perm%28*%28*E2_1408503469%29.d%2C+write%29%3B%0A++++++++++++++++++++++++%5B-----%0A+++79+++++loop_invariant+elems%5B0%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E1_338152470%3B%0A+++++++++++++++++++++++++-----%5D%0A+++80+++++loop_invariant+elems%5B1%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E2_1408503469%3B%0A+++81+++++loop_invariant+%28*elems%5B0%5D%29.tag+%3D%3D+IntTag%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A61+++++assert+Perm%28*%28*E2_1408503469%29.d%2C+write%29%3B%0A+++62+++++if+%28true%29+%7B%0A+++++++++++++%5B---------------------------------%0A+++63+++++++++NonNull+pointer%3CElement%3E%5B2%5D+elems%3B%0A++++++++++++++---------------------------------%5D%0A+++64+++++++++elems+%3D+new+pointer%3CElement%3E%5B2%5D%3B%0A+++65+++++++++assume+elems%5B0%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E1_338152470%3B%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A78+++++loop_invariant+Perm%28*%28*E2_1408503469%29.d%2C+write%29%3B%0A+++79+++++loop_invariant+elems%5B0%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E1_338152470%3B%0A++++++++++++++++++++++++%5B-----%0A+++80+++++loop_invariant+elems%5B1%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E2_1408503469%3B%0A+++++++++++++++++++++++++-----%5D%0A+++81+++++loop_invariant+%28*elems%5B0%5D%29.tag+%3D%3D+IntTag%3B%0A+++82+++++loop_invariant+%28*elems%5B1%5D%29.tag+%3D%3D+FloatTag%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A61+++++assert+Perm%28*%28*E2_1408503469%29.d%2C+write%29%3B%0A+++62+++++if+%28true%29+%7B%0A+++++++++++++%5B---------------------------------%0A+++63+++++++++NonNull+pointer%3CElement%3E%5B2%5D+elems%3B%0A++++++++++++++---------------------------------%5D%0A+++64+++++++++elems+%3D+new+pointer%3CElement%3E%5B2%5D%3B%0A+++65+++++++++assume+elems%5B0%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E1_338152470%3B%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A79+++++loop_invariant+elems%5B0%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E1_338152470%3B%0A+++80+++++loop_invariant+elems%5B1%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E2_1408503469%3B%0A++++++++++++++++++++++++++%5B-----%0A+++81+++++loop_invariant+%28*elems%5B0%5D%29.tag+%3D%3D+IntTag%3B%0A+++++++++++++++++++++++++++-----%5D%0A+++82+++++loop_invariant+%28*elems%5B1%5D%29.tag+%3D%3D+FloatTag%3B%0A+++83+++++for+%28int+i+%3D+0%3B+i+%3C+2%3B+i+%3D+i+%2B+1%29+%7B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A61+++++assert+Perm%28*%28*E2_1408503469%29.d%2C+write%29%3B%0A+++62+++++if+%28true%29+%7B%0A+++++++++++++%5B---------------------------------%0A+++63+++++++++NonNull+pointer%3CElement%3E%5B2%5D+elems%3B%0A++++++++++++++---------------------------------%5D%0A+++64+++++++++elems+%3D+new+pointer%3CElement%3E%5B2%5D%3B%0A+++65+++++++++assume+elems%5B0%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E1_338152470%3B%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A80+++++loop_invariant+elems%5B1%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E2_1408503469%3B%0A+++81+++++loop_invariant+%28*elems%5B0%5D%29.tag+%3D%3D+IntTag%3B%0A++++++++++++++++++++++++++%5B-----%0A+++82+++++loop_invariant+%28*elems%5B1%5D%29.tag+%3D%3D+FloatTag%3B%0A+++++++++++++++++++++++++++-----%5D%0A+++83+++++for+%28int+i+%3D+0%3B+i+%3C+2%3B+i+%3D+i+%2B+1%29+%7B%0A+++84+++++++++if+%28%28*elems%5Bi%5D%29.tag+%3D%3D+IntTag%29+%7B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A61+++++assert+Perm%28*%28*E2_1408503469%29.d%2C+write%29%3B%0A+++62+++++if+%28true%29+%7B%0A+++++++++++++%5B---------------------------------%0A+++63+++++++++NonNull+pointer%3CElement%3E%5B2%5D+elems%3B%0A++++++++++++++---------------------------------%5D%0A+++64+++++++++elems+%3D+new+pointer%3CElement%3E%5B2%5D%3B%0A+++65+++++++++assume+elems%5B0%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E1_338152470%3B%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A82+++++loop_invariant+%28*elems%5B1%5D%29.tag+%3D%3D+FloatTag%3B%0A+++83+++++for+%28int+i+%3D+0%3B+i+%3C+2%3B+i+%3D+i+%2B+1%29+%7B%0A+++++++++++++++++++%5B-----%0A+++84+++++++++if+%28%28*elems%5Bi%5D%29.tag+%3D%3D+IntTag%29+%7B%0A++++++++++++++++++++-----%5D%0A+++85+++++++++++++pointer%3CIElement%3E+ie%3B%0A+++86+++++++++++++ie+%3D+%28pointer%3CIElement%3E%29elems%5Bi%5D%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A61+++++assert+Perm%28*%28*E2_1408503469%29.d%2C+write%29%3B%0A+++62+++++if+%28true%29+%7B%0A+++++++++++++%5B---------------------------------%0A+++63+++++++++NonNull+pointer%3CElement%3E%5B2%5D+elems%3B%0A++++++++++++++---------------------------------%5D%0A+++64+++++++++elems+%3D+new+pointer%3CElement%3E%5B2%5D%3B%0A+++65+++++++++assume+elems%5B0%5D+%3D%3D+%28pointer%3CElement%3E%29%26*E1_338152470%3B%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A

@@ -1,0 +1,67 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 48
+[AddIfZero] candidate 0 | function=main | role=BLOCK_ITEM[0] | path=main.body.block[0] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(8 / 3 == 2);
+[AddIfZero] candidate 1 | function=main | role=BLOCK_ITEM[1] | path=main.body.block[1] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(8 % 3 == 2);
+[AddIfZero] candidate 2 | function=main | role=BLOCK_ITEM[2] | path=main.body.block[2] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(8 / -3 == -2);
+[AddIfZero] candidate 3 | function=main | role=BLOCK_ITEM[3] | path=main.body.block[3] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(8 % -3 == 2);
+[AddIfZero] candidate 4 | function=main | role=BLOCK_ITEM[4] | path=main.body.block[4] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(-8 / 3 == -2);
+[AddIfZero] candidate 5 | function=main | role=BLOCK_ITEM[5] | path=main.body.block[5] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(-8 % 3 == -2);
+[AddIfZero] candidate 6 | function=main | role=BLOCK_ITEM[6] | path=main.body.block[6] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(-8 / -3 == 2);
+[AddIfZero] candidate 7 | function=main | role=BLOCK_ITEM[7] | path=main.body.block[7] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(-8 % -3 == -2);
+[AddIfZero] candidate 8 | function=main | role=BLOCK_ITEM[8] | path=main.body.block[8] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(1 / 2 == 0);
+[AddIfZero] candidate 9 | function=main | role=BLOCK_ITEM[9] | path=main.body.block[9] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(1 % 2 == 1);
+[AddIfZero] candidate 10 | function=main | role=BLOCK_ITEM[10] | path=main.body.block[10] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(1 / -2 == 0);
+[AddIfZero] candidate 11 | function=main | role=BLOCK_ITEM[11] | path=main.body.block[11] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(1 % -2 == 1);
+[AddIfZero] candidate 12 | function=main | role=BLOCK_ITEM[12] | path=main.body.block[12] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(-1 / 2 == 0);
+[AddIfZero] candidate 13 | function=main | role=BLOCK_ITEM[13] | path=main.body.block[13] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(-1 % 2 == -1);
+[AddIfZero] candidate 14 | function=main | role=BLOCK_ITEM[14] | path=main.body.block[14] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(-1 / -2 == 0);
+[AddIfZero] candidate 15 | function=main | role=BLOCK_ITEM[15] | path=main.body.block[15] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(-1 % -2 == -1);
+[AddIfZero] candidate 16 | function=main | role=BLOCK_ITEM[16] | path=main.body.block[16] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(DivEucl_759431771(8, 3) == 2);
+[AddIfZero] candidate 17 | function=main | role=BLOCK_ITEM[17] | path=main.body.block[17] | kind=Block | { /*@ assert 8 / 3 == 2; @*/ }
+[AddIfZero] candidate 18 | function=main | role=BLOCK_ITEM[18] | path=main.body.block[18] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(ModEucl_1555495619(8, 3) == 2);
+[AddIfZero] candidate 19 | function=main | role=BLOCK_ITEM[19] | path=main.body.block[19] | kind=Block | { /*@ assert 8 % 3 == 2; @*/ }
+[AddIfZero] candidate 20 | function=main | role=BLOCK_ITEM[20] | path=main.body.block[20] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(DivEucl_759431771(8, -3) == -2);
+[AddIfZero] candidate 21 | function=main | role=BLOCK_ITEM[21] | path=main.body.block[21] | kind=Block | { /*@ assert 8 / -3 == -2; @*/ }
+[AddIfZero] candidate 22 | function=main | role=BLOCK_ITEM[22] | path=main.body.block[22] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(ModEucl_1555495619(8, -3) == 2);
+[AddIfZero] candidate 23 | function=main | role=BLOCK_ITEM[23] | path=main.body.block[23] | kind=Block | { /*@ assert 8 % -3 == 2; @*/ }
+[AddIfZero] candidate 24 | function=main | role=BLOCK_ITEM[24] | path=main.body.block[24] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(DivEucl_759431771(-8, 3) == -3);
+[AddIfZero] candidate 25 | function=main | role=BLOCK_ITEM[25] | path=main.body.block[25] | kind=Block | { /*@ assert -8 / 3 == -3; @*/ }
+[AddIfZero] candidate 26 | function=main | role=BLOCK_ITEM[26] | path=main.body.block[26] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(ModEucl_1555495619(-8, 3) == 1);
+[AddIfZero] candidate 27 | function=main | role=BLOCK_ITEM[27] | path=main.body.block[27] | kind=Block | { /*@ assert -8 % 3 == 1; @*/ }
+[AddIfZero] candidate 28 | function=main | role=BLOCK_ITEM[28] | path=main.body.block[28] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(DivEucl_759431771(-8, -3) == 3);
+[AddIfZero] candidate 29 | function=main | role=BLOCK_ITEM[29] | path=main.body.block[29] | kind=Block | { /*@ assert -8 / -3 == 3; @*/ }
+[AddIfZero] candidate 30 | function=main | role=BLOCK_ITEM[30] | path=main.body.block[30] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(ModEucl_1555495619(-8, -3) == 1);
+[AddIfZero] candidate 31 | function=main | role=BLOCK_ITEM[31] | path=main.body.block[31] | kind=Block | { /*@ assert -8 % -3 == 1; @*/ }
+[AddIfZero] candidate 32 | function=main | role=BLOCK_ITEM[32] | path=main.body.block[32] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(DivEucl_759431771(1, 2) == 0);
+[AddIfZero] candidate 33 | function=main | role=BLOCK_ITEM[33] | path=main.body.block[33] | kind=Block | { /*@ assert 1 / 2 == 0; @*/ }
+[AddIfZero] candidate 34 | function=main | role=BLOCK_ITEM[34] | path=main.body.block[34] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(ModEucl_1555495619(1, 2) == 1);
+[AddIfZero] candidate 35 | function=main | role=BLOCK_ITEM[35] | path=main.body.block[35] | kind=Block | { /*@ assert 1 % 2 == 1; @*/ }
+[AddIfZero] candidate 36 | function=main | role=BLOCK_ITEM[36] | path=main.body.block[36] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(DivEucl_759431771(1, -2) == 0);
+[AddIfZero] candidate 37 | function=main | role=BLOCK_ITEM[37] | path=main.body.block[37] | kind=Block | { /*@ assert 1 / -2 == 0; @*/ }
+[AddIfZero] candidate 38 | function=main | role=BLOCK_ITEM[38] | path=main.body.block[38] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(ModEucl_1555495619(1, -2) == 1);
+[AddIfZero] candidate 39 | function=main | role=BLOCK_ITEM[39] | path=main.body.block[39] | kind=Block | { /*@ assert 1 % -2 == 1; @*/ }
+[AddIfZero] candidate 40 | function=main | role=BLOCK_ITEM[40] | path=main.body.block[40] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(DivEucl_759431771(-1, 2) == -1);
+[AddIfZero] candidate 41 | function=main | role=BLOCK_ITEM[41] | path=main.body.block[41] | kind=Block | { /*@ assert -1 / 2 == -1; @*/ }
+[AddIfZero] candidate 42 | function=main | role=BLOCK_ITEM[42] | path=main.body.block[42] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(ModEucl_1555495619(-1, 2) == 1);
+[AddIfZero] candidate 43 | function=main | role=BLOCK_ITEM[43] | path=main.body.block[43] | kind=Block | { /*@ assert -1 % 2 == 1; @*/ }
+[AddIfZero] candidate 44 | function=main | role=BLOCK_ITEM[44] | path=main.body.block[44] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(DivEucl_759431771(-1, -2) == 1);
+[AddIfZero] candidate 45 | function=main | role=BLOCK_ITEM[45] | path=main.body.block[45] | kind=Block | { /*@ assert -1 / -2 == 1; @*/ }
+[AddIfZero] candidate 46 | function=main | role=BLOCK_ITEM[46] | path=main.body.block[46] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_1854289001(ModEucl_1555495619(-1, -2) == 1);
+[AddIfZero] candidate 47 | function=main | role=BLOCK_ITEM[47] | path=main.body.block[47] | kind=Block | { /*@ assert -1 % -2 == 1; @*/ }
+[ADD_IF_ZERO_SITE] application 1: selected 47 / 48
+[AddIfZero] SELECTED INDEX = 47
+[AddIfZero] SELECTED | function=main | role=BLOCK_ITEM[47] | path=main.body.block[47] | kind=Block | { /*@ assert -1 % -2 == 1; @*/ }
+[AddIfZero] WRAP class=Block | Block | { /*@ assert -1 % -2 == 1; @*/ }
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

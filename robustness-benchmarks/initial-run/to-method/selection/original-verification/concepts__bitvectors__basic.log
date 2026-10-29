@@ -1,0 +1,26 @@
+[INFO] Start: VerCors (at 00:41:21)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-8181300711608496588.i
+--------------------------------------
+   32  void foo() {
+   33      uint8_t ushl8 = ((uint8_t) 10) << ((uint8_t) 2);
+                            [-------------------------------
+   34      uint16_t ushl16 = ((uint16_t)10) << ((uint16_t)2);
+                             -------------------------------]
+   35      uint32_t ushl32 = ((uint32_t)10) << ((uint32_t)2);
+   36      uint64_t ushl64 = ((uint64_t)10) << ((uint64_t)2);
+--------------------------------------
+At basic.c
+--------------------------------------
+    3  void foo() {
+    4      uint8_t  ushl8  = ((uint8_t) 10) << ((uint8_t) 2);
+      [--------------------------------------------------------
+    5      uint16_t ushl16 = ((uint16_t)10) << ((uint16_t)2);
+       --------------------------------------------------------]
+    6      uint32_t ushl32 = ((uint32_t)10) << ((uint32_t)2);
+    7      uint64_t ushl64 = ((uint64_t)10) << ((uint64_t)2);
+--------------------------------------
+Could not determine the size of the bit vector for this bitwise operation
+======================================
+[INFO] Done: VerCors (at 00:41:46, duration: 00:00:24)

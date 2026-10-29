@@ -1,0 +1,26 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: robustnessForLoopToWhileLoop
+[INFO] Robustness repeat: 1
+[ForToWhile] candidate count = 8
+[ForToWhile] candidate 0 | function=zero_array | path=zero_array.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[ForToWhile] candidate 1 | function=copy_array | path=copy_array.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[ForToWhile] candidate 2 | function=vector_add | path=vector_add.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[ForToWhile] candidate 3 | function=indep_drf | path=indep_drf.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=2))
+[ForToWhile] candidate 4 | function=forward_drf | path=forward_drf.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=4))
+[ForToWhile] candidate 5 | function=forward_full | path=forward_full.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=4))
+[ForToWhile] candidate 6 | function=backward_drf | path=backward_drf.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=4))
+[ForToWhile] candidate 7 | function=backward_full | path=backward_full.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=4))
+[FOR_TO_WHILE_SITE] application 1: selected 1 / 8
+[ForToWhile] SELECTED INDEX = 1
+[ForToWhile] SELECTED | function=copy_array | path=copy_array.body.scope.block[0].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

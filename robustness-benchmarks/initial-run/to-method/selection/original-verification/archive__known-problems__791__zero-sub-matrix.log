@@ -1,0 +1,46 @@
+[INFO] Start: VerCors (at 01:01:11)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier zero-sub-matrix.c:9-:9: '            (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+The quantifier zero-sub-matrix.c:8-:9: '  context_everywhere (\forall* int i; 0 <= i && i < M;
+            (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+[WARN] The quantifier zero-sub-matrix.c:9-:9: '            (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+The quantifier zero-sub-matrix.c:8-:9: '  context_everywhere (\forall* int i; 0 <= i && i < M;
+            (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+[WARN] The quantifier zero-sub-matrix.c:12-:12: '            (\forall int j; 0 <= j && j < N; matrix[i][j] == 0));' contains no triggers
+The quantifier zero-sub-matrix.c:11-:12: '  ensures (\forall int i; 0 <= i && i < M;
+            (\forall int j; 0 <= j && j < N; matrix[i][j] == 0));' contains no triggers
+[WARN] The quantifier zero-sub-matrix.c:9-:9: '            (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+The quantifier zero-sub-matrix.c:8-:9: '  context_everywhere (\forall* int i; 0 <= i && i < M;
+            (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+[WARN] The quantifier zero-sub-matrix.c:17-:17: '      loop_invariant (\forall int i2; 0 <= i2 && i2 < i; (\forall int j; 0 <= j && j < N;matrix[i2][j] == 0));' contains no triggers
+[WARN] The quantifier zero-sub-matrix.c:17-:17: '      loop_invariant (\forall int i2; 0 <= i2 && i2 < i; (\forall int j; 0 <= j && j < N;matrix[i2][j] == 0));' contains no triggers
+[WARN] The quantifier zero-sub-matrix.c:9-:9: '            (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+The quantifier zero-sub-matrix.c:8-:9: '  context_everywhere (\forall* int i; 0 <= i && i < M;
+            (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+[WARN] The quantifier zero-sub-matrix.c:23-:23: '        loop_invariant (\forall* int j2; 0 <= j2 && j2 < j; matrix[i][j2] == 0);' contains no triggers
+[WARN] The quantifier zero-sub-matrix.c:24-:24: '        loop_invariant (\forall int i2; 0 <= i2 && i2 < i; (\forall int j; 0 <= j && j < N;matrix[i2][j] == 0));' contains no triggers
+[WARN] The quantifier zero-sub-matrix.c:24-:24: '        loop_invariant (\forall int i2; 0 <= i2 && i2 < i; (\forall int j; 0 <= j && j < N;matrix[i2][j] == 0));' contains no triggers
+======================================
+At vercors-interpreted-10540544314692048329.i
+--------------------------------------
+   14    context_everywhere \pointer(matrix, M, write);
+   15    context_everywhere (\forall* int i; 0 <= i && i < M;
+                                                         [------------
+   16              (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));
+                                                          ------------]
+   17    context_everywhere M > 0 && N > 0 && step >= N;
+   18    ensures (\forall int i; 0 <= i && i < M;
+--------------------------------------
+At zero-sub-matrix.c
+--------------------------------------
+    7    context_everywhere \pointer(matrix, M, write);
+    8    context_everywhere (\forall* int i; 0 <= i && i < M;
+      [----------------------------------------------------------------------------
+    9              (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));
+       ----------------------------------------------------------------------------]
+   10    context_everywhere M > 0 && N > 0 && step >= N;
+   11    ensures (\forall int i; 0 <= i && i < M;
+--------------------------------------
+The offset to the pointer may be outside the bounds of the allocated memory area that the pointer is in. (https://utwente.nl/vercors#ptrBlock)
+======================================
+[INFO] Done: VerCors (at 01:02:22, duration: 00:01:11)

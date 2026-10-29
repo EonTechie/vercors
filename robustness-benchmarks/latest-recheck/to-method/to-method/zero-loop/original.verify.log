@@ -1,0 +1,8 @@
+[INFO] Start: VerCors (at 15:56:53)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier zero-loop.c:2-:2: '//@ ensures (\forall int k; 0 <= k && k < len; ar[k] == 0);' contains no triggers
+[WARN] The quantifier zero-loop.c:7-:7: '        context Perm(ar[i], write);' contains no triggers
+[WARN] The quantifier zero-loop.c:7-:7: '        context Perm(ar[i], write);' contains no triggers
+[WARN] The quantifier zero-loop.c:8-:8: '        ensures ar[i] == 0;' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 15:58:13, duration: 00:01:20)

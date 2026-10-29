@@ -1,0 +1,23 @@
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: robustnessToMethod
+[INFO] Robustness repeat: 1
+[ToMethod] candidate count = 12
+[ToMethod] candidate 0 | function=can_cast_to_integer | path=can_cast_to_integer.body.block[3] | kind=Compound(items=1)
+[ToMethod] candidate 1 | function=can_cast_to_integer | path=can_cast_to_integer.body.block[4] | kind=Compound(items=1)
+[ToMethod] candidate 2 | function=can_cast_to_integer | path=can_cast_to_integer.body.block[5] | kind=Compound(items=1)
+[ToMethod] candidate 3 | function=can_cast_to_integer | path=can_cast_to_integer.body.block[7] | kind=Compound(items=1)
+[ToMethod] candidate 4 | function=cast_remains_valid_in_loop | path=cast_remains_valid_in_loop.body.block[3].loop.body | kind=Compound(locals=0, items=1)
+[ToMethod] candidate 5 | function=cast_remains_valid_in_loop | path=cast_remains_valid_in_loop.body.block[4] | kind=Compound(items=1)
+[ToMethod] candidate 6 | function=cast_remains_valid_in_loop | path=cast_remains_valid_in_loop.body.block[6].loop.body | kind=Compound(locals=0, items=1)
+[ToMethod] candidate 7 | function=cast_remains_valid_in_loop | path=cast_remains_valid_in_loop.body.block[7] | kind=Compound(items=1)
+[ToMethod] candidate 8 | function=cast_remains_valid_in_par_block | path=cast_remains_valid_in_par_block.body.block[3].loop.body | kind=Compound(locals=0, items=1)
+[ToMethod] candidate 9 | function=cast_remains_valid_in_par_block | path=cast_remains_valid_in_par_block.body.block[3].loop.body.block[0].branch[0] | kind=Compound(locals=0, items=1)
+[ToMethod] candidate 10 | function=cast_remains_valid_in_par_block | path=cast_remains_valid_in_par_block.body.block[4] | kind=Compound(items=1)
+[ToMethod] candidate 11 | function=call_with_cast | path=call_with_cast.body.block[4] | kind=Compound(items=1)
+[TO_METHOD_SITE] application 1: selected 3 / 12
+[ToMethod] SELECTED INDEX = 3
+[ToMethod] SELECTED | function=can_cast_to_integer | path=can_cast_to_integer.body.block[7] | kind=Compound(items=1)
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

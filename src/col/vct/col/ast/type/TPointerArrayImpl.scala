@@ -13,9 +13,17 @@ trait TPointerArrayImpl[G] extends TPointerArrayOps[G] {
     }
 
   override def layout(implicit ctx: Ctx): Doc =
-    layoutDimensions(
-      unique.map(u => Text(s"unique<$u>") <+> element).getOrElse(element.show)
-    )
+    ctx.syntax match {
+      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
+        // Post-resolution C dump: prefer pointer syntax over COL array sugar.
+        val (spec, decl) = layoutSplitDeclarator
+        Group(spec <> decl)
+      case _ =>
+        layoutDimensions(
+          unique.map(u => Text(s"unique<$u>") <+> element)
+            .getOrElse(element.show)
+        )
+    }
 
   override def layoutSplitDeclarator(implicit ctx: Ctx): (Doc, Doc) =
     ctx.syntax match {

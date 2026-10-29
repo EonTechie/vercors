@@ -9,5 +9,10 @@ trait FreePointerImpl[G] extends FreePointerOps[G] {
   override lazy val t: Type[G] = TVoid()
 
   override def layout(implicit ctx: Ctx): Doc =
-    Text("free") <+> "(" <> pointer <> ")"
+    ctx.syntax match {
+      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
+        // Post-resolution C dump: match the emitted vercorsFree(void*) stub.
+        Text("vercorsFree") <> "((void*)" <> pointer <> ")"
+      case _ => Text("free") <+> "(" <> pointer <> ")"
+    }
 }

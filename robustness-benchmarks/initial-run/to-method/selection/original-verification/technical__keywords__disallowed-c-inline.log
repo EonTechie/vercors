@@ -1,0 +1,26 @@
+[INFO] Start: VerCors (at 01:41:04)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-2844303599200178902.i
+--------------------------------------
+   11  
+   12  void test() {
+          [-----------
+   13      int inline;
+           -----------]
+   14  }
+   15
+--------------------------------------
+At disallowed-c-inline.c
+--------------------------------------
+    4  
+    5  void test() {
+      [-----------------
+    6      int inline;
+       -----------------]
+    7  }
+    8
+--------------------------------------
+ ‘inline’ in empty declaration.
+======================================
+[INFO] Done: VerCors (at 01:41:36, duration: 00:00:32)

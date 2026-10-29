@@ -1,0 +1,323 @@
+---- run descriptor ----
+STARTED=2026-10-28T11:18:37+03:00
+FINISHED=
+RUN_ID=20261028-111837
+CONFIG_FILE=/home/filizyildizfi/VC/vercors/robustness-benchmarks/current-code-validation/config.env
+MODE=preferred
+TRANSFORM=to-method
+REPEAT=1
+SEED=
+SITES=all
+INPUT=/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs
+OUT_REQUESTED=/home/filizyildizfi/VC/vercors/robustness-benchmarks/current-code-validation/runs/current-20261028-010058/to-method
+OUT=/home/filizyildizfi/VC/vercors/robustness-benchmarks/current-code-validation/runs/current-20261028-010058/to-method
+PROGRAMS=
+FILE_COUNT=19
+FILES=3_while_multip,4_big,6_pure,arrays,basic-examples,casts,forward-loop,math,mod_div,pallas_c_loop_unused,pointer_casts,pointer_relations,pointer_tests,ptr_comparisons,structs,tagged_struct,vector_add,zero-loop,zero-sub-array
+VCT=/home/filizyildizfi/VC/vercors/robustness-benchmarks/current-code-validation/vercors-with-timeout.sh
+TIMEOUT=3600
+VERIFY_MUTANTS=1
+VERIFY_ORIGINALS=1
+FORCE_ORIGINAL=0
+STAMP=0
+DRY_RUN=0
+---- files ----
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/3_while_multip.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/4_big.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/6_pure.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/arrays.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/basic-examples.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/casts.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/forward-loop.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/math.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/mod_div.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/pallas_c_loop_unused.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/pointer_casts.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/pointer_relations.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/pointer_tests.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/ptr_comparisons.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/structs.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/tagged_struct.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/vector_add.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/zero-loop.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/to-method/inputs/zero-sub-array.c
+---- log ----
+[2026-10-28 11:18:38] mode=preferred  transform=to-method  files=19  out=/home/filizyildizfi/VC/vercors/robustness-benchmarks/current-code-validation/runs/current-20261028-010058/to-method
+[2026-10-28 11:18:38] original verify
+[2026-10-28 11:18:38]   verify 3_while_multip
+[2026-10-28 11:18:58]   PASS  3_while_multip
+[2026-10-28 11:18:58]   verify 4_big
+[2026-10-28 11:19:24]   PASS  4_big
+[2026-10-28 11:19:24]   verify 6_pure
+[2026-10-28 11:19:51]   PASS  6_pure
+[2026-10-28 11:19:51]   verify arrays
+[2026-10-28 11:20:19]   PASS  arrays
+[2026-10-28 11:20:19]   verify basic-examples
+[2026-10-28 11:21:11]   PASS  basic-examples
+[2026-10-28 11:21:11]   verify casts
+[2026-10-28 11:21:38]   PASS  casts
+[2026-10-28 11:21:38]   verify forward-loop
+[2026-10-28 11:22:12]   PASS  forward-loop
+[2026-10-28 11:22:12]   verify math
+[2026-10-28 11:22:41]   PASS  math
+[2026-10-28 11:22:41]   verify mod_div
+[2026-10-28 11:23:04]   PASS  mod_div
+[2026-10-28 11:23:04]   verify pallas_c_loop_unused
+[2026-10-28 11:23:25]   PASS  pallas_c_loop_unused
+[2026-10-28 11:23:25]   verify pointer_casts
+[2026-10-28 11:23:59]   PASS  pointer_casts
+[2026-10-28 11:23:59]   verify pointer_relations
+[2026-10-28 11:24:27]   PASS  pointer_relations
+[2026-10-28 11:24:27]   verify pointer_tests
+[2026-10-28 11:24:56]   PASS  pointer_tests
+[2026-10-28 11:24:56]   verify ptr_comparisons
+[2026-10-28 11:25:23]   PASS  ptr_comparisons
+[2026-10-28 11:25:23]   verify structs
+[2026-10-28 11:26:08]   PASS  structs
+[2026-10-28 11:26:08]   verify tagged_struct
+[2026-10-28 11:26:41]   PASS  tagged_struct
+[2026-10-28 11:26:41]   verify vector_add
+[2026-10-28 11:27:33]   PASS  vector_add
+[2026-10-28 11:27:33]   verify zero-loop
+[2026-10-28 11:28:04]   PASS  zero-loop
+[2026-10-28 11:28:04]   verify zero-sub-array
+[2026-10-28 11:28:32]   PASS  zero-sub-array
+[2026-10-28 11:28:32]   3_while_multip  discovery
+[2026-10-28 11:28:37]   3_while_multip  verify site=0
+[2026-10-28 11:29:02]   ROBUST  3_while_multip site=0
+[2026-10-28 11:29:02]   4_big  discovery
+[2026-10-28 11:29:08]   4_big  verify site=0
+[2026-10-28 11:29:34]   ROBUST  4_big site=0
+[2026-10-28 11:29:34]   4_big  transform site=1
+[2026-10-28 11:29:40]   4_big  verify site=1
+[2026-10-28 11:30:08]   ROBUST  4_big site=1
+[2026-10-28 11:30:08]   6_pure  discovery
+[2026-10-28 11:30:15]   6_pure  verify site=0
+[2026-10-28 11:30:43]   ROBUST  6_pure site=0
+[2026-10-28 11:30:43]   arrays  discovery
+[2026-10-28 11:30:49]   arrays  verify site=0
+[2026-10-28 11:31:18]   ROBUST  arrays site=0
+[2026-10-28 11:31:18]   basic-examples  discovery
+[2026-10-28 11:31:25]   basic-examples  verify site=0
+[2026-10-28 11:32:15]   ROBUST  basic-examples site=0
+[2026-10-28 11:32:15]   basic-examples  transform site=1
+[2026-10-28 11:32:23]   basic-examples  verify site=1
+[2026-10-28 11:33:13]   ROBUST  basic-examples site=1
+[2026-10-28 11:33:13]   basic-examples  transform site=2
+[2026-10-28 11:33:21]   basic-examples  verify site=2
+[2026-10-28 11:34:12]   ROBUST  basic-examples site=2
+[2026-10-28 11:34:12]   basic-examples  transform site=3
+[2026-10-28 11:34:21]   basic-examples  verify site=3
+[2026-10-28 11:35:12]   ROBUST  basic-examples site=3
+[2026-10-28 11:35:12]   basic-examples  transform site=4
+[2026-10-28 11:35:20]   basic-examples  verify site=4
+[2026-10-28 11:36:08]   ROBUST  basic-examples site=4
+[2026-10-28 11:36:08]   basic-examples  transform site=5
+[2026-10-28 11:36:16]   basic-examples  verify site=5
+[2026-10-28 11:37:05]   ROBUST  basic-examples site=5
+[2026-10-28 11:37:05]   basic-examples  transform site=6
+[2026-10-28 11:37:13]   basic-examples  verify site=6
+[2026-10-28 11:38:03]   ROBUST  basic-examples site=6
+[2026-10-28 11:38:03]   basic-examples  transform site=7
+[2026-10-28 11:38:10]   basic-examples  verify site=7
+[2026-10-28 11:38:59]   ROBUST  basic-examples site=7
+[2026-10-28 11:38:59]   casts  discovery
+[2026-10-28 11:39:05]   casts  verify site=0
+[2026-10-28 11:39:36]   ROBUST  casts site=0
+[2026-10-28 11:39:36]   casts  transform site=1
+[2026-10-28 11:39:42]   casts  verify site=1
+[2026-10-28 11:40:11]   ROBUST  casts site=1
+[2026-10-28 11:40:11]   casts  transform site=2
+[2026-10-28 11:40:17]   casts  verify site=2
+[2026-10-28 11:40:47]   ROBUST  casts site=2
+[2026-10-28 11:40:47]   casts  transform site=3
+[2026-10-28 11:40:54]   casts  verify site=3
+[2026-10-28 11:41:24]   ROBUST  casts site=3
+[2026-10-28 11:41:24]   casts  transform site=4
+[2026-10-28 11:41:30]   casts  verify site=4
+[2026-10-28 11:42:00]   ROBUST  casts site=4
+[2026-10-28 11:42:00]   casts  transform site=5
+[2026-10-28 11:42:07]   casts  verify site=5
+[2026-10-28 11:42:37]   ROBUST  casts site=5
+[2026-10-28 11:42:37]   casts  transform site=6
+[2026-10-28 11:42:44]   casts  verify site=6
+[2026-10-28 11:43:14]   ROBUST  casts site=6
+[2026-10-28 11:43:14]   casts  transform site=7
+[2026-10-28 11:43:20]   casts  verify site=7
+[2026-10-28 11:43:50]   ROBUST  casts site=7
+[2026-10-28 11:43:50]   forward-loop  discovery
+[2026-10-28 11:43:56]   forward-loop  verify site=0
+[2026-10-28 11:44:30]   ROBUST  forward-loop site=0
+[2026-10-28 11:44:30]   math  discovery
+[2026-10-28 11:44:36]   math  verify site=0
+[2026-10-28 11:45:06]   ROBUST  math site=0
+[2026-10-28 11:45:06]   math  transform site=1
+[2026-10-28 11:45:12]   math  verify site=1
+[2026-10-28 11:45:41]   ROBUST  math site=1
+[2026-10-28 11:45:41]   math  transform site=2
+[2026-10-28 11:45:47]   math  verify site=2
+[2026-10-28 11:46:19]   ROBUST  math site=2
+[2026-10-28 11:46:19]   math  transform site=3
+[2026-10-28 11:46:26]   math  verify site=3
+[2026-10-28 11:46:57]   ROBUST  math site=3
+[2026-10-28 11:46:57]   math  transform site=4
+[2026-10-28 11:47:03]   math  verify site=4
+[2026-10-28 11:47:34]   ROBUST  math site=4
+[2026-10-28 11:47:34]   math  transform site=5
+[2026-10-28 11:47:41]   math  verify site=5
+[2026-10-28 11:48:13]   ROBUST  math site=5
+[2026-10-28 11:48:13]   math  transform site=6
+[2026-10-28 11:48:20]   math  verify site=6
+[2026-10-28 11:48:51]   ROBUST  math site=6
+[2026-10-28 11:48:51]   math  transform site=7
+[2026-10-28 11:48:57]   math  verify site=7
+[2026-10-28 11:49:28]   ROBUST  math site=7
+[2026-10-28 11:49:28]   math  transform site=8
+[2026-10-28 11:49:34]   math  verify site=8
+[2026-10-28 11:50:07]   ROBUST  math site=8
+[2026-10-28 11:50:07]   math  transform site=9
+[2026-10-28 11:50:13]   math  verify site=9
+[2026-10-28 11:50:45]   ROBUST  math site=9
+[2026-10-28 11:50:45]   math  transform site=10
+[2026-10-28 11:50:52]   math  verify site=10
+[2026-10-28 11:51:24]   ROBUST  math site=10
+[2026-10-28 11:51:24]   math  transform site=11
+[2026-10-28 11:51:30]   math  verify site=11
+[2026-10-28 11:52:05]   ROBUST  math site=11
+[2026-10-28 11:52:05]   math  transform site=12
+[2026-10-28 11:52:14]   math  verify site=12
+[2026-10-28 11:52:45]   ROBUST  math site=12
+[2026-10-28 11:52:45]   math  transform site=13
+[2026-10-28 11:52:51]   math  verify site=13
+[2026-10-28 11:53:26]   ROBUST  math site=13
+[2026-10-28 11:53:26]   math  transform site=14
+[2026-10-28 11:53:33]   math  verify site=14
+[2026-10-28 11:54:05]   ROBUST  math site=14
+[2026-10-28 11:54:05]   math  transform site=15
+[2026-10-28 11:54:11]   math  verify site=15
+[2026-10-28 11:54:42]   ROBUST  math site=15
+[2026-10-28 11:54:42]   math  transform site=16
+[2026-10-28 11:54:48]   math  verify site=16
+[2026-10-28 11:55:22]   ROBUST  math site=16
+[2026-10-28 11:55:22]   math  transform site=17
+[2026-10-28 11:55:29]   math  verify site=17
+[2026-10-28 11:56:01]   ROBUST  math site=17
+[2026-10-28 11:56:01]   math  transform site=18
+[2026-10-28 11:56:09]   math  verify site=18
+[2026-10-28 11:56:43]   ROBUST  math site=18
+[2026-10-28 11:56:43]   math  transform site=19
+[2026-10-28 11:56:50]   math  verify site=19
+[2026-10-28 11:57:21]   ROBUST  math site=19
+[2026-10-28 11:57:21]   math  transform site=20
+[2026-10-28 11:57:29]   math  verify site=20
+[2026-10-28 11:57:59]   ROBUST  math site=20
+[2026-10-28 11:57:59]   math  transform site=21
+[2026-10-28 11:58:07]   math  verify site=21
+[2026-10-28 11:58:38]   ROBUST  math site=21
+[2026-10-28 11:58:38]   math  transform site=22
+[2026-10-28 11:58:45]   math  verify site=22
+[2026-10-28 11:59:16]   ROBUST  math site=22
+[2026-10-28 11:59:16]   math  transform site=23
+[2026-10-28 11:59:23]   math  verify site=23
+[2026-10-28 11:59:54]   ROBUST  math site=23
+[2026-10-28 11:59:54]   math  transform site=24
+[2026-10-28 12:00:01]   math  verify site=24
+[2026-10-28 12:00:33]   ROBUST  math site=24
+[2026-10-28 12:00:33]   math  transform site=25
+[2026-10-28 12:00:39]   math  verify site=25
+[2026-10-28 12:01:11]   ROBUST  math site=25
+[2026-10-28 12:01:11]   math  transform site=26
+[2026-10-28 12:01:18]   math  verify site=26
+[2026-10-28 12:01:50]   ROBUST  math site=26
+[2026-10-28 12:01:50]   math  transform site=27
+[2026-10-28 12:01:56]   math  verify site=27
+[2026-10-28 12:02:28]   ROBUST  math site=27
+[2026-10-28 12:02:28]   mod_div  discovery
+[2026-10-28 12:02:34]   mod_div  verify site=0
+[2026-10-28 12:03:06]   ROBUST  mod_div site=0
+[2026-10-28 12:03:06]   mod_div  transform site=1
+[2026-10-28 12:03:13]   mod_div  verify site=1
+[2026-10-28 12:03:41]   ROBUST  mod_div site=1
+[2026-10-28 12:03:41]   mod_div  transform site=2
+[2026-10-28 12:03:48]   mod_div  verify site=2
+[2026-10-28 12:04:13]   ROBUST  mod_div site=2
+[2026-10-28 12:04:13]   mod_div  transform site=3
+[2026-10-28 12:04:19]   mod_div  verify site=3
+[2026-10-28 12:04:45]   ROBUST  mod_div site=3
+[2026-10-28 12:04:45]   mod_div  transform site=4
+[2026-10-28 12:04:51]   mod_div  verify site=4
+[2026-10-28 12:05:17]   ROBUST  mod_div site=4
+[2026-10-28 12:05:17]   mod_div  transform site=5
+[2026-10-28 12:05:22]   mod_div  verify site=5
+[2026-10-28 12:05:49]   ROBUST  mod_div site=5
+[2026-10-28 12:05:49]   mod_div  transform site=6
+[2026-10-28 12:05:55]   mod_div  verify site=6
+[2026-10-28 12:06:21]   ROBUST  mod_div site=6
+[2026-10-28 12:06:21]   mod_div  transform site=7
+[2026-10-28 12:06:27]   mod_div  verify site=7
+[2026-10-28 12:06:54]   ROBUST  mod_div site=7
+[2026-10-28 12:06:54]   mod_div  transform site=8
+[2026-10-28 12:06:59]   mod_div  verify site=8
+[2026-10-28 12:07:30]   ROBUST  mod_div site=8
+[2026-10-28 12:07:30]   mod_div  transform site=9
+[2026-10-28 12:07:37]   mod_div  verify site=9
+[2026-10-28 12:08:05]   ROBUST  mod_div site=9
+[2026-10-28 12:08:05]   mod_div  transform site=10
+[2026-10-28 12:08:11]   mod_div  verify site=10
+[2026-10-28 12:08:37]   ROBUST  mod_div site=10
+[2026-10-28 12:08:37]   mod_div  transform site=11
+[2026-10-28 12:08:43]   mod_div  verify site=11
+[2026-10-28 12:09:10]   ROBUST  mod_div site=11
+[2026-10-28 12:09:10]   mod_div  transform site=12
+[2026-10-28 12:09:16]   mod_div  verify site=12
+[2026-10-28 12:09:40]   ROBUST  mod_div site=12
+[2026-10-28 12:09:40]   mod_div  transform site=13
+[2026-10-28 12:09:46]   mod_div  verify site=13
+[2026-10-28 12:10:12]   ROBUST  mod_div site=13
+[2026-10-28 12:10:12]   mod_div  transform site=14
+[2026-10-28 12:10:18]   mod_div  verify site=14
+[2026-10-28 12:10:44]   ROBUST  mod_div site=14
+[2026-10-28 12:10:44]   mod_div  transform site=15
+[2026-10-28 12:10:50]   mod_div  verify site=15
+[2026-10-28 12:11:17]   ROBUST  mod_div site=15
+[2026-10-28 12:11:17]   pallas_c_loop_unused  discovery
+[2026-10-28 12:11:22]   pallas_c_loop_unused  verify site=0
+[2026-10-28 12:11:48]   ROBUST  pallas_c_loop_unused site=0
+[2026-10-28 12:11:48]   pointer_casts  discovery
+[2026-10-28 12:11:54]   pointer_casts  verify site=0
+[2026-10-28 12:12:28]   ROBUST  pointer_casts site=0
+[2026-10-28 12:12:28]   pointer_casts  transform site=1
+[2026-10-28 12:12:35]   pointer_casts  verify site=1
+[2026-10-28 12:13:11]   ROBUST  pointer_casts site=1
+[2026-10-28 12:13:11]   pointer_casts  transform site=2
+[2026-10-28 12:13:17]   pointer_casts  verify site=2
+[2026-10-28 12:13:50]   ROBUST  pointer_casts site=2
+[2026-10-28 12:13:50]   pointer_casts  transform site=3
+[2026-10-28 12:13:56]   pointer_casts  verify site=3
+[2026-10-28 12:14:29]   ROBUST  pointer_casts site=3
+[2026-10-28 12:14:29]   pointer_casts  transform site=4
+[2026-10-28 12:14:35]   pointer_casts  verify site=4
+[2026-10-28 12:15:11]   ROBUST  pointer_casts site=4
+[2026-10-28 12:15:11]   pointer_casts  transform site=5
+[2026-10-28 12:15:17]   pointer_casts  verify site=5
+[2026-10-28 12:15:52]   ROBUST  pointer_casts site=5
+[2026-10-28 12:15:52]   pointer_casts  transform site=6
+[2026-10-28 12:15:57]   pointer_casts  verify site=6
+[2026-10-28 12:16:33]   ROBUST  pointer_casts site=6
+[2026-10-28 12:16:33]   pointer_casts  transform site=7
+[2026-10-28 12:16:41]   pointer_casts  verify site=7
+[2026-10-28 12:17:16]   ROBUST  pointer_casts site=7
+[2026-10-28 12:17:16]   pointer_casts  transform site=8
+[2026-10-28 12:17:22]   pointer_casts  verify site=8
+[2026-10-28 12:17:57]   ROBUST  pointer_casts site=8
+[2026-10-28 12:17:57]   pointer_casts  transform site=9
+[2026-10-28 12:18:03]   pointer_casts  verify site=9
+[2026-10-28 12:18:38]   ROBUST  pointer_casts site=9
+[2026-10-28 12:18:38]   pointer_casts  transform site=10
+[2026-10-28 12:18:44]   pointer_casts  verify site=10
+[2026-10-28 12:19:20]   ROBUST  pointer_casts site=10
+[2026-10-28 12:19:20]   pointer_casts  transform site=11
+[2026-10-28 12:19:31]   pointer_casts  verify site=11
+[2026-10-28 12:20:17]   ROBUST  pointer_casts site=11
+[2026-10-28 12:20:17]   pointer_relations  discovery
+[2026-10-28 12:20:23]   pointer_relations  verify site=0

@@ -1,0 +1,28 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 1
+[AddIfOne] candidate count = 9
+[AddIfOne] candidate 0 | function=cubed | role=BLOCK_ITEM[2] | path=cubed.body.block[2] | kind=ExpressionStatement(expr=ProcedureInvocation) | CubedLoop1InvariantAssert_1122962300( &I_1182828628, &Res_905560956, &N_41900...
+[AddIfOne] candidate 1 | function=cubed | role=BLOCK_ITEM[3] | path=cubed.body.block[3] | kind=LoopScope(init=Block, cond=AmbiguousEq, update=Block, body=Scope) | { while (1 == 1) { CubedLoop1InvariantAssume_9744165( &I_1182828628, &Res_905...
+[AddIfOne] candidate 2 | function=cubed | role=LOOP_BODY | path=cubed.body.block[3].loop.body | kind=CompoundStatement(locals=0, items=5) | { CubedLoop1InvariantAssume_9744165( &I_1182828628, &Res_905560956, &N_419001...
+[AddIfOne] candidate 3 | function=cubed | role=BLOCK_ITEM[0] | path=cubed.body.block[3].loop.body.block[0] | kind=ExpressionStatement(expr=ProcedureInvocation) | CubedLoop1InvariantAssume_9744165(&I_1182828628, &Res_905560956, &N_419001434);
+[AddIfOne] candidate 4 | function=cubed | role=BLOCK_ITEM[1] | path=cubed.body.block[3].loop.body.block[1] | kind=IfStatement(arms=1) | if (I_1182828628 >= N_419001434) { break; }
+[AddIfOne] candidate 5 | function=cubed | role=BLOCK_ITEM[2] | path=cubed.body.block[3].loop.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | Res_905560956 = Res_905560956 + N_419001434 * N_419001434;
+[AddIfOne] candidate 6 | function=cubed | role=BLOCK_ITEM[3] | path=cubed.body.block[3].loop.body.block[3] | kind=ExpressionStatement(expr=PreAssignExpression) | I_1182828628 = I_1182828628 + 1;
+[AddIfOne] candidate 7 | function=cubed | role=BLOCK_ITEM[4] | path=cubed.body.block[3].loop.body.block[4] | kind=ExpressionStatement(expr=ProcedureInvocation) | CubedLoop1InvariantAssert_1122962300( &I_1182828628, &Res_905560956, &N_41900...
+[AddIfOne] candidate 8 | function=complicated_function | role=BLOCK_ITEM[1] | path=complicated_function.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | (*A_1099832534).A_2126060437 = 10;
+[ADD_IF_ONE_SITE] application 1: selected 7 / 9
+[AddIfOne] SELECTED INDEX = 7
+[AddIfOne] SELECTED | function=cubed | role=BLOCK_ITEM[4] | path=cubed.body.block[3].loop.body.block[4] | kind=ExpressionStatement(expr=ProcedureInvocation) | CubedLoop1InvariantAssert_1122962300( &I_1182828628, &Res_905560956, &N_41900...
+[AddIfOne] WRAP class=Eval | ExpressionStatement(expr=ProcedureInvocation) | CubedLoop1InvariantAssert_1122962300( &I_1182828628, &Res_905560956, &N_41900...
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

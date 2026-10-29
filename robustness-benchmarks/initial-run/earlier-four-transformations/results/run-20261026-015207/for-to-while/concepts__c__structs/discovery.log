@@ -1,0 +1,19 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: robustnessForLoopToWhileLoop
+[INFO] Robustness repeat: 1
+[ForToWhile] candidate count = 1
+[ForToWhile] candidate 0 | function=avr_x_pol | path=avr_x_pol.body.scope.block[1].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[FOR_TO_WHILE_SITE] application 1: selected 0 / 1
+[ForToWhile] SELECTED INDEX = 0
+[ForToWhile] SELECTED | function=avr_x_pol | path=avr_x_pol.body.scope.block[1].scope | kind=ForLoop(init=Block(items=1), cond=AmbiguousLess, update=ExpressionStatement(expr=PostAssignExpression), body=Scope(locals=0, items=1))
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

@@ -1,0 +1,22 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 06:30:23)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier site-2.c:26-:26: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x0[i], write));' contains no triggers
+[WARN] The quantifier site-2.c:29-:29: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x1[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-2.c:32-:32: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x2[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-2.c:26-:26: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x0[i], write));' contains no triggers
+[WARN] The quantifier site-2.c:29-:29: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x1[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-2.c:32-:32: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x2[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-2.c:33-:33: 'ensures (\forall int i; 0 <= i && i < n ==> x0[i] == x1[i] + x2[i]);' contains no triggers
+[WARN] The quantifier site-2.c:26-:26: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x0[i], write));' contains no triggers
+[WARN] The quantifier site-2.c:29-:29: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x1[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-2.c:32-:32: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x2[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-2.c:39-:39: '    loop_invariant (\forall int i; 0 <= i && i < j ==> x0[i] == x1[i] + x2[i]);' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 06:30:50, duration: 00:00:27)

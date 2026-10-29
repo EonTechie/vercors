@@ -1,0 +1,27 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 1
+[AddIfOne] candidate count = 8
+[AddIfOne] candidate 0 | function=foo | role=BLOCK_ITEM[1] | path=foo.body.block[0].block[0].block[1] | kind=AssignmentStatement | A_1648701502 = (int*) vercorsMallocNonNull(sizeof(int) * 4);
+[AddIfOne] candidate 1 | function=foo | role=BLOCK_ITEM[4] | path=foo.body.block[4] | kind=Block | { /*@ assert End_207802506 >= Start_2064603156; @*/ }
+[AddIfOne] candidate 2 | function=foo | role=BLOCK_ITEM[5] | path=foo.body.block[5] | kind=Block | { /*@ assert Start_2064603156 < End_207802506; @*/ }
+[AddIfOne] candidate 3 | function=foo | role=BLOCK_ITEM[6] | path=foo.body.block[6] | kind=LoopScope(init=Block, cond=AmbiguousLessEq, update=Block, body=Scope) | { /*@ loop_invariant Start_2064603156 <= P_1324295458; loop_invariant P_13242...
+[AddIfOne] candidate 4 | function=foo | role=LOOP_BODY | path=foo.body.block[6].loop.body | kind=CompoundStatement(locals=0, items=1) | { if (P_1324295458 == End_207802506) { break; } else { /*@ assert End_2078025...
+[AddIfOne] candidate 5 | function=foo | role=BLOCK_ITEM[0] | path=foo.body.block[6].loop.body.block[0] | kind=IfStatement(arms=2) | if (P_1324295458 == End_207802506) { break; } else { /*@ assert End_207802506...
+[AddIfOne] candidate 6 | function=foo | role=IF_ELSE[1] | path=foo.body.block[6].loop.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=1) | { /*@ assert End_207802506 > P_1324295458; @*/ }
+[AddIfOne] candidate 7 | function=foo | role=BLOCK_ITEM[0] | path=foo.body.block[6].loop.body.block[0].branch[1].block[0] | kind=Block | { /*@ assert End_207802506 > P_1324295458; @*/ }
+[ADD_IF_ONE_SITE] application 1: selected 3 / 8
+[AddIfOne] SELECTED INDEX = 3
+[AddIfOne] SELECTED | function=foo | role=BLOCK_ITEM[6] | path=foo.body.block[6] | kind=LoopScope(init=Block, cond=AmbiguousLessEq, update=Block, body=Scope) | { /*@ loop_invariant Start_2064603156 <= P_1324295458; loop_invariant P_13242...
+[AddIfOne] WRAP class=Scope | LoopScope(init=Block, cond=AmbiguousLessEq, update=Block, body=Scope) | { /*@ loop_invariant Start_2064603156 <= P_1324295458; loop_invariant P_13242...
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

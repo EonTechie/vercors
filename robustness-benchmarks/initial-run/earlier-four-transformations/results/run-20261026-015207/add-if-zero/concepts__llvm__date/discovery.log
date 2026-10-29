@@ -1,0 +1,23 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 4
+[AddIfZero] candidate 0 | function=is_later | role=BLOCK_ITEM[0] | path=is_later.body.block[0] | kind=IfStatement(arms=2) | if (Y1_1747367695 != Y2_61138212) { return Y1_1747367695 > Y2_61138212; } els...
+[AddIfZero] candidate 1 | function=is_later | role=IF_ELSE[1] | path=is_later.body.block[0].branch[1] | kind=IfStatement(arms=2) | if (M1_1308088814 != M2_1583850640) { return M1_1308088814 > M2_1583850640; }...
+[AddIfZero] candidate 2 | function=test | role=BLOCK_ITEM[0] | path=test.body.block[0] | kind=ExpressionStatement(expr=ProcedureInvocation) | IsLater_1388030234(2023, 3, 7, 2020, 1, 1);
+[AddIfZero] candidate 3 | function=test | role=BLOCK_ITEM[1] | path=test.body.block[1] | kind=ExpressionStatement(expr=ProcedureInvocation) | IsLater_1388030234(1, 1, 2023, 15, 3, 2023);
+[ADD_IF_ZERO_SITE] application 1: selected 0 / 4
+[AddIfZero] SELECTED INDEX = 0
+[AddIfZero] SELECTED | function=is_later | role=BLOCK_ITEM[0] | path=is_later.body.block[0] | kind=IfStatement(arms=2) | if (Y1_1747367695 != Y2_61138212) { return Y1_1747367695 > Y2_61138212; } els...
+[AddIfZero] WRAP class=Branch | IfStatement(arms=2) | if (Y1_1747367695 != Y2_61138212) { return Y1_1747367695 > Y2_61138212; } els...
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

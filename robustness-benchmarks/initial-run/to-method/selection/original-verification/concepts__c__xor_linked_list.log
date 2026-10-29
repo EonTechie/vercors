@@ -1,0 +1,26 @@
+[INFO] Start: VerCors (at 01:33:16)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-9077968236476724382.i
+--------------------------------------
+   94                      (\forall* int i = 0 .. length+2; 0 <= {:nodes[i]->link:} && {:nodes[i]->link:} <= 18446744073709551615);
+   95  */
+                                                                                                  [------------------------------------------
+   96  /*@ inline resource valid_link(seq<struct Node*> nodes, int i, int j, int link) = (link == ((uintptr_t)nodes[i] ^  (uintptr_t)nodes[j])); */
+                                                                                                   ------------------------------------------]
+   97  
+   98
+--------------------------------------
+At xor_linked_list.c
+--------------------------------------
+   34                      (\forall* int i = 0 .. length+2; 0 <= {:nodes[i]->link:} && {:nodes[i]->link:} <= 18446744073709551615);
+   35  */
+      [----------------------------------------------------------------------------------------------------------------------------------------------
+   36  /*@ inline resource valid_link(seq<struct Node*> nodes, int i, int j, int link) = (link == ((uintptr_t)nodes[i] ^  (uintptr_t)nodes[j])); */
+       ----------------------------------------------------------------------------------------------------------------------------------------------]
+   37  
+   38
+--------------------------------------
+Could not determine the size of the bit vector for this bitwise operation
+======================================
+[INFO] Done: VerCors (at 01:33:32, duration: 00:00:16)

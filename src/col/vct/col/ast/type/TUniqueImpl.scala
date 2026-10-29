@@ -8,7 +8,11 @@ import vct.col.typerules.TypeSize
 trait TUniqueImpl[G] extends TUniqueOps[G] {
   this: TUnique[G] =>
   override def layout(implicit ctx: Ctx): Doc =
-    Text("unique<") <> unique.toString <> ">" <+> inner
+    ctx.syntax match {
+      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
+        Text("/*@ unique<") <> unique.toString <> "> @*/" <+> inner
+      case _ => Text("unique<") <> unique.toString <> ">" <+> inner
+    }
 
   override def bits: TypeSize = inner.bits
 }

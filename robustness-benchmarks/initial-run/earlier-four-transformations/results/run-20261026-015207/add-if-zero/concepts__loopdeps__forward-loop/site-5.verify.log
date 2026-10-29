@@ -1,0 +1,27 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 07:27:31)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier site-5.c:17-:17: 'requires (\forall int tid; 0 <= tid && tid < len ==> b[tid] == tid);' contains no triggers
+[WARN] The quantifier site-5.c:21-:21: 'ensures (\forall int i; 0 <= i && i < len ==> a[i] == i + 1);' contains no triggers
+[WARN] The quantifier site-5.c:22-:22: 'ensures (\forall int i; 0 <= i && i < len ==> b[i] == i);' contains no triggers
+[WARN] The quantifier site-5.c:23-:23: 'ensures (\forall int i; 0 < i && i < len ==> c[i] == i + 2);' contains no triggers
+[WARN] The quantifier site-5.c:27-:27: '    requires Perm(a[i], write);' contains no triggers
+[WARN] The quantifier site-5.c:28-:28: '    requires Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-5.c:29-:29: '    requires Perm(c[i], write);' contains no triggers
+[WARN] The quantifier site-5.c:30-:30: '    requires b[i] == i;' contains no triggers
+[WARN] The quantifier site-5.c:31-:31: '    ensures Perm(a[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-5.c:32-:32: '    ensures Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-5.c:33-:33: '    ensures Perm(c[i], write);' contains no triggers
+[WARN] The quantifier site-5.c:34-:34: '    ensures i > 0 ==> Perm(a[i - 1], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-5.c:35-:35: '    ensures i == len - 1 ==> Perm(a[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-5.c:36-:36: '    ensures a[i] == i + 1;' contains no triggers
+[WARN] The quantifier site-5.c:37-:37: '    ensures b[i] == i;' contains no triggers
+[WARN] The quantifier site-5.c:38-:38: '    ensures i > 0 ==> c[i] == i + 2;' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 07:28:00, duration: 00:00:29)

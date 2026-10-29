@@ -1,0 +1,9 @@
+[INFO] Start: VerCors (at 01:40:12)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+Preprocessing file test-other.c failed with exit code 1:
+clang: warning: argument unused during compilation: '-nocudainc' [-Wunused-command-line-argument]
+<stdin>:7:10: fatal error: 'unistd.h' file not found
+    7 | #include <unistd.h>
+      |          ^~~~~~~~~~
+1 error generated.
+[INFO] Done: VerCors (at 01:41:00, duration: 00:00:48)

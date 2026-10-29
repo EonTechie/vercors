@@ -1,0 +1,160 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 53
+[AddIfZero] candidate 0 | function=main | role=BLOCK_ITEM[0] | path=main.body.block[0] | kind=ExpressionStatement(expr=ProcedureInvocation) | Test_256516555(2.0);
+[AddIfZero] candidate 1 | function=main | role=BLOCK_ITEM[1] | path=main.body.block[1] | kind=ExpressionStatement(expr=ProcedureInvocation) | Test2_1667189729(1);
+[AddIfZero] candidate 2 | function=main | role=BLOCK_ITEM[2] | path=main.body.block[2] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(1.0 == Test3_1164785940(3.0, 2.0));
+[AddIfZero] candidate 3 | function=main | role=BLOCK_ITEM[3] | path=main.body.block[3] | kind=Block | { int A_528592928; int B_1456035721; int C_1709175435; int D_31758833; int E_...
+[AddIfZero] candidate 4 | function=main | role=BLOCK_ITEM[4] | path=main.body.block[4] | kind=Block | { float W_253706677; float X_357474679; float Y_817928510; float Z_316564138; }
+[AddIfZero] candidate 5 | function=main | role=BLOCK_ITEM[6] | path=main.body.block[6] | kind=ExpressionStatement(expr=PreAssignExpression) | A_528592928 = 1;
+[AddIfZero] candidate 6 | function=main | role=BLOCK_ITEM[7] | path=main.body.block[7] | kind=ExpressionStatement(expr=PreAssignExpression) | X_357474679 = 1.0;
+[AddIfZero] candidate 7 | function=main | role=BLOCK_ITEM[8] | path=main.body.block[8] | kind=ExpressionStatement(expr=PreAssignExpression) | Y_817928510 = 1.1;
+[AddIfZero] candidate 8 | function=main | role=BLOCK_ITEM[9] | path=main.body.block[9] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(1 != 0);
+[AddIfZero] candidate 9 | function=main | role=BLOCK_ITEM[10] | path=main.body.block[10] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(Y_817928510 >= X_357474679);
+[AddIfZero] candidate 10 | function=main | role=BLOCK_ITEM[11] | path=main.body.block[11] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(Y_817928510 > X_357474679);
+[AddIfZero] candidate 11 | function=main | role=BLOCK_ITEM[12] | path=main.body.block[12] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(X_357474679 < Y_817928510);
+[AddIfZero] candidate 12 | function=main | role=BLOCK_ITEM[13] | path=main.body.block[13] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(X_357474679 <= Y_817928510);
+[AddIfZero] candidate 13 | function=main | role=BLOCK_ITEM[14] | path=main.body.block[14] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(X_357474679 != Y_817928510);
+[AddIfZero] candidate 14 | function=main | role=BLOCK_ITEM[15] | path=main.body.block[15] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(!(X_357474679 == Y_817928510));
+[AddIfZero] candidate 15 | function=main | role=BLOCK_ITEM[16] | path=main.body.block[16] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(1.5 != 1);
+[AddIfZero] candidate 16 | function=main | role=BLOCK_ITEM[17] | path=main.body.block[17] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(Y_817928510 >= A_528592928);
+[AddIfZero] candidate 17 | function=main | role=BLOCK_ITEM[18] | path=main.body.block[18] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(Y_817928510 > A_528592928);
+[AddIfZero] candidate 18 | function=main | role=BLOCK_ITEM[19] | path=main.body.block[19] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(A_528592928 < Y_817928510);
+[AddIfZero] candidate 19 | function=main | role=BLOCK_ITEM[20] | path=main.body.block[20] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(A_528592928 <= Y_817928510);
+[AddIfZero] candidate 20 | function=main | role=BLOCK_ITEM[21] | path=main.body.block[21] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(A_528592928 != Y_817928510);
+[AddIfZero] candidate 21 | function=main | role=BLOCK_ITEM[22] | path=main.body.block[22] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(!(A_528592928 == Y_817928510));
+[AddIfZero] candidate 22 | function=main | role=BLOCK_ITEM[23] | path=main.body.block[23] | kind=ExpressionStatement(expr=PreAssignExpression) | X_357474679 = 3.0;
+[AddIfZero] candidate 23 | function=main | role=BLOCK_ITEM[25] | path=main.body.block[25] | kind=ExpressionStatement(expr=PreAssignExpression) | A_528592928 = X_357474679 / Bb_1731824557;
+[AddIfZero] candidate 24 | function=main | role=BLOCK_ITEM[26] | path=main.body.block[26] | kind=ExpressionStatement(expr=PreAssignExpression) | A_528592928 = 3 / 2.0;
+[AddIfZero] candidate 25 | function=main | role=BLOCK_ITEM[27] | path=main.body.block[27] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(A_528592928 == 1);
+[AddIfZero] candidate 26 | function=main | role=BLOCK_ITEM[28] | path=main.body.block[28] | kind=ExpressionStatement(expr=PreAssignExpression) | A_528592928 = 3.0 / 2;
+[AddIfZero] candidate 27 | function=main | role=BLOCK_ITEM[29] | path=main.body.block[29] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(A_528592928 == 1);
+[AddIfZero] candidate 28 | function=main | role=BLOCK_ITEM[30] | path=main.body.block[30] | kind=ExpressionStatement(expr=PreAssignExpression) | A_528592928 = 3.0 / 2.0;
+[AddIfZero] candidate 29 | function=main | role=BLOCK_ITEM[31] | path=main.body.block[31] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(A_528592928 == 1);
+[AddIfZero] candidate 30 | function=main | role=BLOCK_ITEM[32] | path=main.body.block[32] | kind=ExpressionStatement(expr=PreAssignExpression) | X_357474679 = 1;
+[AddIfZero] candidate 31 | function=main | role=BLOCK_ITEM[33] | path=main.body.block[33] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(X_357474679 == 3 / 2);
+[AddIfZero] candidate 32 | function=main | role=BLOCK_ITEM[34] | path=main.body.block[34] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(1.5 != 3 / 2);
+[AddIfZero] candidate 33 | function=main | role=BLOCK_ITEM[35] | path=main.body.block[35] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(1.5 == 3.0 / 2.0);
+[AddIfZero] candidate 34 | function=main | role=BLOCK_ITEM[36] | path=main.body.block[36] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(1.5 == 3.0 / 2.0);
+[AddIfZero] candidate 35 | function=main | role=BLOCK_ITEM[37] | path=main.body.block[37] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(1 != 3.0 / 2.0);
+[AddIfZero] candidate 36 | function=main | role=BLOCK_ITEM[38] | path=main.body.block[38] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(1 != 3.0 / 2);
+[AddIfZero] candidate 37 | function=main | role=BLOCK_ITEM[39] | path=main.body.block[39] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(1 != 3 / 2.0);
+[AddIfZero] candidate 38 | function=main | role=BLOCK_ITEM[40] | path=main.body.block[40] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(3 != 1.9 * 2);
+[AddIfZero] candidate 39 | function=main | role=BLOCK_ITEM[41] | path=main.body.block[41] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(3.8 == 1.9 * 2);
+[AddIfZero] candidate 40 | function=main | role=BLOCK_ITEM[42] | path=main.body.block[42] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(3 != 1.9 + 2);
+[AddIfZero] candidate 41 | function=main | role=BLOCK_ITEM[43] | path=main.body.block[43] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(3.9 == 1.9 + 2);
+[AddIfZero] candidate 42 | function=main | role=BLOCK_ITEM[44] | path=main.body.block[44] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(0 != 2.9 - 2);
+[AddIfZero] candidate 43 | function=main | role=BLOCK_ITEM[45] | path=main.body.block[45] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(EstimateEq_648021642(0.9, 1.9 - 1));
+[AddIfZero] candidate 44 | function=main | role=BLOCK_ITEM[46] | path=main.body.block[46] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(1 == 3 % 2);
+[AddIfZero] candidate 45 | function=main | role=BLOCK_ITEM[47] | path=main.body.block[47] | kind=Block | { int Sum_119331620; Sum_119331620 = 22; int Count_866237328; Count_866237328...
+[AddIfZero] candidate 46 | function=main | role=BLOCK_ITEM[49] | path=main.body.block[49] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(Mean_1376474236 == 4.4);
+[AddIfZero] candidate 47 | function=main | role=BLOCK_ITEM[50] | path=main.body.block[50] | kind=CompoundStatement(locals=0, items=9) | { int A_1075168859; int B_1874382759; B_1874382759 = 2; float X_373844659; X_...
+[AddIfZero] candidate 48 | function=main | role=BLOCK_ITEM[0] | path=main.body.block[50].block[0] | kind=Block | { int A_1075168859; int B_1874382759; B_1874382759 = 2; }
+[AddIfZero] candidate 49 | function=main | role=BLOCK_ITEM[5] | path=main.body.block[50].block[5] | kind=ExpressionStatement(expr=PreAssignExpression) | A_1075168859 = Z_847238601 / B_1874382759 + B_1874382759 * X_373844659 - Y_45...
+[AddIfZero] candidate 50 | function=main | role=BLOCK_ITEM[6] | path=main.body.block[50].block[6] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(A_1075168859 == 33);
+[AddIfZero] candidate 51 | function=main | role=BLOCK_ITEM[7] | path=main.body.block[50].block[7] | kind=ExpressionStatement(expr=PreAssignExpression) | D_1555495619 = Z_847238601 / B_1874382759 + B_1874382759 * X_373844659 - Y_45...
+[AddIfZero] candidate 52 | function=main | role=BLOCK_ITEM[8] | path=main.body.block[50].block[8] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_407362148(D_1555495619 == 33.5);
+[ADD_IF_ZERO_SITE] application 1: selected 45 / 53
+[AddIfZero] SELECTED INDEX = 45
+[AddIfZero] SELECTED | function=main | role=BLOCK_ITEM[47] | path=main.body.block[47] | kind=Block | { int Sum_119331620; Sum_119331620 = 22; int Count_866237328; Count_866237328...
+[AddIfZero] WRAP class=Block | Block | { int Sum_119331620; Sum_119331620 = 22; int Count_866237328; Count_866237328...
+vct.main.stages.Transformation$TransformationCheckError: The addIfZero rewrite caused the AST to no longer typecheck:
+======================================
+89     }
+   90     float64 mean;
+                         [---
+   91     mean = (float64)sum / count;
+                          ---]
+   92     assert1(mean == 4.4);
+   93     int a1;
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+83         assert false;
+   84     } else {
+             [-------
+   85         int sum;
+              -------]
+   86         sum = 22;
+   87         int count;
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+======================================
+89     }
+   90     float64 mean;
+                               [-----
+   91     mean = (float64)sum / count;
+                                -----]
+   92     assert1(mean == 4.4);
+   93     int a1;
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+85         int sum;
+   86         sum = 22;
+             [---------
+   87         int count;
+              ---------]
+   88         count = 5;
+   89     }
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+	at vct.main.stages.Transformation.$anonfun$run$4(Transformation.scala:303)
+	at vct.main.stages.Transformation.$anonfun$run$4$adapted(Transformation.scala:278)
+	at hre.progress.Progress$.$anonfun$foreach$2(Progress.scala:25)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at hre.progress.task.AbstractTask.frame(AbstractTask.scala:166)
+	at hre.progress.Progress$.$anonfun$foreach$1(Progress.scala:25)
+	at hre.progress.Progress$.$anonfun$foreach$1$adapted(Progress.scala:24)
+	at scala.collection.IterableOnceOps.foreach(IterableOnce.scala:576)
+	at scala.collection.IterableOnceOps.foreach$(IterableOnce.scala:574)
+	at scala.collection.AbstractIterator.foreach(Iterator.scala:1300)
+	at hre.progress.Progress$.foreach(Progress.scala:24)
+	at vct.main.stages.Transformation.$anonfun$run$2(Transformation.scala:278)
+	at hre.debug.TimeTravel$.safelyRepeatable(TimeTravel.scala:32)
+	at vct.main.stages.Transformation.run(Transformation.scala:272)
+	at vct.main.stages.Transformation.run(Transformation.scala:245)
+	at hre.stages.Stages.$anonfun$run$3(Stages.scala:104)
+	at hre.stages.Stages.$anonfun$run$3$adapted(Stages.scala:101)
+	at scala.collection.IterableOnceOps.foreach(IterableOnce.scala:576)
+	at scala.collection.IterableOnceOps.foreach$(IterableOnce.scala:574)
+	at scala.collection.AbstractIterable.foreach(Iterable.scala:933)
+	at scala.collection.IterableOps$WithFilter.foreach(Iterable.scala:903)
+	at hre.stages.Stages.$anonfun$run$1(Stages.scala:101)
+	at hre.progress.task.NameSequenceTask.scope(NameSequenceTask.scala:16)
+	at hre.progress.Progress$.stages(Progress.scala:47)
+	at hre.stages.Stages.run(Stages.scala:98)
+	at hre.stages.Stages.run$(Stages.scala:95)
+	at hre.stages.StagesPair.run(Stages.scala:145)
+	at vct.main.modes.Robustness$.runOptions(Robustness.scala:150)
+	at vct.main.Main$.runMode(Main.scala:109)
+	at vct.main.Main$.$anonfun$runOptions$3(Main.scala:101)
+	at scala.runtime.java8.JFunction0$mcI$sp.apply(JFunction0$mcI$sp.scala:17)
+	at hre.middleware.Middleware$.using(Middleware.scala:78)
+	at vct.main.Main$.$anonfun$runOptions$2(Main.scala:101)
+	at scala.runtime.java8.JFunction0$mcI$sp.apply(JFunction0$mcI$sp.scala:17)
+	at hre.io.Watch$.booleanWithWatch(Watch.scala:58)
+	at vct.main.Main$.$anonfun$runOptions$1(Main.scala:101)
+	at scala.runtime.java8.JFunction0$mcI$sp.apply(JFunction0$mcI$sp.scala:17)
+	at hre.middleware.Middleware$.using(Middleware.scala:78)
+	at vct.main.Main$.runOptions(Main.scala:96)
+	at vct.main.Main$.main(Main.scala:51)
+	at vct.main.Main.main(Main.scala)
+[ERROR] !*!*!*!*!*!*!*!*!*!*!*!
+[ERROR] ! VerCors has crashed !
+[ERROR] !*!*!*!*!*!*!*!*!*!*!*!
+[ERROR] Please report this as a bug here:
+[ERROR] https://github.com/utwente-fmt/vercors/issues/new?labels=A-Bug&title=Crash+report%3A+The+addIfZero+rewrite+caused+the+AST+to+no+longer+typecheck%3A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A&body=%23+Crash+Message%0A%60%60%60%0AThe+addIfZero+rewrite+caused+the+AST+to+no+longer+typecheck%3A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A89+++++%7D%0A+++90+++++float64+mean%3B%0A+++++++++++++++++++++++++%5B---%0A+++91+++++mean+%3D+%28float64%29sum+%2F+count%3B%0A++++++++++++++++++++++++++---%5D%0A+++92+++++assert1%28mean+%3D%3D+4.4%29%3B%0A+++93+++++int+a1%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A83+++++++++assert+false%3B%0A+++84+++++%7D+else+%7B%0A+++++++++++++%5B-------%0A+++85+++++++++int+sum%3B%0A++++++++++++++-------%5D%0A+++86+++++++++sum+%3D+22%3B%0A+++87+++++++++int+count%3B%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A89+++++%7D%0A+++90+++++float64+mean%3B%0A+++++++++++++++++++++++++++++++%5B-----%0A+++91+++++mean+%3D+%28float64%29sum+%2F+count%3B%0A++++++++++++++++++++++++++++++++-----%5D%0A+++92+++++assert1%28mean+%3D%3D+4.4%29%3B%0A+++93+++++int+a1%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A85+++++++++int+sum%3B%0A+++86+++++++++sum+%3D+22%3B%0A+++++++++++++%5B---------%0A+++87+++++++++int+count%3B%0A++++++++++++++---------%5D%0A+++88+++++++++count+%3D+5%3B%0A+++89+++++%7D%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A++at+vct.main.stages.Transformation.%24anonfun%24run%244%28Transformation.scala%3A303%29%0A++at+vct.main.stages.Transformation.%24anonfun%24run%244%24adapted%28Transformation.scala%3A278%29%0A++at+hre.progress.Progress%24.%24anonfun%24foreach%242%28Progress.scala%3A25%29%0A++at+scala.runtime.java8.JFunction0%24mcV%24sp.apply%28JFunction0%24mcV%24sp.scala%3A18%29%0A++at+hre.progress.task.AbstractTask.frame%28AbstractTask.scala%3A166%29%0A++at+hre.progress.Progress%24.%24anonfun%24foreach%241%28Progress.scala%3A25%29%0A++at+hre.progress.Progress%24.%24anonfun%24foreach%241%24adapted%28Progress.scala%3A24%29%0A++at+scala.collection.IterableOnceOps.foreach%28IterableOnce.scala%3A576%29%0A++at+scala.collection.IterableOnceOps.foreach%24%28IterableOnce.scala%3A574%29%0A++at+scala.collection.AbstractIterator.foreach%28Iterator.scala%3A1300%29%0A++at+hre.progress.Progress%24.foreach%28Progress.scala%3A24%29%0A++at+vct.main.stages.Transformation.%24anonfun%24run%242%28Transformation.scala%3A278%29%0A++...%0A++at+vct.main.Main%24.main%28Main.scala%3A51%29%0A++at+vct.main.Main.main%28Main.scala%29%0A%60%60%60%0A%0A%23+Version+Information%0A*+VerCors+version+%609999.9.9-SNAPSHOT%60%0A*+At+commit+3f9ae264fa53403e5edae579f993f1a892d0128c+from+branch+%60robustness-post-resolution%60+%28changes%3Dtrue%29%0A%0A%23+Arguments%0A%60--robustness%60+%60%2Fhome%2Ffilizyildizfi%2FVC%2Fvercors%2Fbroader-benchmark%2Fconcepts__c__floats.c%60%0A%0A%23+File+Inputs%0A%3Cdetails%3E%0A%3Csummary%3Econcepts__c__floats.c%3C%2Fsummary%3E%0A%0A%60%60%60c%0A%23include+%3Cassert.h%3E%0A%23include+%3Cstdbool.h%3E%0A%23include+%3Cstdio.h%3E%0A%0Aint+test%28int+x%29%7B%0A++++return+x%3B%0A%7D%0A%0Afloat+test2%28float+x%29%7B%0A++++return+x%3B%0A%7D%0A%0A%2F%2F%40+requires+y+%21%3D+0%3B%0A%2F%2F%40+ensures+%5Cresult+%3D%3D+x+%25+y%3B%0Aint+test3%28int+x%2C+int+y%29%7B%0A++++return+x+%25+y%3B%0A%7D%0A%0A%2F%2F%40+ensures+%5Cresult+%3D%3D+%28x%2B0.0000001+%3E%3D+y+%26%26+x-0.0000001+%3C%3D+y%29%3B%0A%2F*%40+pure+%40*%2F+bool+estimate_eq%28double+x%2C+double+y%29%7B%0A++++return+x%2B0.0000001+%3E%3D+y+%26%26+x-0.0000001+%3C%3D+y%3B%0A%7D%0A%0Aint+main%28%29%7B%0A++++test%282.0%29%3B%0A++++test2%281%29%3B%0A++++assert%281.0+%3D%3D+test3%283.0%2C+2.0%29%29%3B%0A%0A++++int+a%2Cb%2Cc%2Cd%2Ce%3B%0A++++float+w%2Cx%2Cy%2Cz%3B%0A++++int+f+%3D+5*2%3B%0A++++a+%3D+1%3B%0A++++x+%3D+1.0%3B%0A++++y+%3D+1.1%3B%0A++++assert%281%21%3D0%29%3B%0A++++assert%28y%3E%3Dx%29%3B%0A++++assert%28y%3Ex%29%3B%0A++++assert%28x%3Cy%29%3B%0A++++assert%28x%3C%3Dy%29%3B%0A++++assert%28x%21%3Dy%29%3B%0A++++assert%28%21%28x%3D%3Dy%29%29%3B%0A%0A++++assert%281.5+%21%3D+1%29%3B%0A%0A++++assert%28y%3E%3Da%29%3B%0A++++assert%28y%3Ea%29%3B%0A++++assert%28a%3Cy%29%3B%0A++++assert%28a%3C%3Dy%29%3B%0A++++assert%28a%21%3Dy%29%3B%0A++++assert%28%21%28a%3D%3Dy%29%29%3B%0A%0A++++x+%3D+3.0%3B%0A++++int+bb+%3D+2.0%3B%0A++++a+%3D+x%2Fbb%3B%0A%0A++++a+%3D+3%2F2.0%3B%0A++++assert%28a%3D%3D1%29%3B%0A++++a+%3D+3.0%2F2%3B%0A++++assert%28a%3D%3D1%29%3B%0A++++a+%3D+3.0%2F2.0%3B%0A++++assert%28a%3D%3D1%29%3B%0A++++x+%3D+1%3B%0A++++assert%28x+%3D%3D+3%2F2%29%3B%0A++++assert%281.5+%21%3D+3%2F2%29%3B%0A++++assert%281.5+%3D%3D+3.0%2F2.0%29%3B%0A++++assert%281.5+%3D%3D+3.0%2F2.0%29%3B%0A++++assert%281+%21%3D+3.0%2F2.0%29%3B%0A++++assert%281+%21%3D+3.0%2F2%29%3B%0A++++assert%281+%21%3D+3%2F2.0%29%3B%0A%0A++++assert%283+%21%3D+%281.9*2%29%29%3B%0A++++assert%283.8+%3D%3D+1.9*2%29%3B%0A%0A++++assert%283+%21%3D+1.9%2B2%29%3B%0A++++assert%283.9+%3D%3D+1.9%2B2%29%3B%0A++++assert%280+%21%3D+2.9-2%29%3B%0A++++assert%28estimate_eq%280.9%2C+1.9-1%29%29%3B%0A%0A++++assert%281+%3D%3D+3+%25+2%29%3B%0A%0A++++int+sum+%3D+22%2C+count+%3D+5%3B%0A++++double+mean+%3D+%28double%29sum+%2F+count%3B%0A++++assert%28mean+%3D%3D+4.4%29%3B%0A++++%7B%0A++++++++int+a%2Cb+%3D+2%3B%0A++++++++float+x+%3D+9.5%3B%0A++++++++double+y+%3D+10.5%3B%0A++++++++long+int+z+%3D+50%3B%0A++++++++double+d%3B%0A++++++++a+%3D+z%2Fb%2Bb*x-y%3B%0A++++++++assert%28a+%3D%3D+33%29%3B%0A++++++++d+%3D+z%2Fb%2Bb*x-y%3B%0A++++++++assert%28d+%3D%3D+33.5%29%3B%0A++++%7D%0A%7D%0A%60%60%60%0A%3C%2Fdetails%3E%0A%0A%0A%23+Full+Log%0A%3Cdetails%3E%0A%0A%60%60%60%0A04%3A03%3A58.521+%5BINFO%5D+Robustness+mode+started%0A04%3A03%3A58.541+%5BINFO%5D+Robustness+mode%3A+sequential%0A04%3A03%3A58.543+%5BINFO%5D+Robustness+transforms%3A+addIfZero%0A04%3A03%3A58.544+%5BINFO%5D+Robustness+repeat%3A+1%0A04%3A04%3A03.493+%5BERROR%5D+vct.main.stages.Transformation%24TransformationCheckError%3A+The+addIfZero+rewrite+caused+the+AST+to+no+longer+typecheck%3A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A89+++++%7D%0A+++90+++++float64+mean%3B%0A+++++++++++++++++++++++++%5B---%0A+++91+++++mean+%3D+%28float64%29sum+%2F+count%3B%0A++++++++++++++++++++++++++---%5D%0A+++92+++++assert1%28mean+%3D%3D+4.4%29%3B%0A+++93+++++int+a1%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A83+++++++++assert+false%3B%0A+++84+++++%7D+else+%7B%0A+++++++++++++%5B-------%0A+++85+++++++++int+sum%3B%0A++++++++++++++-------%5D%0A+++86+++++++++sum+%3D+22%3B%0A+++87+++++++++int+count%3B%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A89+++++%7D%0A+++90+++++float64+mean%3B%0A+++++++++++++++++++++++++++++++%5B-----%0A+++91+++++mean+%3D+%28float64%29sum+%2F+count%3B%0A++++++++++++++++++++++++++++++++-----%5D%0A+++92+++++assert1%28mean+%3D%3D+4.4%29%3B%0A+++93+++++int+a1%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A

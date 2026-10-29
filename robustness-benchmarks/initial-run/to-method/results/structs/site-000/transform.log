@@ -1,0 +1,12 @@
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: robustnessToMethod
+[INFO] Robustness repeat: 1
+[ToMethod] candidate count = 1
+[ToMethod] candidate 0 | function=avr_x_pol | path=avr_x_pol.body.block[1].loop.body | kind=Compound(locals=0, items=1)
+[TO_METHOD_SITE] application 1: selected 0 / 1
+[ToMethod] SELECTED INDEX = 0
+[ToMethod] SELECTED | function=avr_x_pol | path=avr_x_pol.body.block[1].loop.body | kind=Compound(locals=0, items=1)
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

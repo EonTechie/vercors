@@ -17,7 +17,7 @@ CATEGORY = [
 	("vercors/bin", "misc"),
 	("vercors/util", "misc"),
 	("vercors/examples", "misc"),
-	("vercors/res/universal/README.md", "misc"),
+	("vercors/res/universal/vercors-installation.md", "misc"),
 
 	("vercors/res/hre", "config"),
 	("vercors/res/universal/res/systemc", "config"),

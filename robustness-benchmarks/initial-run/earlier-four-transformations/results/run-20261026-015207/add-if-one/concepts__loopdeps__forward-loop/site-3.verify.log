@@ -1,0 +1,33 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 11:48:37)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-10186019943231265635.i
+--------------------------------------
+   48          a[i] = b[i] + 1;
+   49          if (1) {
+                      [-------------------------------------------------------------------
+   50              /*@ send s, 1: 0 <= i ** i < len ** Perm(a[i], 1 \ 2) ** a[i] == i + 1; @*/
+                       -------------------------------------------------------------------]
+   51          } else {
+   52              /*@ assert false; @*/
+--------------------------------------
+At site-3.c
+--------------------------------------
+   41          a[i] = b[i] + 1;
+   42          if (1) {
+      [-----------------------------------------------------------------------------------------
+   43              /*@ send s, 1: 0 <= i ** i < len ** Perm(a[i], 1 \ 2) ** a[i] == i + 1; @*/
+       -----------------------------------------------------------------------------------------]
+   44          } else {
+   45              /*@ assert false; @*/
+--------------------------------------
+Send and recv may only occur within a parallel block, or loop with an iteration contract, and must be unconditionally executed.
+======================================
+[INFO] Done: VerCors (at 11:48:50, duration: 00:00:12)

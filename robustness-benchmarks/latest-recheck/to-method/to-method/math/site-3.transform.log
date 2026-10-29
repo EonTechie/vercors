@@ -1,0 +1,46 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: robustnessToMethod
+[INFO] Robustness repeat: 1
+[ToMethod] candidate count = 28
+[ToMethod] candidate 0 | function=main | path=main.body.block[0] | kind=Compound(items=1)
+[ToMethod] candidate 1 | function=main | path=main.body.block[1] | kind=Compound(items=1)
+[ToMethod] candidate 2 | function=main | path=main.body.block[2] | kind=Compound(items=1)
+[ToMethod] candidate 3 | function=main | path=main.body.block[3] | kind=Compound(items=1)
+[ToMethod] candidate 4 | function=main | path=main.body.block[4] | kind=Compound(items=1)
+[ToMethod] candidate 5 | function=main | path=main.body.block[5] | kind=Compound(items=1)
+[ToMethod] candidate 6 | function=main | path=main.body.block[6] | kind=Compound(items=1)
+[ToMethod] candidate 7 | function=main | path=main.body.block[7] | kind=Compound(items=1)
+[ToMethod] candidate 8 | function=main | path=main.body.block[8] | kind=Compound(items=1)
+[ToMethod] candidate 9 | function=main | path=main.body.block[9] | kind=Compound(items=1)
+[ToMethod] candidate 10 | function=main | path=main.body.block[10] | kind=Compound(items=1)
+[ToMethod] candidate 11 | function=main | path=main.body.block[11] | kind=Compound(items=1)
+[ToMethod] candidate 12 | function=main | path=main.body.block[12] | kind=Compound(items=1)
+[ToMethod] candidate 13 | function=main | path=main.body.block[13] | kind=Compound(items=1)
+[ToMethod] candidate 14 | function=main | path=main.body.block[14] | kind=Compound(items=1)
+[ToMethod] candidate 15 | function=main | path=main.body.block[15] | kind=Compound(items=1)
+[ToMethod] candidate 16 | function=main | path=main.body.block[16] | kind=Compound(items=1)
+[ToMethod] candidate 17 | function=main | path=main.body.block[17] | kind=Compound(items=1)
+[ToMethod] candidate 18 | function=main | path=main.body.block[18] | kind=Compound(items=1)
+[ToMethod] candidate 19 | function=main | path=main.body.block[19] | kind=Compound(items=1)
+[ToMethod] candidate 20 | function=main | path=main.body.block[20] | kind=Compound(items=1)
+[ToMethod] candidate 21 | function=main | path=main.body.block[21] | kind=Compound(items=1)
+[ToMethod] candidate 22 | function=main | path=main.body.block[22] | kind=Compound(items=1)
+[ToMethod] candidate 23 | function=main | path=main.body.block[23] | kind=Compound(items=1)
+[ToMethod] candidate 24 | function=main | path=main.body.block[24] | kind=Compound(items=1)
+[ToMethod] candidate 25 | function=main | path=main.body.block[25] | kind=Compound(items=1)
+[ToMethod] candidate 26 | function=main | path=main.body.block[26] | kind=Compound(items=1)
+[ToMethod] candidate 27 | function=main | path=main.body.block[27] | kind=Compound(items=1)
+[TO_METHOD_SITE] application 1: selected 3 / 28
+[ToMethod] SELECTED INDEX = 3
+[ToMethod] SELECTED | function=main | path=main.body.block[3] | kind=Compound(items=1)
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

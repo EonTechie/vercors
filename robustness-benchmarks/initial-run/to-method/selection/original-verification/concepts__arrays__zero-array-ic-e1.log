@@ -1,0 +1,8 @@
+[INFO] Start: VerCors (at 23:30:56)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier zero-array-ic-e1.c:8-:8: '  ensures  (\forall int k ; 0 <= k && k < len ; ar[k]==0 );' contains no triggers
+[WARN] The quantifier zero-array-ic-e1.c:15-:15: '        context Perm(ar[i],write);' contains no triggers
+[WARN] The quantifier zero-array-ic-e1.c:15-:15: '        context Perm(ar[i],write);' contains no triggers
+[WARN] The quantifier zero-array-ic-e1.c:16-:16: '        ensures ar[i]==0;' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 23:31:51, duration: 00:00:55)

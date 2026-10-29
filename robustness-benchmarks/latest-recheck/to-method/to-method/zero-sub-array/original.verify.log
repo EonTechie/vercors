@@ -1,0 +1,8 @@
+[INFO] Start: VerCors (at 15:58:15)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier zero-sub-array.c:9-:9: '  ensures (\forall int i; 0 <= i && i < M; matrix[i] == 0);' contains no triggers
+[WARN] The quantifier zero-sub-array.c:15-:15: '    context Perm(matrix[i], write);' contains no triggers
+[WARN] The quantifier zero-sub-array.c:15-:15: '    context Perm(matrix[i], write);' contains no triggers
+[WARN] The quantifier zero-sub-array.c:16-:16: '    ensures matrix[i] == 0;' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 15:59:22, duration: 00:01:06)

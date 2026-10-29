@@ -1,0 +1,28 @@
+[INFO] Start: VerCors (at 01:37:11)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-1083066193759858636.i
+--------------------------------------
+    9  // in front of a loop caused an incorrect encoding, is fixed.
+   10  // Transform with -mem2reg option
+          [-------
+   11  /*@ declare DEF_RESULT(int); @*/
+           -------]
+   12  
+   13  /*@ pure;
+--------------------------------------
+[1/2] Parsing failed: no viable alternative at input '/*@declare'
+--------------------------------------
+At vercors-interpreted-1083066193759858636.i
+--------------------------------------
+    9  // in front of a loop caused an incorrect encoding, is fixed.
+   10  // Transform with -mem2reg option
+                                   [---
+   11  /*@ declare DEF_RESULT(int); @*/
+                                    ---]
+   12  
+   13  /*@ pure;
+--------------------------------------
+[2/2] Parsing failed: mismatched input '@*/' expecting {'auto', 'char', 'const', 'double', 'enum', 'extern', 'float', 'inline', 'int', 'long', 'register', 'restrict', 'short', 'signed', 'static', 'struct', 'typedef', 'union', 'unsigned', 'void', 'volatile', '_Alignas', '_Atomic', '_Bool', '_Complex', '_Noreturn', '_Thread_local', '(', ')', '[', '*', '^', ',', BlockStartSpecImmediate, '__typeof__', '__inline__', '__stdcall', '__declspec', '__attribute__', NEVER, 'resource', 'process', 'frac', 'zfrac', 'bool', 'ref', 'rational', 'seq', 'set', 'vector', 'bag', 'pointer', 'map', 'option', 'either', 'tuple', 'type', 'any', 'nothing', 'string', 'pure', 'thread_local', 'bip_annotation', 'opaque', 'unique', 'unique_pointer_field', '**', '__opencl_kernel__', '__cuda_kernel__', '__vercors_global_memory__', '__vercors_local_memory__', '__opencl_vector_type__', Identifier, BlockStartSpec, LineStartSpec}
+======================================
+[INFO] Done: VerCors (at 01:38:02, duration: 00:00:50)

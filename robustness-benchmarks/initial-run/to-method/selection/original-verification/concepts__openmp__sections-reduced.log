@@ -1,0 +1,38 @@
+[INFO] Start: VerCors (at 01:39:43)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-3035358839275501967.i
+--------------------------------------
+   47  void addmul(int len,int a[],int b[],int c[], int d[])
+   48  {
+                  [----------
+   49  #pragma omp parallel
+   50  {
+   51  /*@
+       ... (58 lines omitted)
+  110  }//section
+  111  }//sections
+  112  }//parallel
+       -]
+  113  }//method
+  114
+--------------------------------------
+At sections-reduced.c
+--------------------------------------
+   23  void addmul(int len,int a[],int b[],int c[], int d[])
+   24  {
+      [----------------------
+   25  #pragma omp parallel
+   26  {
+   27  /*@
+       ... (58 lines omitted)
+   86  }//section
+   87  }//sections
+   88  }//parallel
+       -------------]
+   89  }//method
+   90
+--------------------------------------
+Parsing failed: This construct (CompoundStatement1Context) is syntactically valid, but not supported by VerCors.
+======================================
+[INFO] Done: VerCors (at 01:40:27, duration: 00:00:43)

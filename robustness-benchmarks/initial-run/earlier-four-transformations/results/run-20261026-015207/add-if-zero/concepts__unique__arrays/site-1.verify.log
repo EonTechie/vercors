@@ -1,0 +1,23 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 07:32:10)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-11129781086121377161.i
+--------------------------------------
+   39  ensures (\forall int i; 0 <= i && i < n ==> x0[i] == x1[i] + x2[i]);
+   40  @*/
+                   [------
+   41  int f(int n, unique<1> int *x0, unique<2> int *x1, unique<3> int *x2) {
+                    ------]
+   42      /*@
+   43      loop_invariant 0 <= j;
+--------------------------------------
+[1/1] Parsing failed: no viable alternative at input 'unique'
+======================================
+[INFO] Done: VerCors (at 07:32:20, duration: 00:00:09)

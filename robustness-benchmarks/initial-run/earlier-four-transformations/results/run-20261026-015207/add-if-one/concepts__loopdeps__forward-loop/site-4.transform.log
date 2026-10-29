@@ -1,0 +1,26 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 1
+[AddIfOne] candidate count = 7
+[AddIfOne] candidate 0 | function=example | role=BLOCK_ITEM[0] | path=example.body.block[0] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ requires Perm(A_352607808[I_437747500], write); requires Perm(B_8834676...
+[AddIfOne] candidate 1 | function=example | role=LOOP_BODY | path=example.body.block[0].loop.body | kind=CompoundStatement(locals=0, items=4) | { A_352607808[I_437747500] = B_883467693[I_437747500] + 1; /*@ send S_1567719...
+[AddIfOne] candidate 2 | function=example | role=BLOCK_ITEM[0] | path=example.body.block[0].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | A_352607808[I_437747500] = B_883467693[I_437747500] + 1;
+[AddIfOne] candidate 3 | function=example | role=BLOCK_ITEM[1] | path=example.body.block[0].loop.body.block[1] | kind=Block | { /*@ send S_1567719739, 1: 0 <= I_437747500 ** I_437747500 < Len_1630411886 ...
+[AddIfOne] candidate 4 | function=example | role=BLOCK_ITEM[2] | path=example.body.block[0].loop.body.block[2] | kind=Block | { /*@ recv S_1567719739; @*/ }
+[AddIfOne] candidate 5 | function=example | role=IF_TRUE | path=example.body.block[0].loop.body.block[3].labelBody.branch[0] | kind=CompoundStatement(locals=0, items=1) | { C_1570470306[I_437747500] = A_352607808[I_437747500 - 1] + 2; }
+[AddIfOne] candidate 6 | function=example | role=BLOCK_ITEM[0] | path=example.body.block[0].loop.body.block[3].labelBody.branch[0].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | C_1570470306[I_437747500] = A_352607808[I_437747500 - 1] + 2;
+[ADD_IF_ONE_SITE] application 1: selected 4 / 7
+[AddIfOne] SELECTED INDEX = 4
+[AddIfOne] SELECTED | function=example | role=BLOCK_ITEM[2] | path=example.body.block[0].loop.body.block[2] | kind=Block | { /*@ recv S_1567719739; @*/ }
+[AddIfOne] WRAP class=Block | Block | { /*@ recv S_1567719739; @*/ }
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

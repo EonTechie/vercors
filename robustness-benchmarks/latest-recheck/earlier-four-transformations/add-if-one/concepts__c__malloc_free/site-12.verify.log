@@ -1,0 +1,33 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 07:53:53)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-6739316377837718911.i
+--------------------------------------
+   59          return 1;
+   60      }
+          [---------
+   61      xs[0] = 3;
+           ---------]
+   62      xs[1] = 2;
+   63      xs[2] = 1;
+--------------------------------------
+At site-12.c
+--------------------------------------
+   52          return 1;
+   53      }
+      [----------------
+   54      xs[0] = 3;
+       ----------------]
+   55      xs[1] = 2;
+   56      xs[2] = 1;
+--------------------------------------
+Insufficient permission to assign to field. (https://utwente.nl/vercors#assignFieldFailed)
+======================================
+[INFO] Done: VerCors (at 07:54:21, duration: 00:00:28)

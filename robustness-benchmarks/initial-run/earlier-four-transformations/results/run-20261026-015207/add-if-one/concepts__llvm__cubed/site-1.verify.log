@@ -1,0 +1,35 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 11:24:18)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-10501214631789904306.i
+--------------------------------------
+   93  int complicatedFunction() {
+   94      struct TestStruct *A_491793772;
+            [-----------
+   95      (*A_491793772).a = 10;
+             -----------]
+   96      return (*A_491793772).a;
+   97  }
+--------------------------------------
+At site-1.c
+--------------------------------------
+   86  int complicatedFunction() {
+   87      struct TestStruct *A_491793772;
+      [----------------------------
+   88      (*A_491793772).a = 10;
+       ----------------------------]
+   89      return (*A_491793772).a;
+   90  }
+--------------------------------------
+Pointer may be null. (https://utwente.nl/vercors#ptrNull)
+======================================
+[INFO] Done: VerCors (at 11:24:45, duration: 00:00:27)
+[WARN] Non-daemon thread UnknownThreadGroup.[VerCors] Block layout updates (#16) is still running
+[WARN] Due to this VerCors will not exit and sit idly until that thread is done. You may want to stop the program manually.

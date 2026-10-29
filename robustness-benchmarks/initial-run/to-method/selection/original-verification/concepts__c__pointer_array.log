@@ -1,0 +1,310 @@
+[INFO] Start: VerCors (at 23:04:11)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At pointer_array.c:81-:104:
+[INFO]       method localInLoop1
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), k_j))
+[INFO]       evaluate ptrAdd(get_int_pointer1(a), k_j)
+[INFO]     At pointer.pvl:55:10-:55:51:
+[INFO]       consume 0 <= pointer_offset(p) + offset
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:55:10-:55:51:
+[INFO]       consume 0 <= pointer_offset(p) + offset
+[INFO]       comment Retry
+[INFO]   [2] <indeterminate branch 1 of 2>
+[INFO]       conditional edge i < n
+[INFO]   [1] i < n
+[INFO]     At pointer_array.c:96-:96:
+[INFO]       produce (forall l: Int :: { ptrDeref(ptrAdd(get_int_pointer1(a), l)) } (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i)
+[INFO]       evaluate (forall l: Int :: { ptrDeref(ptrAdd(get_int_pointer1(a), l)) } (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i)
+[INFO]       evaluate (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i
+[INFO]       implies (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i
+[INFO]       joining null
+[INFO]   [0] (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), l)).int
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), l))
+[INFO]       evaluate ptrAdd(get_int_pointer1(a), l)
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       decider assert pointer_offset[Int](get_int_pointer1[Pointer](res@20@14)) + l@64@14 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](res@20@14)))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer1[Pointer](res@20@14)) + l@64@14 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](res@20@14)))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At pointer_array.c:106-:120:
+[INFO]       method parameterInParBlock1
+[INFO]   [8] <indeterminate branch 1 of 2>
+[INFO]       conditional edge 0 < m
+[INFO]   [7] 0 < m
+[INFO]   [6] <indeterminate branch 2 of 2>
+[INFO]       conditional edge !(indet == 0)
+[INFO]   [5] !(indet == 0)
+[INFO]   [4] <indeterminate branch 1 of 2>
+[INFO]       conditional edge indet == 1
+[INFO]   [3] indet == 1
+[INFO]   [2] <indeterminate branch 1 of 2>
+[INFO]       conditional edge 0 < m
+[INFO]   [1] 0 < m
+[INFO]     At pointer_array.c:111-:119:
+[INFO]       produce once ==> (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_0_int1(optGet1(a)) == m) && (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_1_int(optGet1(a)) == n) && (forall i: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)) } 0 <= i - j2 * get_dim_1_int(optGet1(a)) && i - j2 * get_dim_1_int(optGet1(a)) < n ==> acc(ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)).int, write)) && ((forperm obj: Ref [obj.intptrT] :: obj.intptrT == old[BEFOREFRAME](obj.intptrT)) && (forperm obj: Ref [obj.uintptrT] :: obj.uintptrT == old[BEFOREFRAME](obj.uintptrT)) && (forperm obj: Ref [obj.int8T] :: obj.int8T == old[BEFOREFRAME](obj.int8T)) && (forperm obj: Ref [obj.int16T] :: obj.int16T == old[BEFOREFRAME](obj.int16T)) && (forperm obj: Ref [obj.int32T] :: obj.int32T == old[BEFOREFRAME](obj.int32T)) && (forperm obj: Ref [obj.int64T] :: obj.int64T == old[BEFOREFRAME](obj.int64T)) && (forperm obj: Ref [obj.uint8T] :: obj.uint8T == old[BEFOREFRAME](obj.uint8T)) && (forperm obj: Ref [obj.uint16T] :: obj.uint16T == old[BEFOREFRAME](obj.uint16T)) && (forperm obj: Ref [obj.uint32T] :: obj.uint32T == old[BEFOREFRAME](obj.uint32T)) && (forperm obj: Ref [obj.uint64T] :: obj.uint64T == old[BEFOREFRAME](obj.uint64T)) && (forperm obj: Ref [obj.int] :: obj.int == old[BEFOREFRAME](obj.int)))
+[INFO]       implies once ==> (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_0_int1(optGet1(a)) == m) && (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_1_int(optGet1(a)) == n) && (forall i: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)) } 0 <= i - j2 * get_dim_1_int(optGet1(a)) && i - j2 * get_dim_1_int(optGet1(a)) < n ==> acc(ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)).int, write)) && ((forperm obj: Ref [obj.intptrT] :: obj.intptrT == old[BEFOREFRAME](obj.intptrT)) && (forperm obj: Ref [obj.uintptrT] :: obj.uintptrT == old[BEFOREFRAME](obj.uintptrT)) && (forperm obj: Ref [obj.int8T] :: obj.int8T == old[BEFOREFRAME](obj.int8T)) && (forperm obj: Ref [obj.int16T] :: obj.int16T == old[BEFOREFRAME](obj.int16T)) && (forperm obj: Ref [obj.int32T] :: obj.int32T == old[BEFOREFRAME](obj.int32T)) && (forperm obj: Ref [obj.int64T] :: obj.int64T == old[BEFOREFRAME](obj.int64T)) && (forperm obj: Ref [obj.uint8T] :: obj.uint8T == old[BEFOREFRAME](obj.uint8T)) && (forperm obj: Ref [obj.uint16T] :: obj.uint16T == old[BEFOREFRAME](obj.uint16T)) && (forperm obj: Ref [obj.uint32T] :: obj.uint32T == old[BEFOREFRAME](obj.uint32T)) && (forperm obj: Ref [obj.uint64T] :: obj.uint64T == old[BEFOREFRAME](obj.uint64T)) && (forperm obj: Ref [obj.int] :: obj.int == old[BEFOREFRAME](obj.int)))
+[INFO]   [0] once
+[INFO]     At pointer_array.c:111-:111:
+[INFO]       produce (forall i: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)) } 0 <= i - j2 * get_dim_1_int(optGet1(a)) && i - j2 * get_dim_1_int(optGet1(a)) < n ==> acc(ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)).int, write))
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i))
+[INFO]       evaluate ptrAdd(get_int_pointer1(optGet1(a)), i)
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       decider assert pointer_offset[Int](get_int_pointer1[Pointer](optGet1(_, a@26@09))) + i@85@09 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](optGet1(_, a@26@09))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer1[Pointer](optGet1(_, a@26@09))) + i@85@09 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](optGet1(_, a@26@09))))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At pointer_array.c:106-:120:
+[INFO]       method parameterInParBlock1
+[INFO]   [8] <indeterminate branch 1 of 2>
+[INFO]       conditional edge 0 < m
+[INFO]   [7] 0 < m
+[INFO]   [6] <indeterminate branch 2 of 2>
+[INFO]       conditional edge !(indet == 0)
+[INFO]   [5] !(indet == 0)
+[INFO]   [4] <indeterminate branch 1 of 2>
+[INFO]       conditional edge indet == 1
+[INFO]   [3] indet == 1
+[INFO]   [2] <indeterminate branch 1 of 2>
+[INFO]       conditional edge 0 < m
+[INFO]   [1] 0 < m
+[INFO]     At pointer_array.c:111-:119:
+[INFO]       produce once ==> (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_0_int1(optGet1(a)) == m) && (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_1_int(optGet1(a)) == n) && (forall i: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)) } 0 <= i - j2 * get_dim_1_int(optGet1(a)) && i - j2 * get_dim_1_int(optGet1(a)) < n ==> acc(ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)).int, write)) && ((forperm obj: Ref [obj.intptrT] :: obj.intptrT == old[BEFOREFRAME](obj.intptrT)) && (forperm obj: Ref [obj.uintptrT] :: obj.uintptrT == old[BEFOREFRAME](obj.uintptrT)) && (forperm obj: Ref [obj.int8T] :: obj.int8T == old[BEFOREFRAME](obj.int8T)) && (forperm obj: Ref [obj.int16T] :: obj.int16T == old[BEFOREFRAME](obj.int16T)) && (forperm obj: Ref [obj.int32T] :: obj.int32T == old[BEFOREFRAME](obj.int32T)) && (forperm obj: Ref [obj.int64T] :: obj.int64T == old[BEFOREFRAME](obj.int64T)) && (forperm obj: Ref [obj.uint8T] :: obj.uint8T == old[BEFOREFRAME](obj.uint8T)) && (forperm obj: Ref [obj.uint16T] :: obj.uint16T == old[BEFOREFRAME](obj.uint16T)) && (forperm obj: Ref [obj.uint32T] :: obj.uint32T == old[BEFOREFRAME](obj.uint32T)) && (forperm obj: Ref [obj.uint64T] :: obj.uint64T == old[BEFOREFRAME](obj.uint64T)) && (forperm obj: Ref [obj.int] :: obj.int == old[BEFOREFRAME](obj.int)))
+[INFO]       implies once ==> (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_0_int1(optGet1(a)) == m) && (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_1_int(optGet1(a)) == n) && (forall i: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)) } 0 <= i - j2 * get_dim_1_int(optGet1(a)) && i - j2 * get_dim_1_int(optGet1(a)) < n ==> acc(ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)).int, write)) && ((forperm obj: Ref [obj.intptrT] :: obj.intptrT == old[BEFOREFRAME](obj.intptrT)) && (forperm obj: Ref [obj.uintptrT] :: obj.uintptrT == old[BEFOREFRAME](obj.uintptrT)) && (forperm obj: Ref [obj.int8T] :: obj.int8T == old[BEFOREFRAME](obj.int8T)) && (forperm obj: Ref [obj.int16T] :: obj.int16T == old[BEFOREFRAME](obj.int16T)) && (forperm obj: Ref [obj.int32T] :: obj.int32T == old[BEFOREFRAME](obj.int32T)) && (forperm obj: Ref [obj.int64T] :: obj.int64T == old[BEFOREFRAME](obj.int64T)) && (forperm obj: Ref [obj.uint8T] :: obj.uint8T == old[BEFOREFRAME](obj.uint8T)) && (forperm obj: Ref [obj.uint16T] :: obj.uint16T == old[BEFOREFRAME](obj.uint16T)) && (forperm obj: Ref [obj.uint32T] :: obj.uint32T == old[BEFOREFRAME](obj.uint32T)) && (forperm obj: Ref [obj.uint64T] :: obj.uint64T == old[BEFOREFRAME](obj.uint64T)) && (forperm obj: Ref [obj.int] :: obj.int == old[BEFOREFRAME](obj.int)))
+[INFO]   [0] once
+[INFO]     At pointer_array.c:111-:111:
+[INFO]       produce (forall i: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)) } 0 <= i - j2 * get_dim_1_int(optGet1(a)) && i - j2 * get_dim_1_int(optGet1(a)) < n ==> acc(ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)).int, write))
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i))
+[INFO]       evaluate ptrAdd(get_int_pointer1(optGet1(a)), i)
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       decider assert pointer_offset[Int](get_int_pointer1[Pointer](optGet1(_, a@26@09))) + i@85@09 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](optGet1(_, a@26@09))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer1[Pointer](optGet1(_, a@26@09))) + i@85@09 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](optGet1(_, a@26@09))))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At pointer_array.c:63-:79:
+[INFO]       method parameterInLoop1
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), k_j))
+[INFO]       evaluate ptrAdd(get_int_pointer1(optGet1(a)), k_j)
+[INFO]     At pointer.pvl:55:10-:55:51:
+[INFO]       consume 0 <= pointer_offset(p) + offset
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:55:10-:55:51:
+[INFO]       consume 0 <= pointer_offset(p) + offset
+[INFO]       comment Retry
+[INFO]   [2] <indeterminate branch 1 of 2>
+[INFO]       conditional edge i < n
+[INFO]   [1] i < n
+[INFO]     At pointer_array.c:74-:74:
+[INFO]       produce (forall l: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), l)) } (l - i) % get_dim_1_int(optGet1(a)) == 0 && 0 <= (l - i) \ get_dim_1_int(optGet1(a)) && (l - i) \ get_dim_1_int(optGet1(a)) < j ==> ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), l)).int == (l - i) \ get_dim_1_int(optGet1(a)) * n + i)
+[INFO]       evaluate (forall l: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), l)) } (l - i) % get_dim_1_int(optGet1(a)) == 0 && 0 <= (l - i) \ get_dim_1_int(optGet1(a)) && (l - i) \ get_dim_1_int(optGet1(a)) < j ==> ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), l)).int == (l - i) \ get_dim_1_int(optGet1(a)) * n + i)
+[INFO]       evaluate (l - i) % get_dim_1_int(optGet1(a)) == 0 && 0 <= (l - i) \ get_dim_1_int(optGet1(a)) && (l - i) \ get_dim_1_int(optGet1(a)) < j ==> ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), l)).int == (l - i) \ get_dim_1_int(optGet1(a)) * n + i
+[INFO]       implies (l - i) % get_dim_1_int(optGet1(a)) == 0 && 0 <= (l - i) \ get_dim_1_int(optGet1(a)) && (l - i) \ get_dim_1_int(optGet1(a)) < j ==> ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), l)).int == (l - i) \ get_dim_1_int(optGet1(a)) * n + i
+[INFO]       joining null
+[INFO]   [0] (l - i) % get_dim_1_int(optGet1(a)) == 0 && 0 <= (l - i) \ get_dim_1_int(optGet1(a)) && (l - i) \ get_dim_1_int(optGet1(a)) < j
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), l)).int == (l - i) \ get_dim_1_int(optGet1(a)) * n + i
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), l)).int
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), l))
+[INFO]       evaluate ptrAdd(get_int_pointer1(optGet1(a)), l)
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       decider assert pointer_offset[Int](get_int_pointer1[Pointer](optGet1(_, a@13@11))) + l@66@11 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](optGet1(_, a@13@11))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer1[Pointer](optGet1(_, a@13@11))) + l@66@11 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](optGet1(_, a@13@11))))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At pointer_array.c:106-:120:
+[INFO]       method parameterInParBlock1
+[INFO]   [8] <indeterminate branch 1 of 2>
+[INFO]       conditional edge 0 < m
+[INFO]   [7] 0 < m
+[INFO]   [6] <indeterminate branch 2 of 2>
+[INFO]       conditional edge !(indet == 0)
+[INFO]   [5] !(indet == 0)
+[INFO]   [4] <indeterminate branch 1 of 2>
+[INFO]       conditional edge indet == 1
+[INFO]   [3] indet == 1
+[INFO]   [2] <indeterminate branch 1 of 2>
+[INFO]       conditional edge 0 < m
+[INFO]   [1] 0 < m
+[INFO]     At pointer_array.c:111-:119:
+[INFO]       produce once ==> (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_0_int1(optGet1(a)) == m) && (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_1_int(optGet1(a)) == n) && (forall i: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)) } 0 <= i - j2 * get_dim_1_int(optGet1(a)) && i - j2 * get_dim_1_int(optGet1(a)) < n ==> acc(ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)).int, write)) && ((forperm obj: Ref [obj.intptrT] :: obj.intptrT == old[BEFOREFRAME](obj.intptrT)) && (forperm obj: Ref [obj.uintptrT] :: obj.uintptrT == old[BEFOREFRAME](obj.uintptrT)) && (forperm obj: Ref [obj.int8T] :: obj.int8T == old[BEFOREFRAME](obj.int8T)) && (forperm obj: Ref [obj.int16T] :: obj.int16T == old[BEFOREFRAME](obj.int16T)) && (forperm obj: Ref [obj.int32T] :: obj.int32T == old[BEFOREFRAME](obj.int32T)) && (forperm obj: Ref [obj.int64T] :: obj.int64T == old[BEFOREFRAME](obj.int64T)) && (forperm obj: Ref [obj.uint8T] :: obj.uint8T == old[BEFOREFRAME](obj.uint8T)) && (forperm obj: Ref [obj.uint16T] :: obj.uint16T == old[BEFOREFRAME](obj.uint16T)) && (forperm obj: Ref [obj.uint32T] :: obj.uint32T == old[BEFOREFRAME](obj.uint32T)) && (forperm obj: Ref [obj.uint64T] :: obj.uint64T == old[BEFOREFRAME](obj.uint64T)) && (forperm obj: Ref [obj.int] :: obj.int == old[BEFOREFRAME](obj.int)))
+[INFO]       implies once ==> (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_0_int1(optGet1(a)) == m) && (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_1_int(optGet1(a)) == n) && (forall i: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)) } 0 <= i - j2 * get_dim_1_int(optGet1(a)) && i - j2 * get_dim_1_int(optGet1(a)) < n ==> acc(ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)).int, write)) && ((forperm obj: Ref [obj.intptrT] :: obj.intptrT == old[BEFOREFRAME](obj.intptrT)) && (forperm obj: Ref [obj.uintptrT] :: obj.uintptrT == old[BEFOREFRAME](obj.uintptrT)) && (forperm obj: Ref [obj.int8T] :: obj.int8T == old[BEFOREFRAME](obj.int8T)) && (forperm obj: Ref [obj.int16T] :: obj.int16T == old[BEFOREFRAME](obj.int16T)) && (forperm obj: Ref [obj.int32T] :: obj.int32T == old[BEFOREFRAME](obj.int32T)) && (forperm obj: Ref [obj.int64T] :: obj.int64T == old[BEFOREFRAME](obj.int64T)) && (forperm obj: Ref [obj.uint8T] :: obj.uint8T == old[BEFOREFRAME](obj.uint8T)) && (forperm obj: Ref [obj.uint16T] :: obj.uint16T == old[BEFOREFRAME](obj.uint16T)) && (forperm obj: Ref [obj.uint32T] :: obj.uint32T == old[BEFOREFRAME](obj.uint32T)) && (forperm obj: Ref [obj.uint64T] :: obj.uint64T == old[BEFOREFRAME](obj.uint64T)) && (forperm obj: Ref [obj.int] :: obj.int == old[BEFOREFRAME](obj.int)))
+[INFO]   [0] once
+[INFO]     At pointer_array.c:111-:111:
+[INFO]       produce (forall i: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)) } 0 <= i - j2 * get_dim_1_int(optGet1(a)) && i - j2 * get_dim_1_int(optGet1(a)) < n ==> acc(ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)).int, write))
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i))
+[INFO]       evaluate ptrAdd(get_int_pointer1(optGet1(a)), i)
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       decider assert pointer_offset[Int](get_int_pointer1[Pointer](optGet1(_, a@26@09))) + i@85@09 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](optGet1(_, a@26@09))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer1[Pointer](optGet1(_, a@26@09))) + i@85@09 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](optGet1(_, a@26@09))))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At pointer_array.c:106-:120:
+[INFO]       method parameterInParBlock1
+[INFO]   [8] <indeterminate branch 1 of 2>
+[INFO]       conditional edge 0 < m
+[INFO]   [7] 0 < m
+[INFO]   [6] <indeterminate branch 2 of 2>
+[INFO]       conditional edge !(indet == 0)
+[INFO]   [5] !(indet == 0)
+[INFO]   [4] <indeterminate branch 1 of 2>
+[INFO]       conditional edge indet == 1
+[INFO]   [3] indet == 1
+[INFO]   [2] <indeterminate branch 1 of 2>
+[INFO]       conditional edge 0 < m
+[INFO]   [1] 0 < m
+[INFO]     At pointer_array.c:111-:119:
+[INFO]       produce once ==> (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_0_int1(optGet1(a)) == m) && (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_1_int(optGet1(a)) == n) && (forall i: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)) } 0 <= i - j2 * get_dim_1_int(optGet1(a)) && i - j2 * get_dim_1_int(optGet1(a)) < n ==> acc(ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)).int, write)) && ((forperm obj: Ref [obj.intptrT] :: obj.intptrT == old[BEFOREFRAME](obj.intptrT)) && (forperm obj: Ref [obj.uintptrT] :: obj.uintptrT == old[BEFOREFRAME](obj.uintptrT)) && (forperm obj: Ref [obj.int8T] :: obj.int8T == old[BEFOREFRAME](obj.int8T)) && (forperm obj: Ref [obj.int16T] :: obj.int16T == old[BEFOREFRAME](obj.int16T)) && (forperm obj: Ref [obj.int32T] :: obj.int32T == old[BEFOREFRAME](obj.int32T)) && (forperm obj: Ref [obj.int64T] :: obj.int64T == old[BEFOREFRAME](obj.int64T)) && (forperm obj: Ref [obj.uint8T] :: obj.uint8T == old[BEFOREFRAME](obj.uint8T)) && (forperm obj: Ref [obj.uint16T] :: obj.uint16T == old[BEFOREFRAME](obj.uint16T)) && (forperm obj: Ref [obj.uint32T] :: obj.uint32T == old[BEFOREFRAME](obj.uint32T)) && (forperm obj: Ref [obj.uint64T] :: obj.uint64T == old[BEFOREFRAME](obj.uint64T)) && (forperm obj: Ref [obj.int] :: obj.int == old[BEFOREFRAME](obj.int)))
+[INFO]       implies once ==> (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_0_int1(optGet1(a)) == m) && (!(a == (none1(): Option[Pointer_2_array_int])) ==> get_dim_1_int(optGet1(a)) == n) && (forall i: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)) } 0 <= i - j2 * get_dim_1_int(optGet1(a)) && i - j2 * get_dim_1_int(optGet1(a)) < n ==> acc(ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)).int, write)) && ((forperm obj: Ref [obj.intptrT] :: obj.intptrT == old[BEFOREFRAME](obj.intptrT)) && (forperm obj: Ref [obj.uintptrT] :: obj.uintptrT == old[BEFOREFRAME](obj.uintptrT)) && (forperm obj: Ref [obj.int8T] :: obj.int8T == old[BEFOREFRAME](obj.int8T)) && (forperm obj: Ref [obj.int16T] :: obj.int16T == old[BEFOREFRAME](obj.int16T)) && (forperm obj: Ref [obj.int32T] :: obj.int32T == old[BEFOREFRAME](obj.int32T)) && (forperm obj: Ref [obj.int64T] :: obj.int64T == old[BEFOREFRAME](obj.int64T)) && (forperm obj: Ref [obj.uint8T] :: obj.uint8T == old[BEFOREFRAME](obj.uint8T)) && (forperm obj: Ref [obj.uint16T] :: obj.uint16T == old[BEFOREFRAME](obj.uint16T)) && (forperm obj: Ref [obj.uint32T] :: obj.uint32T == old[BEFOREFRAME](obj.uint32T)) && (forperm obj: Ref [obj.uint64T] :: obj.uint64T == old[BEFOREFRAME](obj.uint64T)) && (forperm obj: Ref [obj.int] :: obj.int == old[BEFOREFRAME](obj.int)))
+[INFO]   [0] once
+[INFO]     At pointer_array.c:111-:111:
+[INFO]       produce (forall i: Int :: { ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)) } 0 <= i - j2 * get_dim_1_int(optGet1(a)) && i - j2 * get_dim_1_int(optGet1(a)) < n ==> acc(ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i)).int, write))
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(optGet1(a)), i))
+[INFO]       evaluate ptrAdd(get_int_pointer1(optGet1(a)), i)
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       decider assert pointer_offset[Int](get_int_pointer1[Pointer](optGet1(_, a@26@09))) + i@85@09 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](optGet1(_, a@26@09))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer1[Pointer](optGet1(_, a@26@09))) + i@85@09 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](optGet1(_, a@26@09))))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At pointer_array.c:81-:104:
+[INFO]       method localInLoop1
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), k_j))
+[INFO]       evaluate ptrAdd(get_int_pointer1(a), k_j)
+[INFO]     At pointer.pvl:55:10-:55:51:
+[INFO]       consume 0 <= pointer_offset(p) + offset
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:55:10-:55:51:
+[INFO]       consume 0 <= pointer_offset(p) + offset
+[INFO]       comment Retry
+[INFO]   [2] <indeterminate branch 1 of 2>
+[INFO]       conditional edge i < n
+[INFO]   [1] i < n
+[INFO]     At pointer_array.c:96-:96:
+[INFO]       produce (forall l: Int :: { ptrDeref(ptrAdd(get_int_pointer1(a), l)) } (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i)
+[INFO]       evaluate (forall l: Int :: { ptrDeref(ptrAdd(get_int_pointer1(a), l)) } (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i)
+[INFO]       evaluate (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i
+[INFO]       implies (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i
+[INFO]       joining null
+[INFO]   [0] (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), l)).int
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), l))
+[INFO]       evaluate ptrAdd(get_int_pointer1(a), l)
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       decider assert pointer_offset[Int](get_int_pointer1[Pointer](res@20@14)) + l@64@14 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](res@20@14)))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer1[Pointer](res@20@14)) + l@64@14 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](res@20@14)))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At pointer_array.c:81-:104:
+[INFO]       method localInLoop1
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), k_j))
+[INFO]       evaluate ptrAdd(get_int_pointer1(a), k_j)
+[INFO]     At pointer.pvl:55:10-:55:51:
+[INFO]       consume 0 <= pointer_offset(p) + offset
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:55:10-:55:51:
+[INFO]       consume 0 <= pointer_offset(p) + offset
+[INFO]       comment Retry
+[INFO]   [2] <indeterminate branch 1 of 2>
+[INFO]       conditional edge i < n
+[INFO]   [1] i < n
+[INFO]     At pointer_array.c:96-:96:
+[INFO]       produce (forall l: Int :: { ptrDeref(ptrAdd(get_int_pointer1(a), l)) } (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i)
+[INFO]       evaluate (forall l: Int :: { ptrDeref(ptrAdd(get_int_pointer1(a), l)) } (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i)
+[INFO]       evaluate (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i
+[INFO]       implies (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i
+[INFO]       joining null
+[INFO]   [0] (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), l)).int
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), l))
+[INFO]       evaluate ptrAdd(get_int_pointer1(a), l)
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       decider assert pointer_offset[Int](get_int_pointer1[Pointer](res@20@14)) + l@64@14 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](res@20@14)))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer1[Pointer](res@20@14)) + l@64@14 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](res@20@14)))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At pointer_array.c:81-:104:
+[INFO]       method localInLoop1
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), k_j))
+[INFO]       evaluate ptrAdd(get_int_pointer1(a), k_j)
+[INFO]     At pointer.pvl:55:10-:55:51:
+[INFO]       consume 0 <= pointer_offset(p) + offset
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:55:10-:55:51:
+[INFO]       consume 0 <= pointer_offset(p) + offset
+[INFO]       comment Retry
+[INFO]   [2] <indeterminate branch 1 of 2>
+[INFO]       conditional edge i < n
+[INFO]   [1] i < n
+[INFO]     At pointer_array.c:96-:96:
+[INFO]       produce (forall l: Int :: { ptrDeref(ptrAdd(get_int_pointer1(a), l)) } (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i)
+[INFO]       evaluate (forall l: Int :: { ptrDeref(ptrAdd(get_int_pointer1(a), l)) } (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i)
+[INFO]       evaluate (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i
+[INFO]       implies (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j ==> ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i
+[INFO]       joining null
+[INFO]   [0] (l - i) % get_dim_1_int(a) == 0 && 0 <= (l - i) \ get_dim_1_int(a) && (l - i) \ get_dim_1_int(a) < j
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), l)).int == (l - i) \ get_dim_1_int(a) * n + i
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), l)).int
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer1(a), l))
+[INFO]       evaluate ptrAdd(get_int_pointer1(a), l)
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       decider assert pointer_offset[Int](get_int_pointer1[Pointer](res@20@14)) + l@64@14 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](res@20@14)))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer1[Pointer](res@20@14)) + l@64@14 < block_length[Int](pointer_block[Block](get_int_pointer1[Pointer](res@20@14)))
+[INFO] Printing verification results as a compressed table. Run with `--more` for verbose verification results.
+At                       Code     Description                                                                                                                                                   
+------------------------ -------- --------------------------------------------------------------------------------------------------------------------------------------------------------------
+pointer_array.c:74-:74   ptrBlock The offset in `(\forall int ... == l * n + i) > //@ loop_inv ... = l * n + i);` may be outside the bounds of the allocated memory area that the pointer is in.
+pointer_array.c:96-:96   ptrBlock The offset in `(\forall int ... == l * n + i) > //@ loop_inv ... = l * n + i);` may be outside the bounds of the allocated memory area that the pointer is in.
+pointer_array.c:111-:111 ptrBlock The offset in `a[j][i] > //@ context ... ]:}, write));` may be outside the bounds of the allocated memory area that the pointer is in.
+[INFO] Done: VerCors (at 23:13:16, duration: 00:09:04)

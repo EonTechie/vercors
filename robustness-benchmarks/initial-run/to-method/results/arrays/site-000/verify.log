@@ -1,0 +1,15 @@
+[INFO] Start: VerCors (at 13:57:20)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier transformed.c:39-:39: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x0[i], write));' contains no triggers
+[WARN] The quantifier transformed.c:42-:42: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x1[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier transformed.c:45-:45: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x2[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier transformed.c:39-:39: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x0[i], write));' contains no triggers
+[WARN] The quantifier transformed.c:42-:42: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x1[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier transformed.c:45-:45: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x2[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier transformed.c:46-:46: 'ensures (\forall int i; 0 <= i && i < n ==> x0[i] == x1[i] + x2[i]);' contains no triggers
+[WARN] The quantifier transformed.c:39-:39: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x0[i], write));' contains no triggers
+[WARN] The quantifier transformed.c:42-:42: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x1[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier transformed.c:45-:45: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(x2[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier transformed.c:52-:52: '    loop_invariant (\forall int i; 0 <= i && i < j ==> x0[i] == x1[i] + x2[i]);' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 13:58:57, duration: 00:01:36)

@@ -1,0 +1,45 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 11:05:56)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-3035387463375669237.i
+--------------------------------------
+   17      int i;
+   18      i = 0;
+          [-----
+   19      /*@
+   20      requires \pointer_index(ar, i, write);
+   21      ensures \pointer_index(ar, i, write);
+       ... (1 lines omitted)
+   23      while (i < len) {
+   24          i = i + 1;
+   25      }
+       -----]
+   26  }
+   27
+--------------------------------------
+At site-0.c
+--------------------------------------
+   10      int i;
+   11      i = 0;
+      [---------
+   12      /*@
+   13      requires \pointer_index(ar, i, write);
+   14      ensures \pointer_index(ar, i, write);
+       ... (1 lines omitted)
+   16      while (i < len) {
+   17          i = i + 1;
+   18      }
+       -------]
+   19  }
+   20
+--------------------------------------
+This loop has an iteration contract, but we could not derive the iteration variable or its lower bound from the initialization portion of the loop.
+======================================
+[INFO] Done: VerCors (at 11:06:07, duration: 00:00:10)

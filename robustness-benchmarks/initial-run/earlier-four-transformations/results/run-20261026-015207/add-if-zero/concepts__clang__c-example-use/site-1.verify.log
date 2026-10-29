@@ -1,0 +1,56 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 07:06:35)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-15492555135496079051.i
+--------------------------------------
+   12  
+   13  /*@
+                     [-
+   14  requires Perm(*X, 1);
+                      -]
+   15  ensures Perm(*X, 1);
+   16  ensures *X == \old(*X) + 1;
+--------------------------------------
+At site-1.c
+--------------------------------------
+    5  
+    6  /*@
+      [-----------------------
+    7  requires Perm(*X, 1);
+       -----------------------]
+    8  ensures Perm(*X, 1);
+    9  ensures *X == \old(*X) + 1;
+--------------------------------------
+There may be insufficient permission to access this field here. (https://utwente.nl/vercors#perm)
+======================================
+======================================
+At vercors-interpreted-15492555135496079051.i
+--------------------------------------
+   19  
+   20  /*@
+                     [-
+   21  requires Perm(*X, 1);
+                      -]
+   22  ensures Perm(*X, 1);
+   23  ensures *X == 4;
+--------------------------------------
+At site-1.c
+--------------------------------------
+   12  
+   13  /*@
+      [-----------------------
+   14  requires Perm(*X, 1);
+       -----------------------]
+   15  ensures Perm(*X, 1);
+   16  ensures *X == 4;
+--------------------------------------
+There may be insufficient permission to access this field here. (https://utwente.nl/vercors#perm)
+======================================
+[INFO] Done: VerCors (at 07:06:57, duration: 00:00:21)

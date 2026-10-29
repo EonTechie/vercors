@@ -1,0 +1,60 @@
+[INFO] Start: VerCors (at 01:37:08)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-10024257931887543731.i
+--------------------------------------
+    8  // Simple demo of a Pallas function-contract that is expected to fail.
+    9  
+      [-----
+   10  /*@
+   11   requires a >= 0 && b >= 0;
+   12   ensures a > 0;
+       ... (3 lines omitted)
+   16      x ++;
+   17      return x * b + 1;
+   18  }
+       -]
+   19  
+   20
+--------------------------------------
+At pallas_function_contract_fail.c
+--------------------------------------
+    1  // Simple demo of a Pallas function-contract that is expected to fail.
+    2  
+      [-----
+    3  /*@
+    4   requires a >= 0 && b >= 0;
+    5   ensures a > 0;
+       ... (3 lines omitted)
+    9      x ++;
+   10      return x * b + 1;
+   11  }
+       ---]
+   12  
+   13
+--------------------------------------
+[1/2] Postcondition may not hold, since ...
+--------------------------------------
+At vercors-interpreted-10024257931887543731.i
+--------------------------------------
+   10  /*@
+   11   requires a >= 0 && b >= 0;
+               [-----
+   12   ensures a > 0;
+                -----]
+   13   @*/
+   14  int foo (int a, int b) {
+--------------------------------------
+At pallas_function_contract_fail.c
+--------------------------------------
+    3  /*@
+    4   requires a >= 0 && b >= 0;
+      [-----------------
+    5   ensures a > 0;
+       -----------------]
+    6   @*/
+    7  int foo (int a, int b) {
+--------------------------------------
+[2/2] ... this expression may be false (https://utwente.nl/vercors#postFailed:false)
+======================================
+[INFO] Done: VerCors (at 01:38:33, duration: 00:01:25)

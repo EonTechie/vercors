@@ -1,0 +1,20 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 1
+[AddIfZero] candidate 0 | function=fibonacci | role=BLOCK_ITEM[0] | path=fibonacci.body.block[0] | kind=IfStatement(arms=1) | if (N_1222637172 > 2) { return Fibonacci_1681838063(N_1222637172 - 1) + Fibon...
+[ADD_IF_ZERO_SITE] application 1: selected 0 / 1
+[AddIfZero] SELECTED INDEX = 0
+[AddIfZero] SELECTED | function=fibonacci | role=BLOCK_ITEM[0] | path=fibonacci.body.block[0] | kind=IfStatement(arms=1) | if (N_1222637172 > 2) { return Fibonacci_1681838063(N_1222637172 - 1) + Fibon...
+[AddIfZero] WRAP class=Branch | IfStatement(arms=1) | if (N_1222637172 > 2) { return Fibonacci_1681838063(N_1222637172 - 1) + Fibon...
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

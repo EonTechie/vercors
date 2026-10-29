@@ -251,6 +251,11 @@ case object CoercionUtils {
       case (source @ TOpenCLVector(lSize, innerType), TVector(rSize, element))
           if element == innerType && lSize == rSize =>
         CoerceCVectorVector(rSize, element)
+      // Reverse: post-resolution C dump uses __opencl_vector_type__ decls,
+      // while vector ops often produce TVector — allow assigning either way.
+      case (TVector(lSize, element), TOpenCLVector(rSize, innerType))
+          if element == innerType && lSize == rSize =>
+        CoerceCVectorVector(rSize, element)
       case (s @ CTPointer(innerLeft), t @ CTPointer(innerRight)) =>
         getPointerCoercion(s, t, innerLeft, innerRight).getOrElse(return None)
       case (s @ CTPointer(innerLeft), t @ CTPointer(innerRight)) =>

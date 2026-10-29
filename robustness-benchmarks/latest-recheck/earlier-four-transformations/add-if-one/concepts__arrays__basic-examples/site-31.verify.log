@@ -1,0 +1,91 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 07:11:25)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier site-31.c:14-:14: 'ensures (\forall int k; 0 <= k && k < len ==> ar[k] == 0);' contains no triggers
+[WARN] The quantifier site-31.c:19-:19: '    requires Perm(ar[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:21-:21: '    ensures Perm(ar[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:22-:22: '    ensures ar[i] == 0;' contains no triggers
+[WARN] The quantifier site-31.c:32-:32: 'ensures (\forall int i; 0 <= i && i < len ==> a[i] == \old(a[i]));' contains no triggers
+[WARN] The quantifier site-31.c:37-:37: '    requires Perm(a[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:38-:38: '    requires a[i] == \old(a[i]);' contains no triggers
+[WARN] The quantifier site-31.c:40-:40: '    ensures Perm(a[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:41-:41: '    ensures a[i] == \old(a[i]);' contains no triggers
+[WARN] The quantifier site-31.c:55-:55: 'ensures (\forall int i; 0 <= i && i < len ==> a[i] == b[i] + c[i]);' contains no triggers
+[WARN] The quantifier site-31.c:56-:56: 'ensures (\forall int i; 0 <= i && i < len ==> b[i] == \old(b[i]));' contains no triggers
+[WARN] The quantifier site-31.c:57-:57: 'ensures (\forall int i; 0 <= i && i < len ==> c[i] == \old(c[i]));' contains no triggers
+[WARN] The quantifier site-31.c:64-:64: '    requires Perm(a[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:65-:65: '    requires Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:66-:66: '    requires Perm(c[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:67-:67: '    requires b[i] == \old(b[i]);' contains no triggers
+[WARN] The quantifier site-31.c:68-:68: '    requires c[i] == \old(c[i]);' contains no triggers
+[WARN] The quantifier site-31.c:72-:72: '    ensures Perm(a[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:73-:73: '    ensures Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:74-:74: '    ensures Perm(c[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:75-:75: '    ensures b[i] == \old(b[i]);' contains no triggers
+[WARN] The quantifier site-31.c:76-:76: '    ensures c[i] == \old(c[i]);' contains no triggers
+[WARN] The quantifier site-31.c:77-:77: '    ensures a[i] == b[i] + c[i];' contains no triggers
+[WARN] The quantifier site-31.c:97-:97: '    requires Perm(a[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:98-:98: '    requires Perm(c[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:99-:99: '    requires Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:103-:103: '    ensures Perm(a[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:104-:104: '    ensures Perm(c[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:105-:105: '    ensures Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:126-:126: '    requires Perm(a[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:127-:127: '    requires Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:128-:128: '    requires Perm(c[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:132-:132: '    ensures Perm(a[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:133-:133: '    ensures Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:134-:134: '    ensures Perm(c[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:135-:135: '    ensures i > 0 ==> Perm(a[i - 1], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:136-:136: '    ensures i == n - 1 ==> Perm(a[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:152-:152: 'requires (\forall int i; 0 <= i && i < len ==> b[i] == i);' contains no triggers
+[WARN] The quantifier site-31.c:156-:156: 'ensures (\forall int i; 0 <= i && i < len ==> b[i] == i);' contains no triggers
+[WARN] The quantifier site-31.c:157-:157: 'ensures (\forall int i; 0 <= i && i < len ==> a[i] == i + 1);' contains no triggers
+[WARN] The quantifier site-31.c:158-:158: 'ensures (\forall int i; 0 < i && i < len ==> c[i] == i + 2);' contains no triggers
+[WARN] The quantifier site-31.c:165-:165: '    requires Perm(a[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:166-:166: '    requires Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:167-:167: '    requires Perm(c[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:168-:168: '    requires b[i] == i;' contains no triggers
+[WARN] The quantifier site-31.c:172-:172: '    ensures Perm(a[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:173-:173: '    ensures Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:174-:174: '    ensures Perm(c[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:175-:175: '    ensures i > 0 ==> Perm(a[i - 1], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:176-:176: '    ensures i == len - 1 ==> Perm(a[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:177-:177: '    ensures a[i] == i + 1;' contains no triggers
+[WARN] The quantifier site-31.c:178-:178: '    ensures b[i] == i;' contains no triggers
+[WARN] The quantifier site-31.c:179-:179: '    ensures i > 0 ==> c[i] == i + 2;' contains no triggers
+[WARN] The quantifier site-31.c:204-:204: '    requires Perm(a[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:205-:205: '    requires Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:206-:206: '    requires Perm(c[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:207-:207: '    requires i == 0 ==> Perm(a[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:208-:208: '    requires i < n - 1 ==> Perm(a[i + 1], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:212-:212: '    ensures Perm(a[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:213-:213: '    ensures Perm(a[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:214-:214: '    ensures Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:215-:215: '    ensures Perm(c[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:231-:231: 'requires (\forall int tid; 0 <= tid && tid < len ==> a[tid] == 0);' contains no triggers
+[WARN] The quantifier site-31.c:232-:232: 'requires (\forall int tid; 0 <= tid && tid < len ==> b[tid] == tid);' contains no triggers
+[WARN] The quantifier site-31.c:236-:236: 'ensures (\forall int i; 0 <= i && i < len ==> a[i] == i + 1);' contains no triggers
+[WARN] The quantifier site-31.c:237-:237: 'ensures (\forall int i; 0 <= i && i < len ==> b[i] == i);' contains no triggers
+[WARN] The quantifier site-31.c:238-:238: 'ensures (\forall int i; 0 <= i && i < len - 1 ==> c[i] == 2);' contains no triggers
+[WARN] The quantifier site-31.c:245-:245: '    requires Perm(a[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:246-:246: '    requires i == 0 ==> Perm(a[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:247-:247: '    requires i < len - 1 ==> Perm(a[i + 1], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:248-:248: '    requires Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:249-:249: '    requires Perm(c[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:250-:250: '    requires i < len - 1 ==> a[i + 1] == 0;' contains no triggers
+[WARN] The quantifier site-31.c:251-:251: '    requires b[i] == i;' contains no triggers
+[WARN] The quantifier site-31.c:252-:252: '    ensures Perm(b[i], 1 \ 2);' contains no triggers
+[WARN] The quantifier site-31.c:253-:253: '    ensures Perm(c[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:254-:254: '    ensures b[i] == i;' contains no triggers
+[WARN] The quantifier site-31.c:255-:255: '    ensures Perm(a[i], write);' contains no triggers
+[WARN] The quantifier site-31.c:256-:256: '    ensures a[i] == i + 1;' contains no triggers
+[WARN] The quantifier site-31.c:257-:257: '    ensures i < len - 1 ==> c[i] == 2;' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 07:12:13, duration: 00:00:47)

@@ -1,0 +1,22 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 01:27:58)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier concepts__unique__arrays.c:2-:2: '  context_everywhere x0 != NULL ** \pointer_length(x0) == n ** (\forall* int i; 0<=i && i<n; Perm(x0[i], write));' contains no triggers
+[WARN] The quantifier concepts__unique__arrays.c:3-:3: '  context_everywhere x1 != NULL ** \pointer_length(x1) == n ** (\forall* int i; 0<=i && i<n; Perm(x1[i], 1\2));' contains no triggers
+[WARN] The quantifier concepts__unique__arrays.c:4-:4: '  context_everywhere x2 != NULL ** \pointer_length(x2) == n ** (\forall* int i; 0<=i && i<n; Perm(x2[i], 1\2));' contains no triggers
+[WARN] The quantifier concepts__unique__arrays.c:2-:2: '  context_everywhere x0 != NULL ** \pointer_length(x0) == n ** (\forall* int i; 0<=i && i<n; Perm(x0[i], write));' contains no triggers
+[WARN] The quantifier concepts__unique__arrays.c:3-:3: '  context_everywhere x1 != NULL ** \pointer_length(x1) == n ** (\forall* int i; 0<=i && i<n; Perm(x1[i], 1\2));' contains no triggers
+[WARN] The quantifier concepts__unique__arrays.c:4-:4: '  context_everywhere x2 != NULL ** \pointer_length(x2) == n ** (\forall* int i; 0<=i && i<n; Perm(x2[i], 1\2));' contains no triggers
+[WARN] The quantifier concepts__unique__arrays.c:5-:5: '  ensures (\forall int i; 0<=i && i<n; x0[i] == x1[i] + x2[i] );' contains no triggers
+[WARN] The quantifier concepts__unique__arrays.c:2-:2: '  context_everywhere x0 != NULL ** \pointer_length(x0) == n ** (\forall* int i; 0<=i && i<n; Perm(x0[i], write));' contains no triggers
+[WARN] The quantifier concepts__unique__arrays.c:3-:3: '  context_everywhere x1 != NULL ** \pointer_length(x1) == n ** (\forall* int i; 0<=i && i<n; Perm(x1[i], 1\2));' contains no triggers
+[WARN] The quantifier concepts__unique__arrays.c:4-:4: '  context_everywhere x2 != NULL ** \pointer_length(x2) == n ** (\forall* int i; 0<=i && i<n; Perm(x2[i], 1\2));' contains no triggers
+[WARN] The quantifier concepts__unique__arrays.c:10-:10: '    loop_invariant (\forall int i; 0<=i && i<j; x0[i] == x1[i] + x2[i] );' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 01:28:43, duration: 00:00:44)

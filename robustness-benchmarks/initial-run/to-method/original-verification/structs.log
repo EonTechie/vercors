@@ -1,0 +1,9 @@
+[INFO] Start: VerCors (at 20:16:18)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier structs.c:91-:91: ' requires (\forall* int i; 0 <= i && i < n; Perm(inp[i].x, 1\10));' contains no triggers
+[WARN] The quantifier structs.c:93-:93: ' ensures (\forall int i; 0 <= i && i < n; \result[i] == inp[i].x);' contains no triggers
+[WARN] The quantifier structs.c:109-:109: '  context (\forall* int i; 0<=i && i<len; Perm(p->ps[i], 1\2));' contains no triggers
+[WARN] The quantifier structs.c:109-:109: '  context (\forall* int i; 0<=i && i<len; Perm(p->ps[i], 1\2));' contains no triggers
+[WARN] The quantifier structs.c:122-:122: '      loop_invariant (\forall* int i; 0<=i && i<len; Perm(p->ps[i], 1\2));' contains no triggers
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 20:17:04, duration: 00:00:45)

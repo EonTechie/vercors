@@ -1,0 +1,33 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 12:08:40)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-5566857117408504145.i
+--------------------------------------
+   72      float f;
+   73      struct IElement *E1_196922207;
+            [------------
+   74      (*E1_196922207).e.tag = IntTag;
+             ------------]
+   75      (*E1_196922207).d = &a;
+   76      struct FElement *E2_1234080048;
+--------------------------------------
+At site-0.c
+--------------------------------------
+   65      float f;
+   66      struct IElement *E1_196922207;
+      [-------------------------------------
+   67      (*E1_196922207).e.tag = IntTag;
+       -------------------------------------]
+   68      (*E1_196922207).d = &a;
+   69      struct FElement *E2_1234080048;
+--------------------------------------
+Pointer may be null. (https://utwente.nl/vercors#ptrNull)
+======================================
+[INFO] Done: VerCors (at 12:09:09, duration: 00:00:28)

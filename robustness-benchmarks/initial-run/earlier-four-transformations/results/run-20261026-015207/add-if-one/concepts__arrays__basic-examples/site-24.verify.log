@@ -1,0 +1,33 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 08:01:43)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-5404003957745490312.i
+--------------------------------------
+  188          a[i] = b[i] + 1;
+  189          if (1) {
+                      [-------------------------------------------------------------------------------------
+  190              /*@ send fs, 1: a != NULL ** 0 <= i ** i < len - 1 ** Perm(a[i], 1 \ 2) ** a[i] == i + 1; @*/
+                       -------------------------------------------------------------------------------------]
+  191          } else {
+  192              /*@ assert false; @*/
+--------------------------------------
+At site-24.c
+--------------------------------------
+  181          a[i] = b[i] + 1;
+  182          if (1) {
+      [-----------------------------------------------------------------------------------------------------------
+  183              /*@ send fs, 1: a != NULL ** 0 <= i ** i < len - 1 ** Perm(a[i], 1 \ 2) ** a[i] == i + 1; @*/
+       -----------------------------------------------------------------------------------------------------------]
+  184          } else {
+  185              /*@ assert false; @*/
+--------------------------------------
+Send and recv may only occur within a parallel block, or loop with an iteration contract, and must be unconditionally executed.
+======================================
+[INFO] Done: VerCors (at 08:01:56, duration: 00:00:13)

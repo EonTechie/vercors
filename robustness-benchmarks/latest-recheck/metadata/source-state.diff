@@ -1,0 +1,2523 @@
+diff --git a/src/col/vct/col/ast/declaration/global/HeapVariableImpl.scala b/src/col/vct/col/ast/declaration/global/HeapVariableImpl.scala
+index fc6af45ba..b50d3ad1a 100644
+--- a/src/col/vct/col/ast/declaration/global/HeapVariableImpl.scala
++++ b/src/col/vct/col/ast/declaration/global/HeapVariableImpl.scala
+@@ -9,7 +9,10 @@ trait HeapVariableImpl[G] extends HeapVariableOps[G] {
+   override def layout(implicit ctx: Ctx): Doc = {
+     val decl: Doc = ctx.syntax match {
+       case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP =>
+-        val (spec, decl) = t.layoutSplitDeclarator
++        // A mutable C global is stored in COL as one non-null pointer layer
++        // around its source type. The C dump must remove that storage layer.
++        val sourceType = t.asPointer.filter(_.isNonNull).map(_.element).getOrElse(t)
++        val (spec, decl) = sourceType.layoutSplitDeclarator
+         spec <+> decl <> ctx.name(this)
+       case _ => t.show <+> ctx.name(this)
+ 
+diff --git a/src/col/vct/col/ast/declaration/global/ProcedureImpl.scala b/src/col/vct/col/ast/declaration/global/ProcedureImpl.scala
+index 99dc781d8..ce5ed029f 100644
+--- a/src/col/vct/col/ast/declaration/global/ProcedureImpl.scala
++++ b/src/col/vct/col/ast/declaration/global/ProcedureImpl.scala
+@@ -25,12 +25,20 @@ trait ProcedureImpl[G] extends ProcedureOps[G] {
+   def layoutC(implicit ctx: Ctx): Doc = {
+     val (spec, decl) = returnType.layoutSplitDeclarator
+     val prefix = if (inline) Text("inline") <> " " else Empty
++    // Emit /*@ pure @*/ for body-less stubs (e.g. math.h) so later contracts
++    // may call them. Skip for procedures with bodies: dumped locals often use
++    // decl+assign, which cannot be re-parsed as a pure function.
++    val pureMod =
++      if (pure && body.isEmpty)
++        Doc.inlineSpec(Text("pure")) <> " "
++      else
++        Empty
+     Doc.stack(Seq(
+       // Post-resolution C pretty-print: post-resolution Procedure nodes must keep
+       // their function contracts when emitted as C mutants.
+       contract,
+       Group(
+-        prefix <> spec <+> decl <> ctx.name(this) <> "(" <>
++        prefix <> pureMod <> spec <+> decl <> ctx.name(this) <> "(" <>
+           Doc.args(args) <> ")"
+       ) <>
+         (if (body.nonEmpty)
+diff --git a/src/col/vct/col/ast/declaration/singular/LocalHeapVariableImpl.scala b/src/col/vct/col/ast/declaration/singular/LocalHeapVariableImpl.scala
+index f97c95121..e3ca1901d 100644
+--- a/src/col/vct/col/ast/declaration/singular/LocalHeapVariableImpl.scala
++++ b/src/col/vct/col/ast/declaration/singular/LocalHeapVariableImpl.scala
+@@ -9,12 +9,24 @@ trait LocalHeapVariableImpl[G]
+     extends LocalHeapVariableOps[G] with LocalHeapVariableFamilyOps[G] {
+   this: LocalHeapVariable[G] =>
+   override def layout(implicit ctx: Ctx): Doc =
+-    Text("@heap") <+>
+-      (ctx.syntax match {
+-        case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP =>
+-          val (spec, decl) = t.layoutSplitDeclarator
+-          spec <+> decl <> ctx.name(this)
+-        case Ctx.PVL | Ctx.Java => t.show <+> ctx.name(this)
+-        case Ctx.Silver => Text(ctx.name(this)) <> ":" <+> t
+-      })
++    ctx.syntax match {
++      case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP =>
++        // Post-resolution C dump: @heap is COL-only; emit a normal C local.
++        val (spec, decl) = t.layoutSplitDeclarator
++        val declaration = spec <+> decl <> ctx.name(this)
++        t.asPointer.filter(_.isNonNull) match {
++          case Some(pointer) =>
++            val (elementSpec, elementDecl) = pointer.element
++              .layoutSplitDeclarator
++            declaration <+> "=" <+>
++              (Text("(") <> elementSpec <> elementDecl <> "*)" <+>
++                "vercorsMallocNonNull" <> "(" <> "sizeof" <> "(" <>
++                elementSpec <> elementDecl <> ")" <> ")")
++          case None => declaration
++        }
++      case Ctx.PVL | Ctx.Java =>
++        Text("@heap") <+> t.show <+> ctx.name(this)
++      case Ctx.Silver =>
++        Text("@heap") <+> Text(ctx.name(this)) <> ":" <+> t
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/heap/alloc/FreePointerImpl.scala b/src/col/vct/col/ast/expr/heap/alloc/FreePointerImpl.scala
+index 398830400..0bbb3eee6 100644
+--- a/src/col/vct/col/ast/expr/heap/alloc/FreePointerImpl.scala
++++ b/src/col/vct/col/ast/expr/heap/alloc/FreePointerImpl.scala
+@@ -9,5 +9,10 @@ trait FreePointerImpl[G] extends FreePointerOps[G] {
+   override lazy val t: Type[G] = TVoid()
+ 
+   override def layout(implicit ctx: Ctx): Doc =
+-    Text("free") <+> "(" <> pointer <> ")"
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        // Post-resolution C dump: match the emitted vercorsFree(void*) stub.
++        Text("vercorsFree") <> "((void*)" <> pointer <> ")"
++      case _ => Text("free") <+> "(" <> pointer <> ")"
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/heap/alloc/NewConstPointerImpl.scala b/src/col/vct/col/ast/expr/heap/alloc/NewConstPointerImpl.scala
+index 0c42d3137..3ea41c135 100644
+--- a/src/col/vct/col/ast/expr/heap/alloc/NewConstPointerImpl.scala
++++ b/src/col/vct/col/ast/expr/heap/alloc/NewConstPointerImpl.scala
+@@ -9,5 +9,13 @@ trait NewConstPointerImpl[G] extends NewConstPointerOps[G] {
+   override lazy val t: Type[G] = TConstPointer[G](element)
+ 
+   override def layout(implicit ctx: Ctx): Doc =
+-    Text("new") <+> "const" <+> element <> "[" <> size <> "]"
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        // Post-resolution C dump: malloc form, not COL `new const T[n]`.
++        val (spec, decl) = element.layoutSplitDeclarator
++        Text("(") <> "const" <+> spec <> decl <> "*)" <+> "vercorsMalloc" <>
++          "(" <> "sizeof" <> "(" <> "const" <+> spec <> decl <> ")" <+> "*" <+>
++          size <> ")"
++      case _ => Text("new") <+> "const" <+> element <> "[" <> size <> "]"
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/heap/alloc/NewNonNullConstPointerImpl.scala b/src/col/vct/col/ast/expr/heap/alloc/NewNonNullConstPointerImpl.scala
+index c58738532..f81ac4001 100644
+--- a/src/col/vct/col/ast/expr/heap/alloc/NewNonNullConstPointerImpl.scala
++++ b/src/col/vct/col/ast/expr/heap/alloc/NewNonNullConstPointerImpl.scala
+@@ -9,5 +9,13 @@ trait NewNonNullConstPointerImpl[G] extends NewNonNullConstPointerOps[G] {
+   override lazy val t: Type[G] = TNonNullConstPointer[G](element)
+ 
+   override def layout(implicit ctx: Ctx): Doc =
+-    Text("new") <+> "const" <+> element <> "[" <> size <> "]"
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        // Post-resolution C dump: malloc form, not COL `new const T[n]`.
++        val (spec, decl) = element.layoutSplitDeclarator
++        Text("(") <> "const" <+> spec <> decl <> "*)" <+> "vercorsMalloc" <>
++          "(" <> "sizeof" <> "(" <> "const" <+> spec <> decl <> ")" <+> "*" <+>
++          size <> ")"
++      case _ => Text("new") <+> "const" <+> element <> "[" <> size <> "]"
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/heap/alloc/NewNonNullPointerImpl.scala b/src/col/vct/col/ast/expr/heap/alloc/NewNonNullPointerImpl.scala
+index 4520c0713..1105bbc26 100644
+--- a/src/col/vct/col/ast/expr/heap/alloc/NewNonNullPointerImpl.scala
++++ b/src/col/vct/col/ast/expr/heap/alloc/NewNonNullPointerImpl.scala
+@@ -9,9 +9,17 @@ trait NewNonNullPointerImpl[G] extends NewNonNullPointerOps[G] {
+   override lazy val t: Type[G] = TNonNullPointer(element, unique)
+ 
+   override def layout(implicit ctx: Ctx): Doc =
+-    Text("new") <>
+-      (if (unique.nonEmpty)
+-         Text(" unique<" + unique.get.toString + ">")
+-       else
+-         Text("")) <+> element <> "[" <> size <> "]"
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        // Post-resolution C dump: malloc form, not COL `new T[n]`.
++        val (spec, decl) = element.layoutSplitDeclarator
++        Text("(") <> spec <> decl <> "*)" <+> "vercorsMallocNonNull" <> "(" <>
++          "sizeof" <> "(" <> spec <> decl <> ")" <+> "*" <+> size <> ")"
++      case _ =>
++        Text("new") <>
++          (if (unique.nonEmpty)
++             Text(" unique<" + unique.get.toString + ">")
++           else
++             Text("")) <+> element <> "[" <> size <> "]"
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/heap/alloc/NewPointerArrayImpl.scala b/src/col/vct/col/ast/expr/heap/alloc/NewPointerArrayImpl.scala
+index ad8437fc4..fd1fa4fd8 100644
+--- a/src/col/vct/col/ast/expr/heap/alloc/NewPointerArrayImpl.scala
++++ b/src/col/vct/col/ast/expr/heap/alloc/NewPointerArrayImpl.scala
+@@ -9,6 +9,19 @@ trait NewPointerArrayImpl[G] extends NewPointerArrayOps[G] {
+   override def t: Type[G] =
+     TNonNullPointerArray(element, dimensions.map(Some(_)), unique)
+   override def layout(implicit ctx: Ctx): Doc =
+-    Text("new") <+> unique.map(u => Text(s"unique<$u>") <+> element)
+-      .getOrElse(element.show) <> dimensions.mkString("[", ",", "]")
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        // Post-resolution C dump: one-dimensional malloc; multi-dim stays best-effort.
++        val (spec, decl) = element.layoutSplitDeclarator
++        val sizeDoc: Doc =
++          if (dimensions.isEmpty)
++            Text("1")
++          else
++            dimensions.map(_.show).reduceLeft[Doc]((a, b) => a <+> "*" <+> b)
++        Text("(") <> spec <> decl <> "*)" <+> "vercorsMallocNonNull" <> "(" <>
++          "sizeof" <> "(" <> spec <> decl <> ")" <+> "*" <+> sizeDoc <> ")"
++      case _ =>
++        Text("new") <+> unique.map(u => Text(s"unique<$u>") <+> element)
++          .getOrElse(element.show) <> dimensions.mkString("[", ",", "]")
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/heap/alloc/NewPointerImpl.scala b/src/col/vct/col/ast/expr/heap/alloc/NewPointerImpl.scala
+index 2d63230f1..40ba51b27 100644
+--- a/src/col/vct/col/ast/expr/heap/alloc/NewPointerImpl.scala
++++ b/src/col/vct/col/ast/expr/heap/alloc/NewPointerImpl.scala
+@@ -9,9 +9,17 @@ trait NewPointerImpl[G] extends NewPointerOps[G] {
+   override lazy val t: Type[G] = TPointer[G](element, unique)
+ 
+   override def layout(implicit ctx: Ctx): Doc =
+-    Text("new") <>
+-      (if (unique.nonEmpty)
+-         Text(" unique<" + unique.get.toString + ">")
+-       else
+-         Text("")) <+> element <> "[" <> size <> "]"
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        // Post-resolution C dump: malloc form, not COL `new T[n]`.
++        val (spec, decl) = element.layoutSplitDeclarator
++        Text("(") <> spec <> decl <> "*)" <+> "vercorsMalloc" <> "(" <>
++          "sizeof" <> "(" <> spec <> decl <> ")" <+> "*" <+> size <> ")"
++      case _ =>
++        Text("new") <>
++          (if (unique.nonEmpty)
++             Text(" unique<" + unique.get.toString + ">")
++           else
++             Text("")) <+> element <> "[" <> size <> "]"
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/heap/read/DerefPointerImpl.scala b/src/col/vct/col/ast/expr/heap/read/DerefPointerImpl.scala
+index ab2a387d2..b5c665882 100644
+--- a/src/col/vct/col/ast/expr/heap/read/DerefPointerImpl.scala
++++ b/src/col/vct/col/ast/expr/heap/read/DerefPointerImpl.scala
+@@ -1,6 +1,6 @@
+ package vct.col.ast.expr.heap.read
+ 
+-import vct.col.ast.{DerefPointer, Type}
++import vct.col.ast.{DerefHeapVariable, DerefPointer, Type}
+ import vct.col.print._
+ import vct.col.ast.ops.DerefPointerOps
+ 
+@@ -9,5 +9,17 @@ trait DerefPointerImpl[G] extends DerefPointerOps[G] {
+   override def t: Type[G] = pointer.t.asPointer.get.element
+ 
+   override def precedence: Int = Precedence.PREFIX
+-  override def layout(implicit ctx: Ctx): Doc = Text("*") <> assoc(pointer)
++  override def layout(implicit ctx: Ctx): Doc =
++    ctx.syntax match {
++      case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP =>
++        pointer match {
++          // LangCToCol represents mutable globals through an artificial
++          // non-null storage pointer. The source C access has no `*` for that
++          // representation layer.
++          case DerefHeapVariable(ref) if ref.decl.t.asPointer.exists(_.isNonNull) =>
++            pointer.show
++          case _ => Text("*") <> assoc(pointer)
++        }
++      case _ => Text("*") <> assoc(pointer)
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/literal/build/LiteralVectorImpl.scala b/src/col/vct/col/ast/expr/literal/build/LiteralVectorImpl.scala
+index c9da43b64..93669cac1 100644
+--- a/src/col/vct/col/ast/expr/literal/build/LiteralVectorImpl.scala
++++ b/src/col/vct/col/ast/expr/literal/build/LiteralVectorImpl.scala
+@@ -3,6 +3,7 @@ package vct.col.ast.expr.literal.build
+ import vct.col.ast.{LiteralVector, TVector, Type}
+ import vct.col.print.{Ctx, Doc, Group, Precedence, Text}
+ import vct.col.ast.ops.LiteralVectorOps
++import vct.col.ast.`type`.TVectorImpl
+ 
+ trait LiteralVectorImpl[G] extends LiteralVectorOps[G] {
+   this: LiteralVector[G] =>
+@@ -10,8 +11,21 @@ trait LiteralVectorImpl[G] extends LiteralVectorOps[G] {
+ 
+   override def precedence: Int = Precedence.POSTFIX
+   override def layout(implicit ctx: Ctx): Doc =
+-    Group(
+-      Text("vector<") <> element <> "," <> values.size.toString <> ">{" <>
+-        Doc.args(values) <> "}"
+-    )
++    ctx.syntax match {
++      case Ctx.C | Ctx.Cuda | Ctx.OpenCL if !ctx.inSpec =>
++        // OpenCL-style vector literal: (T)(e0, e1, ...). Brace compound
++        // literals do not parse for this type form in LangCParser.
++        // Cast args to the element type so float vectors accept int literals.
++        val args = values.map(v => Text("(") <> element <> Text(")") <> v)
++        Text("(") <> TVectorImpl.cTypeDoc(element, values.size) <> Text(")(") <>
++          Doc.args(args) <> Text(")")
++      case _ if ctx.inSpec || ctx.syntax == Ctx.PVL =>
++        // SpecParser: vector<T>{...} (no size in the literal).
++        Group(Text("vector<") <> element <> ">{" <> Doc.args(values) <> "}")
++      case _ =>
++        Group(
++          Text("vector<") <> element <> "," <> values.size.toString <> ">{" <>
++            Doc.args(values) <> "}"
++        )
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/literal/constant/FloatInfImpl.scala b/src/col/vct/col/ast/expr/literal/constant/FloatInfImpl.scala
+index 38c1a7784..06cacf37f 100644
+--- a/src/col/vct/col/ast/expr/literal/constant/FloatInfImpl.scala
++++ b/src/col/vct/col/ast/expr/literal/constant/FloatInfImpl.scala
+@@ -7,5 +7,10 @@ import vct.col.print._
+ trait FloatInfImpl[G] extends FloatInfOps[G] {
+   this: FloatInf[G] =>
+   val value: Double = Double.PositiveInfinity
+-  override def layout(implicit ctx: Ctx): Doc = Text("inf")
++  override def layout(implicit ctx: Ctx): Doc =
++    ctx.syntax match {
++      // VerCors C lexer/parser keyword (see LangCLexer INFINITY).
++      case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP => Text("vercorsINFINITY")
++      case _ => Text("inf")
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/literal/constant/FloatNaNImpl.scala b/src/col/vct/col/ast/expr/literal/constant/FloatNaNImpl.scala
+index f38e6a725..fb52dcf5d 100644
+--- a/src/col/vct/col/ast/expr/literal/constant/FloatNaNImpl.scala
++++ b/src/col/vct/col/ast/expr/literal/constant/FloatNaNImpl.scala
+@@ -1,12 +1,16 @@
+ package vct.col.ast.expr.literal.constant
+ 
+-import vct.col.ast.{FloatNaN}
+-import vct.col.ast.`type`.typeclass.TFloats
++import vct.col.ast.FloatNaN
+ import vct.col.ast.ops.FloatNaNOps
+ import vct.col.print._
+ 
+ trait FloatNaNImpl[G] extends FloatNaNOps[G] {
+   this: FloatNaN[G] =>
+   def value: Double = Double.NaN
+-  override def layout(implicit ctx: Ctx): Doc = Text("NaN")
++  override def layout(implicit ctx: Ctx): Doc =
++    ctx.syntax match {
++      // VerCors C lexer/parser keyword (see LangCLexer NAN).
++      case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP => Text("vercorsNAN")
++      case _ => Text("NaN")
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/op/num/AmbiguousDivImpl.scala b/src/col/vct/col/ast/expr/op/num/AmbiguousDivImpl.scala
+index b4cdce748..1442883ed 100644
+--- a/src/col/vct/col/ast/expr/op/num/AmbiguousDivImpl.scala
++++ b/src/col/vct/col/ast/expr/op/num/AmbiguousDivImpl.scala
+@@ -7,5 +7,10 @@ import vct.col.print._
+ trait AmbiguousDivImpl[G] extends AmbiguousDivOps[G] {
+   this: AmbiguousDiv[G] =>
+   override def precedence: Int = Precedence.MULTIPLICATIVE
+-  override def layout(implicit ctx: Ctx): Doc = lassoc(left, "/", right)
++  override def layout(implicit ctx: Ctx): Doc =
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        Group(Text("\\euclidean_div(") <> Doc.args(Seq(left, right)) <> ")")
++      case _ => lassoc(left, "/", right)
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/op/num/AmbiguousModImpl.scala b/src/col/vct/col/ast/expr/op/num/AmbiguousModImpl.scala
+index 129b0f0f0..a331f5d76 100644
+--- a/src/col/vct/col/ast/expr/op/num/AmbiguousModImpl.scala
++++ b/src/col/vct/col/ast/expr/op/num/AmbiguousModImpl.scala
+@@ -7,5 +7,10 @@ import vct.col.print._
+ trait AmbiguousModImpl[G] extends AmbiguousModOps[G] {
+   this: AmbiguousMod[G] =>
+   override def precedence: Int = Precedence.MULTIPLICATIVE
+-  override def layout(implicit ctx: Ctx): Doc = lassoc(left, "%", right)
++  override def layout(implicit ctx: Ctx): Doc =
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        Group(Text("\\euclidean_mod(") <> Doc.args(Seq(left, right)) <> ")")
++      case _ => lassoc(left, "%", right)
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/op/num/FloorDivImpl.scala b/src/col/vct/col/ast/expr/op/num/FloorDivImpl.scala
+index f7366993a..d36335f3e 100644
+--- a/src/col/vct/col/ast/expr/op/num/FloorDivImpl.scala
++++ b/src/col/vct/col/ast/expr/op/num/FloorDivImpl.scala
+@@ -1,12 +1,17 @@
+ package vct.col.ast.expr.op.num
+ 
+ import vct.col.ast.{FloorDiv, TInt, Type}
+-import vct.col.print.{Ctx, Doc, Precedence}
++import vct.col.print.{Ctx, Doc, Group, Precedence, Text}
+ import vct.col.ast.ops.FloorDivOps
+ 
+ trait FloorDivImpl[G] extends FloorDivOps[G] {
+   this: FloorDiv[G] =>
+   override def t: Type[G] = TInt()
+   override def precedence: Int = Precedence.MULTIPLICATIVE
+-  override def layout(implicit ctx: Ctx): Doc = lassoc(left, "/", right)
++  override def layout(implicit ctx: Ctx): Doc =
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        Group(Text("\\euclidean_div(") <> Doc.args(Seq(left, right)) <> ")")
++      case _ => lassoc(left, "/", right)
++    }
+ }
+diff --git a/src/col/vct/col/ast/expr/op/num/ModImpl.scala b/src/col/vct/col/ast/expr/op/num/ModImpl.scala
+index 37a1d773a..d6a82ec68 100644
+--- a/src/col/vct/col/ast/expr/op/num/ModImpl.scala
++++ b/src/col/vct/col/ast/expr/op/num/ModImpl.scala
+@@ -1,12 +1,17 @@
+ package vct.col.ast.expr.op.num
+ 
+ import vct.col.ast.{Mod, TInt, Type}
+-import vct.col.print.{Ctx, Doc, Precedence}
++import vct.col.print.{Ctx, Doc, Group, Precedence, Text}
+ import vct.col.ast.ops.ModOps
+ 
+ trait ModImpl[G] extends ModOps[G] {
+   this: Mod[G] =>
+   override def t: Type[G] = TInt()
+   override def precedence: Int = Precedence.MULTIPLICATIVE
+-  override def layout(implicit ctx: Ctx): Doc = lassoc(left, "%", right)
++  override def layout(implicit ctx: Ctx): Doc =
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        Group(Text("\\euclidean_mod(") <> Doc.args(Seq(left, right)) <> ")")
++      case _ => lassoc(left, "%", right)
++    }
+ }
+diff --git a/src/col/vct/col/ast/lang/smt/SmtlibIsIntImpl.scala b/src/col/vct/col/ast/lang/smt/SmtlibIsIntImpl.scala
+index 343f8ce56..c4b4372be 100644
+--- a/src/col/vct/col/ast/lang/smt/SmtlibIsIntImpl.scala
++++ b/src/col/vct/col/ast/lang/smt/SmtlibIsIntImpl.scala
+@@ -7,5 +7,7 @@ import vct.col.ast.ops.SmtlibIsIntOps
+ trait SmtlibIsIntImpl[G] extends SmtlibIsIntOps[G] {
+   this: SmtlibIsInt[G] =>
+   override def t: Type[G] = TBool()
+-  override def layout(implicit ctx: Ctx): Doc = Text("is_int(") <> arg <> ")"
++  override def layout(implicit ctx: Ctx): Doc =
++    // Spec grammar uses \is_int; bare is_int does not resolve on re-parse.
++    Text("\\is_int(") <> arg <> ")"
+ }
+diff --git a/src/col/vct/col/ast/lang/smt/SmtlibPowImpl.scala b/src/col/vct/col/ast/lang/smt/SmtlibPowImpl.scala
+index 31dad2bfb..6c7498758 100644
+--- a/src/col/vct/col/ast/lang/smt/SmtlibPowImpl.scala
++++ b/src/col/vct/col/ast/lang/smt/SmtlibPowImpl.scala
+@@ -9,5 +9,7 @@ trait SmtlibPowImpl[G] extends SmtlibPowOps[G] {
+   override def precedence: Int = Precedence.PVL_POW
+ 
+   override lazy val t: Type[G] = getNumericType
+-  override def layout(implicit ctx: Ctx): Doc = rassoc(left, "^", right)
++  override def layout(implicit ctx: Ctx): Doc =
++    // Spec grammar uses \pow; bare ^ is bitwise xor in C.
++    Text("\\pow(") <> left <> Text(", ") <> right <> Text(")")
+ }
+diff --git a/src/col/vct/col/ast/node/ProgramImpl.scala b/src/col/vct/col/ast/node/ProgramImpl.scala
+index 8c0f566e5..26af8c4e3 100644
+--- a/src/col/vct/col/ast/node/ProgramImpl.scala
++++ b/src/col/vct/col/ast/node/ProgramImpl.scala
+@@ -22,24 +22,40 @@ trait ProgramImpl[G]
+     }
+ 
+   override def layout(implicit ctx: Ctx): Doc = {
+-    val decls =
++    val decls = declarations
++
++    val header: Doc =
+       ctx.syntax match {
++        case Ctx.Java =>
++          Text("import java.util.concurrent.locks.Lock;") <+/>
++            "import java.util.concurrent.locks.ReentrantLock;" <+/>
++            "import java.util.concurrent.locks.Condition;" <> Line
+         case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP =>
+-          // Post-resolution C pretty-print: omit generated sizeof_* helpers.
+-          // They stay in the AST for pointer-size encoding.
+-          declarations.filterNot {
+-            case f: vct.col.ast.Function[_] => f.isGeneratedSizeOfHelper
+-            case _ => false
+-          }
+-        case _ =>
+-          declarations
++          // Post-resolution C dump: NewPointer/FreePointer print these names.
++          // Emit stubs when the resolved program did not already carry them.
++          val names = decls.flatMap { d =>
++            try
++              Some(ctx.name(d))
++            catch { case _: Throwable => None }
++          }.toSet
++          val parts = Seq(
++            Option.when(!names.contains("vercorsMallocNonNull"))(
++              Text("void *vercorsMallocNonNull(int size);")
++            ),
++            Option.when(!names.contains("vercorsMalloc"))(
++              Text("void *vercorsMalloc(int size);")
++            ),
++            Option.when(!names.contains("vercorsFree"))(
++              Text("void vercorsFree(void *ptr);")
++            ),
++          ).flatten
++          if (parts.isEmpty)
++            Empty
++          else
++            Doc.stack(parts) <> Line <> Line
++        case _ => Empty
+       }
+ 
+-    (if (ctx.syntax == Ctx.Java)
+-       (Text("import java.util.concurrent.locks.Lock;") <+/>
+-         "import java.util.concurrent.locks.ReentrantLock;" <+/>
+-         "import java.util.concurrent.locks.Condition;" <> Line)
+-     else
+-       Empty) <> Doc.stack2(decls)
++    header <> Doc.stack2(decls)
+   }
+ }
+diff --git a/src/col/vct/col/ast/statement/composite/LoopImpl.scala b/src/col/vct/col/ast/statement/composite/LoopImpl.scala
+index 55ab94852..5abaeb871 100644
+--- a/src/col/vct/col/ast/statement/composite/LoopImpl.scala
++++ b/src/col/vct/col/ast/statement/composite/LoopImpl.scala
+@@ -50,17 +50,29 @@ trait LoopImpl[G] extends LoopOps[G] {
+       case _ => None
+     }
+ 
++  private def isOne(e: Expr[G]): Boolean =
++    e match {
++      case IntegerValue(ONE) => true
++      case CIntegerValue(ONE, _) => true
++      case _ => false
++    }
++
++  private def isVarPlusOne(e: Expr[G], v: Variable[G]): Boolean =
++    e match {
++      case Plus(Local(Ref(`v`)), one) if isOne(one) => true
++      case AmbiguousPlus(Local(Ref(`v`)), one) if isOne(one) => true
++      case _ => false
++    }
++
+   def doesIncrement(v: Variable[G], update: Statement[G] = update): Boolean =
+     update match {
+       case Block(Seq(s)) => doesIncrement(v, s)
+-      case Assign(Local(Ref(`v`)), Plus(Local(Ref(`v`)), IntegerValue(ONE))) =>
++      case Assign(Local(Ref(`v`)), rhs) if isVarPlusOne(rhs, v) => true
++      case Eval(PostAssignExpression(Local(Ref(`v`)), rhs))
++          if isVarPlusOne(rhs, v) =>
+         true
+-      case Eval(
+-            PostAssignExpression(
+-              Local(Ref(`v`)),
+-              Plus(Local(Ref(`v`)), IntegerValue(ONE)),
+-            )
+-          ) =>
++      case Eval(PreAssignExpression(Local(Ref(`v`)), rhs))
++          if isVarPlusOne(rhs, v) =>
+         true
+       case _ => false
+     }
+diff --git a/src/col/vct/col/ast/type/TConstPointerImpl.scala b/src/col/vct/col/ast/type/TConstPointerImpl.scala
+index 460792766..27da80ffa 100644
+--- a/src/col/vct/col/ast/type/TConstPointerImpl.scala
++++ b/src/col/vct/col/ast/type/TConstPointerImpl.scala
+@@ -11,8 +11,19 @@ trait TConstPointerImpl[G] extends TConstPointerOps[G] {
+   val isConst = true
+   val isNonNull = false
+ 
++  override def layoutSplitDeclarator(implicit ctx: Ctx): (Doc, Doc) = {
++    val (spec, decl) = element.layoutSplitDeclarator
++    (Text("const") <+> spec, decl <> "*")
++  }
++
+   override def layout(implicit ctx: Ctx): Doc =
+-    Text("const_pointer") <> open <> element <> close
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        // Post-resolution C dump: print as const T*, not COL const_pointer<T>.
++        val (spec, decl) = layoutSplitDeclarator
++        Group(spec <> decl)
++      case _ => Text("const_pointer") <> open <> element <> close
++    }
+ 
+   override def asNullable: Type[G] = this
+ }
+diff --git a/src/col/vct/col/ast/type/TNonNullPointerImpl.scala b/src/col/vct/col/ast/type/TNonNullPointerImpl.scala
+index 25198968b..052a2c9bc 100644
+--- a/src/col/vct/col/ast/type/TNonNullPointerImpl.scala
++++ b/src/col/vct/col/ast/type/TNonNullPointerImpl.scala
+@@ -16,14 +16,21 @@ trait TNonNullPointerImpl[G] extends TNonNullPointerOps[G] {
+   }
+ 
+   override def layout(implicit ctx: Ctx): Doc =
+-    Group(
+-      Text(
+-        (if (unique.isDefined)
+-           "unique<" + unique.get.toString + ">"
+-         else
+-           "") + "NonNull"
+-      ) <> open <> element <> close
+-    )
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        // Post-resolution C dump: non-null is a verifier property, not C syntax.
++        val (spec, decl) = layoutSplitDeclarator
++        Group(spec <> decl)
++      case _ =>
++        Group(
++          Text(
++            (if (unique.isDefined)
++               "unique<" + unique.get.toString + ">"
++             else
++               "") + "NonNull"
++          ) <> open <> element <> close
++        )
++    }
+ 
+   override def asNullable: Type[G] = TPointer(element, unique)
+ }
+diff --git a/src/col/vct/col/ast/type/TPointerArrayImpl.scala b/src/col/vct/col/ast/type/TPointerArrayImpl.scala
+index 04b5813db..2e459de8e 100644
+--- a/src/col/vct/col/ast/type/TPointerArrayImpl.scala
++++ b/src/col/vct/col/ast/type/TPointerArrayImpl.scala
+@@ -13,9 +13,17 @@ trait TPointerArrayImpl[G] extends TPointerArrayOps[G] {
+     }
+ 
+   override def layout(implicit ctx: Ctx): Doc =
+-    layoutDimensions(
+-      unique.map(u => Text(s"unique<$u>") <+> element).getOrElse(element.show)
+-    )
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        // Post-resolution C dump: prefer pointer syntax over COL array sugar.
++        val (spec, decl) = layoutSplitDeclarator
++        Group(spec <> decl)
++      case _ =>
++        layoutDimensions(
++          unique.map(u => Text(s"unique<$u>") <+> element)
++            .getOrElse(element.show)
++        )
++    }
+ 
+   override def layoutSplitDeclarator(implicit ctx: Ctx): (Doc, Doc) =
+     ctx.syntax match {
+diff --git a/src/col/vct/col/ast/type/TPointerImpl.scala b/src/col/vct/col/ast/type/TPointerImpl.scala
+index ba4d6ef91..0ccac446e 100644
+--- a/src/col/vct/col/ast/type/TPointerImpl.scala
++++ b/src/col/vct/col/ast/type/TPointerImpl.scala
+@@ -16,14 +16,21 @@ trait TPointerImpl[G] extends TPointerOps[G] {
+   }
+ 
+   override def layout(implicit ctx: Ctx): Doc =
+-    Group(
+-      Text(
+-        (if (unique.isDefined)
+-           "unique<" + unique.get.toString + ">"
+-         else
+-           "") + "pointer"
+-      ) <> open <> element <> close
+-    )
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        // Post-resolution C dump: print as C pointer syntax, not COL pointer<T>.
++        val (spec, decl) = layoutSplitDeclarator
++        Group(spec <> decl)
++      case _ =>
++        Group(
++          Text(
++            (if (unique.isDefined)
++               "unique<" + unique.get.toString + ">"
++             else
++               "") + "pointer"
++          ) <> open <> element <> close
++        )
++    }
+ 
+   override def asNullable: Type[G] = this
+ }
+diff --git a/src/col/vct/col/ast/type/TUniqueImpl.scala b/src/col/vct/col/ast/type/TUniqueImpl.scala
+index fc4a6bd7f..7e3a014b0 100644
+--- a/src/col/vct/col/ast/type/TUniqueImpl.scala
++++ b/src/col/vct/col/ast/type/TUniqueImpl.scala
+@@ -8,7 +8,11 @@ import vct.col.typerules.TypeSize
+ trait TUniqueImpl[G] extends TUniqueOps[G] {
+   this: TUnique[G] =>
+   override def layout(implicit ctx: Ctx): Doc =
+-    Text("unique<") <> unique.toString <> ">" <+> inner
++    ctx.syntax match {
++      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
++        Text("/*@ unique<") <> unique.toString <> "> @*/" <+> inner
++      case _ => Text("unique<") <> unique.toString <> ">" <+> inner
++    }
+ 
+   override def bits: TypeSize = inner.bits
+ }
+diff --git a/src/col/vct/col/ast/type/TVectorImpl.scala b/src/col/vct/col/ast/type/TVectorImpl.scala
+index 77f807494..040ee1b70 100644
+--- a/src/col/vct/col/ast/type/TVectorImpl.scala
++++ b/src/col/vct/col/ast/type/TVectorImpl.scala
+@@ -2,14 +2,39 @@ package vct.col.ast.`type`
+ 
+ import vct.col.ast.{TVector, Type}
+ import vct.col.ast.ops.TVectorOps
+-import vct.col.print.{Ctx, Doc, Group, Text}
++import vct.col.print.{Ctx, Doc, Empty, Group, Text}
++
++object TVectorImpl {
++  /** C dump form accepted by LangCParser as a typeSpecifier (not a typedef
++    * name). Typedef-based compound literals conflict with castExpression's
++    * `isTypedefName` gate, so we avoid typedefs here.
++    */
++  def cTypeDoc[G](element: Type[G], size: BigInt)(implicit ctx: Ctx): Doc =
++    Text("__opencl_vector_type__(") <> element <> Text(", ") <>
++      Text(size.toString) <> Text(")")
++}
+ 
+ trait TVectorImpl[G] extends TVectorOps[G] {
+   this: TVector[G] =>
++
++  override def layoutSplitDeclarator(implicit ctx: Ctx): (Doc, Doc) =
++    ctx.syntax match {
++      case Ctx.C | Ctx.Cuda | Ctx.OpenCL if !ctx.inSpec =>
++        (TVectorImpl.cTypeDoc(element, size), Empty)
++      case _ =>
++        (show, Empty)
++    }
++
+   override def layout(implicit ctx: Ctx): Doc =
+-    Group(
+-      Text("vector") <> open <> Doc.arg(element) <> "," <> size.toString <>
+-        close
+-    )
++    ctx.syntax match {
++      case Ctx.C | Ctx.Cuda | Ctx.OpenCL if !ctx.inSpec =>
++        TVectorImpl.cTypeDoc(element, size)
++      case _ =>
++        Group(
++          Text("vector") <> open <> Doc.arg(element) <> "," <> size.toString <>
++            close
++        )
++    }
++
+   val subtypes: Seq[Type[G]] = Seq(element)
+ }
+diff --git a/src/col/vct/col/typerules/CoercionUtils.scala b/src/col/vct/col/typerules/CoercionUtils.scala
+index bf7114360..629ab334c 100644
+--- a/src/col/vct/col/typerules/CoercionUtils.scala
++++ b/src/col/vct/col/typerules/CoercionUtils.scala
+@@ -251,6 +251,11 @@ case object CoercionUtils {
+       case (source @ TOpenCLVector(lSize, innerType), TVector(rSize, element))
+           if element == innerType && lSize == rSize =>
+         CoerceCVectorVector(rSize, element)
++      // Reverse: post-resolution C dump uses __opencl_vector_type__ decls,
++      // while vector ops often produce TVector — allow assigning either way.
++      case (TVector(lSize, element), TOpenCLVector(rSize, innerType))
++          if element == innerType && lSize == rSize =>
++        CoerceCVectorVector(rSize, element)
+       case (s @ CTPointer(innerLeft), t @ CTPointer(innerRight)) =>
+         getPointerCoercion(s, t, innerLeft, innerRight).getOrElse(return None)
+       case (s @ CTPointer(innerLeft), t @ CTPointer(innerRight)) =>
+diff --git a/src/main/vct/main/modes/Robustness.scala b/src/main/vct/main/modes/Robustness.scala
+index 925e33c72..f5fc08d2a 100644
+--- a/src/main/vct/main/modes/Robustness.scala
++++ b/src/main/vct/main/modes/Robustness.scala
+@@ -131,8 +131,8 @@ case object Robustness extends LazyLogging {
+ 
+     // Parse and resolve once, then apply the selected robustness rewrite(s)
+     // `repeat` times so later applications see the already-mutated AST.
+-    // Generated sizeof_* helpers stay in the resolved AST for pointer-size
+-    // reasoning, but C layout omits them (see Function.isGeneratedSizeOfHelper).
++    // Generated sizeof_* helpers stay in the resolved AST and are printed in
++    // the C dump so annotation calls like sizeof_int() re-resolve.
+     // Inter-pass typecheck is skipped for repeat > 1: 100 nested wraps would
+     // otherwise re-check the same well-formedness 100 times.
+     val stages = Parsing.ofOptions[InitialGeneration](options, blameProvider)
+diff --git a/src/parsers/vct/parsers/transform/CToCol.scala b/src/parsers/vct/parsers/transform/CToCol.scala
+index 62f81503f..3578f194a 100644
+--- a/src/parsers/vct/parsers/transform/CToCol.scala
++++ b/src/parsers/vct/parsers/transform/CToCol.scala
+@@ -948,8 +948,14 @@ case class CToCol[G](
+         )(blame(expr))
+       case PostfixExpression8(e, SpecPostfix0(postfix)) =>
+         convert(expr, postfix, convert(e))
+-      case PostfixExpression9(_, _, _, _, _, _) => ??(expr)
+-      case PostfixExpression10(_, _, _, _, _, _, _) => ??(expr)
++      // GCC / C99 compound literal: (T){ e0, e1, ... }
++      // Needed so post-resolution C dumps of LiteralVector re-parse.
++      // Pattern: ( typeName ) { initList }
++      case PostfixExpression9(_, typeName, _, _, initList, _) =>
++        CCast(CLiteralArray(convert(initList)), convert(typeName))
++      // Pattern: ( typeName ) { initList , }
++      case PostfixExpression10(_, typeName, _, _, initList, _, _) =>
++        CCast(CLiteralArray(convert(initList)), convert(typeName))
+       case PostfixExpression11(_, _, _, _, _, _, _) => ??(expr)
+       case PostfixExpression12(_, _, _, _, _, _, _, _) => ??(expr)
+       case PostfixExpression13(
+diff --git a/src/rewrite/vct/rewrite/CStatementSites.scala b/src/rewrite/vct/rewrite/CStatementSites.scala
+index abba4ef31..6811c3b15 100644
+--- a/src/rewrite/vct/rewrite/CStatementSites.scala
++++ b/src/rewrite/vct/rewrite/CStatementSites.scala
+@@ -79,6 +79,27 @@ object CStatementSites {
+       case _ => false
+     }
+ 
++  // VerCors requires send/recv statements in iteration contracts to execute
++  // unconditionally. Wrapping either one, or a container that holds one, in
++  // an if creates an invalid annotated program rather than a robustness
++  // mutant.
++  private def containsSendRecv[G](stat: Statement[G]): Boolean =
++    stat match {
++      case _: Send[G] | _: Recv[G] => true
++      // A wrapper outside a complete loop does not make send/recv conditional
++      // within an iteration. Do not descend through that loop boundary.
++      case Scope(_, _: Loop[G]) => false
++      case _: Loop[G] => false
++      case Scope(_, body) => containsSendRecv(body)
++      case Block(statements) => statements.exists(containsSendRecv)
++      case Branch(branches) =>
++        branches.exists { case (_, body) => containsSendRecv(body) }
++      case IndetBranch(branches) => branches.exists(containsSendRecv)
++      case Switch(_, body) => containsSendRecv(body)
++      case Label(_, inner, _) => containsSendRecv(inner)
++      case _ => false
++    }
++
+   private def declarationCluster[G](stat: Statement[G]): Boolean =
+     stat match {
+       case _: CDeclarationStatement[G] | _: LocalDecl[G] | _: HeapLocalDecl[G] =>
+@@ -97,6 +118,55 @@ object CStatementSites {
+       case _ => false
+     }
+ 
++  /** True when this target declares a name that is used elsewhere in the
++    * program. Such a target is a parser-generated declaration cluster, not a
++    * source compound statement: an if wrapper would shorten the name's scope.
++    */
++  private def declarationsEscape[G](
++      program: Program[G],
++      target: Statement[G],
++  ): Boolean = {
++    val declarations = ArrayBuffer.empty[Node[G]]
++    val seenInside = ArrayBuffer.empty[Node[G]]
++
++    def collectDeclarations(node: Node[G]): Unit = {
++      if (seenInside.exists(_ eq node))
++        return
++      seenInside += node
++      node match {
++        case LocalDecl(v) => declarations += v
++        case HeapLocalDecl(v) => declarations += v
++        case _: Type[G] =>
++        case other => other.subnodes.foreach(collectDeclarations)
++      }
++    }
++
++    collectDeclarations(target)
++    if (declarations.isEmpty)
++      return false
++
++    val seenOutside = ArrayBuffer.empty[Node[G]]
++    var found = false
++
++    def isDeclared(value: AnyRef): Boolean =
++      declarations.exists(_ eq value)
++
++    def findOutsideUse(node: Node[G]): Unit = {
++      if (found || (node eq target) || seenOutside.exists(_ eq node))
++        return
++      seenOutside += node
++      node match {
++        case Local(Ref(v)) if isDeclared(v) => found = true
++        case HeapLocal(Ref(v)) if isDeclared(v) => found = true
++        case _: Type[G] =>
++        case other => other.subnodes.foreach(findOutsideUse)
++      }
++    }
++
++    findOutsideUse(program)
++    found
++  }
++
+   private def selectableShape[G](
+       stat: Statement[G],
+       excludeContainedAbrupt: Boolean,
+@@ -105,6 +175,7 @@ object CStatementSites {
+       case _ if isAbruptStatement(stat) => false
+       case _ if excludeContainedAbrupt && isForbiddenWrapTarget(stat) => false
+       case _ if !excludeContainedAbrupt && containsDirectAbrupt(stat) => false
++      case _ if containsSendRecv(stat) => false
+       case _ if declarationCluster(stat) => false
+       case _: NonExecutableStatement[G] => false
+ 
+@@ -180,7 +251,10 @@ object CStatementSites {
+         role: Role,
+         target: Statement[G],
+     ): Unit =
+-      if (selectable(role, target, excludeContainedAbrupt)) {
++      if (
++        selectable(role, target, excludeContainedAbrupt) &&
++        !declarationsEscape(program, target)
++      ) {
+         result += Site(functionName, path, role, target)
+       }
+ 
+diff --git a/src/rewrite/vct/rewrite/ROBUSTNESS-HOW-TO-ADD-A-TRANSFORM.md b/src/rewrite/vct/rewrite/ROBUSTNESS-HOW-TO-ADD-A-TRANSFORM.md
+new file mode 100644
+index 000000000..8ef393e98
+--- /dev/null
++++ b/src/rewrite/vct/rewrite/ROBUSTNESS-HOW-TO-ADD-A-TRANSFORM.md
+@@ -0,0 +1,110 @@
++# How to add a new robustness transform
++
++Example names below: `my-transform` and `MY_TRANSFORM_SITE`. Use your own.
++
++## 1. Pick the two strings
++
++- Transform name: `my-transform`
++- Site variable: `MY_TRANSFORM_SITE`
++
++## 2. List the places the rewrite may touch
++
++Add `src/rewrite/vct/rewrite/MyTransformSites.scala` with
++`collect(program)` that returns the allowed nodes in a stable order.
++Index `0` is the first item.
++
++The walk into C function bodies (`visitGlobal`: `CTranslationUnit`,
++`CFunctionDefinition`, `Procedure`, skip `reach_error` / `abort` /
++`__VERIFIER_*`) is the same in every `*Sites.scala`. Copy that part.
++Do not copy another file’s `descend` / `add`: that is which nodes this
++rewrite may touch, and each transform’s list is different.
++
++## 3. Write the rewriter
++
++Add one file: `src/rewrite/vct/rewrite/MyTransform.scala`. In Scala a
++`case object` is a single named value; a `case class` is a type you
++create an instance of. `AddIfZero.scala` has both in the same file: the
++object is the transform’s name, the class is the code that edits the
++tree. Copy that shape. Do not split them into two files.
++
++Those steps go in the `case class` in `MyTransform.scala`, in
++`dispatch(program)` (see `AddIfZero.scala`):
++
++1. `val candidates = MyTransformSites.collect(program)`
++2. `RobustnessSiteSelection.nextIndex("MY_TRANSFORM_SITE", candidates.size)`
++   and keep `candidates(index)` when that returns an index. Call
++   `nextIndex` even if the list is empty. If there are no candidates, do
++   not change the program.
++3. `super.dispatch(program)`
++
++When you visit a statement (still in that same `case class`): if it is
++the selected site, apply your edit once. If it is any other statement,
++leave it unchanged (`stat.rewriteDefault()`). That is how the rest of
++the program stays the same.
++
++If you replace a `{ }` body with something that is not a block, call
++`RobustnessStatementWrap.keepSurroundingBraces`.
++
++## 4. Register the name
++
++`TRANSFORM=my-transform` is only text in `config.env`. Until
++`src/main/vct/main/modes/Robustness.scala` `parseTransform` turns that
++text into your `case object`, VerCors does not know which rewrite to
++run. In that file do three things, the same way `add-if-zero` is wired:
++
++1. At the top of `Robustness.scala`, in `import vct.col.rewrite.{ ... }`,
++   add `MyTransform` next to `AddIfZero` (so the file can name your
++   `case object`).
++2. In the same file, inside `parseTransform`’s `match`, add a line like
++   the add-if-zero one: `case "my-transform" => MyTransform`. That is the
++   line that turns the text `my-transform` into your `case object`.
++3. Still in `parseTransform`, if the name is not in the `match`, VerCors
++   throws. The text of that error is:
++
++   `Use add-if-zero, add-if-one, for-to-while, deepen-while, or to-method`
++
++   Change it so the list also contains `my-transform`. This does not run
++   the rewrite. It only updates the message someone sees after a typo.
++
++Do not add your rewriter to `Transformation.scala`. That file is the
++rewrite list for verification. If you put it there, every verify would
++apply the mutant, not only `--robustness`.
++
++Which transform runs is the string `TRANSFORM` in `config.env` (the
++driver copies it to `ROBUSTNESS_TRANSFORM`). `Options.scala` already has
++`--robustness`. You do not add a new flag for each transform.
++
++## 5. Mixed mode
++
++Skip this if you will not use `MODE=mixed`.
++
++File: `src/rewrite/vct/rewrite/RobustnessSpin.scala`.
++
++- Line 18: `sealed trait Kind` — the shape of the extra block (name, site
++  count, how to run).
++- Lines 24–33: `AddIfZeroKind` — add-if-zero’s copy of that block.
++- Lines 86–92: `kindOf` — `case AddIfZero => AddIfZeroKind` connects the
++  rewriter from step 4 to that block.
++
++Copy `AddIfZeroKind` and the `kindOf` line:
++
++1. After `AddIfZeroKind`, add `MyTransformKind` the same way. `label` is
++   `"my-transform"`. `candidateCount` is
++   `MyTransformSites.collect(program).size`. `apply` is
++   `MyTransform[Pre]().dispatch(program)`.
++2. In `kindOf`, next to `case AddIfZero => AddIfZeroKind`, add
++   `case MyTransform => MyTransformKind`.
++
++When you want mixed to pick it, put `my-transform` on `TRANSFORM=` in
++`config.env`.
++
++If `TRANSFORM` is empty, mixed uses the `Seq` at
++`src/main/vct/main/modes/Robustness.scala` lines 72–77 (add-if-zero,
++add-if-one, for-to-while, deepen-while). Do not put `MyTransform` on that
++`Seq` unless an empty `TRANSFORM` should include it.
++
++## 6. Driver script
++
++If `run-benchmark.sh` should accept the name: add `MY_TRANSFORM_SITE` to
++`ALL_SITE_VARS`, add the name in `site_var_for` and in `usage`, and set
++`TRANSFORM` in `config.env`. Mixed also needs step 5.
+diff --git a/src/rewrite/vct/rewrite/ROBUSTNESS-CHANGES.md b/src/rewrite/vct/rewrite/ROBUSTNESS-WHAT-CHANGED-AFTER-THE-FORK.md
+similarity index 99%
+rename from src/rewrite/vct/rewrite/ROBUSTNESS-CHANGES.md
+rename to src/rewrite/vct/rewrite/ROBUSTNESS-WHAT-CHANGED-AFTER-THE-FORK.md
+index f30d2ae1f..97cb2e4b0 100644
+--- a/src/rewrite/vct/rewrite/ROBUSTNESS-CHANGES.md
++++ b/src/rewrite/vct/rewrite/ROBUSTNESS-WHAT-CHANGED-AFTER-THE-FORK.md
+@@ -1,10 +1,14 @@
+ # What changed after the VerCors fork
+ 
+-This is the detailed companion to [`ROBUSTNESS-FILES.md`](ROBUSTNESS-FILES.md).
++This is the detailed companion to [`ROBUSTNESS-WORK-MAP.md`](ROBUSTNESS-WORK-MAP.md).
+ It is not a list of recently touched files. It records what this branch
+ (`robustness-post-resolution`) changed relative to upstream VerCors
+ (`origin/dev`).
+ 
++The source excerpts below record the implementation as documented on
++2026-09-01. The current source files are authoritative; the current overview
++and benchmark locations are in `ROBUSTNESS-WORK-MAP.md`.
++
+ - **Added:** the path did not exist on `origin/dev`. The current source is
+   given in full.
+ - **Removed:** the file or flag existed on `origin/dev` and is gone here.
+@@ -13,7 +17,19 @@ It is not a list of recently touched files. It records what this branch
+   fragment, and what that piece did versus what it does now.
+ 
+ How to add a transform that does not exist yet:
+-[`ROBUSTNESS.md`](ROBUSTNESS.md).
++[`ROBUSTNESS-HOW-TO-ADD-A-TRANSFORM.md`](ROBUSTNESS-HOW-TO-ADD-A-TRANSFORM.md).
++
++## Current status
++
++- VerCors has five robustness transforms: `add-if-zero`, `add-if-one`,
++  `for-to-while`, `deepen-while`, and `to-method`.
++- The completed `to-method` benchmark is under
++  `robustness-benchmarks/to-method/`: 19 programs, 100 applicable sites, and
++  100 successful mutant verification logs.
++- The shared 34-program input set for the four established transforms is under
++  `robustness-benchmarks/established-transformations/broader/`; `SOURCES.tsv`
++  and `SELECTION.md` record its origin and selection. The recorded 2026-10-26
++  run contains 361 `ROBUST` and 228 `NOT_ROBUST` rows.
+ 
+ ## A. Added files
+ 
+@@ -3957,6 +3973,6 @@ override def layout(implicit ctx: Ctx): Doc =
+ 
+ | Path | Why |
+ |---|---|
+-| `ROBUSTNESS-FILES.md`, `ROBUSTNESS.md`, this file | Documentation. |
+-| `robustness-results/post-resolution/` | Driver output, not implementation. |
++| `ROBUSTNESS-WORK-MAP.md`, `ROBUSTNESS-HOW-TO-ADD-A-TRANSFORM.md`, this file | Documentation. |
++| `robustness-benchmarks/` | Inputs, mutants, logs, and result tables; not implementation. |
+ | `robustness-transformed.c` | Last dump in the working directory. |
+diff --git a/src/rewrite/vct/rewrite/ROBUSTNESS-FILES.md b/src/rewrite/vct/rewrite/ROBUSTNESS-WORK-MAP.md
+similarity index 86%
+rename from src/rewrite/vct/rewrite/ROBUSTNESS-FILES.md
+rename to src/rewrite/vct/rewrite/ROBUSTNESS-WORK-MAP.md
+index 6949579df..70258e7ed 100644
+--- a/src/rewrite/vct/rewrite/ROBUSTNESS-FILES.md
++++ b/src/rewrite/vct/rewrite/ROBUSTNESS-WORK-MAP.md
+@@ -4,10 +4,10 @@ This file is the map of the work on `robustness-post-resolution`: which
+ files we added or changed, and what each one is for, so the big picture
+ is visible. Deleted experiments and flags are not listed here; their
+ full text is in
+-[`ROBUSTNESS-CHANGES.md`](ROBUSTNESS-CHANGES.md).
++[`ROBUSTNESS-WHAT-CHANGED-AFTER-THE-FORK.md`](ROBUSTNESS-WHAT-CHANGED-AFTER-THE-FORK.md).
+ 
+ It is **not** a recipe for a sixth transform. That guide is
+-[`ROBUSTNESS.md`](ROBUSTNESS.md).
++[`ROBUSTNESS-HOW-TO-ADD-A-TRANSFORM.md`](ROBUSTNESS-HOW-TO-ADD-A-TRANSFORM.md).
+ 
+ Two jobs were done, and they must stay separate in your head:
+ 
+@@ -28,6 +28,17 @@ Names in use: `add-if-zero`, `add-if-one`, `for-to-while`, `deepen-while`,
+ `to-method`. Underscores (`add_if_zero`) are accepted. The old SemTransforms
+ names (`if0error`, `add_if1`, `for2while`) are not.
+ 
++## Current benchmark state
++
++- `to-method`: 19 input programs, 100 applicable sites, and 100 successful
++  mutant verification logs are under `robustness-benchmarks/to-method/`.
++- The four established transforms share 34 verified broader-benchmark inputs
++  under `robustness-benchmarks/established-transformations/broader/`.
++  `SOURCES.tsv` and `SELECTION.md` record their origin and selection; the
++  recorded 2026-10-26 run contains 361 `ROBUST` and 228 `NOT_ROBUST` rows.
++- Benchmark folders keep the inputs, original-verification logs, transformed C,
++  transform logs, verification logs, and result tables together.
++
+ ---
+ 
+ ## Added files
+@@ -72,15 +83,15 @@ for-to-while, and deepen-while. `to-method` is used only when you list it.
+ | `src/rewrite/vct/rewrite/RobustnessSpin.scala` | Implements one `--robustness-spin` step. It first picks a transform from the pool (each remaining kind with at least one site has the same chance), then picks a site among that kind's current candidates (each candidate has the same chance). |
+ | `src/rewrite/vct/rewrite/RobustnessStatementWrap.scala` | Shared wrap helpers for add-if-zero, add-if-one, deepen-while, and to-method. `asCompound` puts a statement inside a `{ }` block. `keepSurroundingBraces` keeps a wrapped site as a `{ }` block when the original node was already a `Block` or `Scope`, so a loop or if body that was compound stays compound after the wrap. |
+ 
+-### Driver and these two documents
++### Driver and these documents
+ 
+ These are not VerCors core.
+ 
+ | File | What it is responsible for |
+ |---|---|
+-| `src/rewrite/vct/rewrite/ROBUSTNESS-FILES.md` | The map of the work on this branch: which files were added, changed, or removed, and what each one is for, so the big picture is visible without opening every source. |
+-| `src/rewrite/vct/rewrite/ROBUSTNESS-CHANGES.md` | After this work forked from VerCors (`origin/dev`), this file shows those changes in full: every new file's source, every removed file or flag with the source that used to be there, and before/after fragments for files that already existed. |
+-| `src/rewrite/vct/rewrite/ROBUSTNESS.md` | Instruction guide for adding a transform that does not exist yet. |
++| `src/rewrite/vct/rewrite/ROBUSTNESS-WORK-MAP.md` | The map of the implementation, benchmark layout, and the file responsible for each part. |
++| `src/rewrite/vct/rewrite/ROBUSTNESS-WHAT-CHANGED-AFTER-THE-FORK.md` | The detailed record of changes relative to upstream VerCors. |
++| `src/rewrite/vct/rewrite/ROBUSTNESS-HOW-TO-ADD-A-TRANSFORM.md` | Instructions for adding a transform that does not exist yet. |
+ | `util/robustness/run-benchmark.sh` | Runs the automated robustness pipeline. It calls ordinary `vercors` on originals, then `--robustness`, then ordinary `vercors` on mutants, and writes TSV verdicts. From the repository root: `./util/robustness/run-benchmark.sh`. |
+ | `util/robustness/config.env` | The settings the script reads. Edit this file, then run the script. |
+ 
+@@ -161,7 +172,7 @@ original VerCors comments.
+ 
+ | Path | What it is |
+ |---|---|
+-| `robustness-results/post-resolution/` | Driver output: mutants, logs, TSV. The script writes here. |
++| `robustness-benchmarks/` | Organized inputs, mutants, logs, and result tables; it is evidence, not implementation. |
+ | `robustness-transformed.c` in the working directory | Last `--robustness` dump. Do not commit it. |
+ 
+ ---
+@@ -190,10 +201,11 @@ Use `out/vercors/main/runScript.dest/vercors` while mill is compiling, not
+ 
+ | You want to | Open |
+ |---|---|
+-| Add a transform that does not exist yet | [`ROBUSTNESS.md`](ROBUSTNESS.md) |
++| Add a transform that does not exist yet | [`ROBUSTNESS-HOW-TO-ADD-A-TRANSFORM.md`](ROBUSTNESS-HOW-TO-ADD-A-TRANSFORM.md) |
+ | Change which statements a rewrite may touch | The matching `*Sites.scala` |
+ | Change repeat / spin / seed | `Robustness.scala` and `Options.scala` |
+ | Change the dump path or C syntax of the mode | `Robustness.scala` `Output(...)` |
+ | Hide sizeof helpers in C | The four files in the sizeof section; not `FunctionImpl.layout` |
+ | Fix invalid C in a dump | The pretty-print files in that section |
+ | Change a folder run | `util/robustness/config.env`, then the script |
++| Inspect or rerun the organized benchmarks | `robustness-benchmarks/README.md` |
+diff --git a/src/rewrite/vct/rewrite/ROBUSTNESS.md b/src/rewrite/vct/rewrite/ROBUSTNESS.md
+deleted file mode 100644
+index 64a2b1a26..000000000
+--- a/src/rewrite/vct/rewrite/ROBUSTNESS.md
++++ /dev/null
+@@ -1,238 +0,0 @@
+-# Adding a robustness transform that does not exist yet
+-
+-This file is an instruction for wiring a **new** rewrite into
+-`--robustness`. It is not a catalogue of the five rewrites that already
+-exist. Those are recorded in [`ROBUSTNESS-FILES.md`](ROBUSTNESS-FILES.md).
+-
+-`--robustness` does not run Silicon. After a dump exists, verification is
+-a separate ordinary `vercors` invocation, or the driver script.
+-
+-Do not add the new rewrite to `Transformation.scala`. That object is the
+-ordinary Verify pass list. None of the robustness rewrites are on it.
+-
+-Do not add a new flag in `Options.scala`. The name is the environment
+-variable `ROBUSTNESS_TRANSFORM`. The site index is a second environment
+-variable that you pass to `RobustnessSiteSelection.nextIndex`.
+-
+----
+-
+-## What the engine requires
+-
+-A robustness transform is three things that must agree:
+-
+-1. A **collector** that returns the AST nodes this rewrite is allowed to
+-   change, in a stable order, so index `0` is always the first node in that
+-   list.
+-2. A **rewriter** (`RewriterBuilder` + `Rewriter`) that, on each
+-   application, asks `RobustnessSiteSelection.nextIndex` for one index,
+-   changes that node once, and leaves every other node to
+-   `rewriteDefault`.
+-3. A **name** in `parseTransform` in
+-   `src/main/vct/main/modes/Robustness.scala`, so
+-   `ROBUSTNESS_TRANSFORM=<name>` selects that builder.
+-
+-The selected node is identified by reference (`eq` on the tree node), not
+-by line number and not by printed C text.
+-
+-If the collector returns no nodes, `nextIndex(env, 0)` returns `None` and
+-the rewriter must not change the program. Call `nextIndex` even in that
+-case: spin may have stored a forced index, and that call consumes it.
+-
+----
+-
+-## 1. Choose the two strings
+-
+-Pick the string that will appear in `ROBUSTNESS_TRANSFORM`, and the
+-environment variable that will hold the site index.
+-
+-Example: name `my-transform`, site variable `MY_TRANSFORM_SITE`.
+-
+-`parseTransform` matches on `name.trim.toLowerCase`. Put in the `case`
+-exactly the strings you will export. If you only list `"my-transform"`,
+-then `ROBUSTNESS_TRANSFORM=my_transform` is unknown and the process stops
+-with `Unknown ROBUSTNESS_TRANSFORM=...`.
+-
+-Update the error text in that same `match` so it lists the new name.
+-Otherwise a typo still tells the user only the old five names.
+-
+-`RewriterBuilder.key` is a separate Scala string (used in logs and in the
+-spin error `Robustness spin pool cannot include …`). It must not collide
+-with another builder’s `key` in the same run.
+-
+----
+-
+-## 2. Write the collector
+-
+-Add a Scala object whose `collect(program)` returns the allowed nodes.
+-
+-After `--robustness` has parsed and resolved, C functions appear as
+-`CFunctionDefinition` or `Procedure` under `program.declarations`,
+-sometimes nested in `CTranslationUnit`. Every collector that exists today
+-walks those declarations and skips function names `reach_error`, `abort`,
+-`assume_abort_if_not`, and names that start with `__VERIFIER_`. Do the
+-same unless you have a documented reason not to: otherwise you will
+-rewrite error-sink helpers.
+-
+-Which **node type** you collect is the definition of this transform. That
+-decision is yours. Do not call another transform’s collector unless that
+-list is exactly the set of nodes you intend to change. A wrong collector
+-selects the wrong node and the rewrite is still “successful” as far as
+-the engine is concerned.
+-
+-Each site must hold the target node (for `eq`) and whatever you need to
+-log. The engine only cares that `candidates(index).target` is the node
+-the rewriter will test with `eq`.
+-
+----
+-
+-## 3. Write the rewriter
+-
+-Add a `RewriterBuilder` and a `Rewriter[Pre]` in
+-`src/rewrite/vct/rewrite/`. The `rewrite` mill module takes all Scala
+-under `src/rewrite`. `build.sc` does not list individual rewriter files.
+-
+-In `dispatch(program: Program[Pre])`:
+-
+-1. `val candidates = YourSites.collect(program)`
+-2. `selected = RobustnessSiteSelection.nextIndex("YOUR_SITE", candidates.size)`
+-   mapped to `candidates(index)` when the `Option` is `Some`
+-3. `super.dispatch(program)`
+-
+-In `dispatch` for the node kind you change: if the stored target `eq` this
+-node, apply the AST edit once; otherwise `rewriteDefault`.
+-
+-The AST edit is the meaning of this transform. The engine does not
+-constrain it beyond: one selected node per application, identity by `eq`.
+-
+-Printer constraint, verified in `RobustnessStatementWrap` and the C loop
+-printer: `if` and `for`/`while` only emit `{ }` when the body is a
+-`Block` or `Scope`. If you replace a `Block`/`Scope` body with a node that
+-is neither, the dump can drop the braces. In that situation call
+-`RobustnessStatementWrap.keepSurroundingBraces(original, replacement)`.
+-If the replacement is already a `Block` or `Scope`, you do not need it.
+-
+----
+-
+-## 4. Register the name (required for any use)
+-
+-In `src/main/vct/main/modes/Robustness.scala`:
+-
+-- import the `RewriterBuilder`
+-- add a `case` in `parseTransform`
+-- add the name to the `Unknown ROBUSTNESS_TRANSFORM` message
+-
+-After a compile, this is enough for a non-spin run:
+-
+-```bash
+-ROBUSTNESS_TRANSFORM=my-transform \
+-  out/vercors/main/runScript.dest/vercors --robustness file.c
+-```
+-
+-`file.c` must actually contain at least one collected site. If it does
+-not, the dump is the resolved program with no rewrite applied.
+-
+-Compile:
+-
+-```bash
+-./mill vercors.main.compile
+-```
+-
+-Use `out/vercors/main/runScript.dest/vercors`, not `bin/vct`, while that
+-compile is the binary you intend to run.
+-
+----
+-
+-## 5. Register spin (`kindOf`) if the name will be used with `--robustness-spin`
+-
+-Non-spin runs never call `RobustnessSpin.kindOf`.
+-
+-`--robustness-spin` (and the driver’s `MODE=mixed`) builds the pool with
+-`builders.map(RobustnessSpin.kindOf)`. If `kindOf` has no case for the
+-new builder, the process throws:
+-
+-`Robustness spin pool cannot include <key>`
+-
+-In `src/rewrite/vct/rewrite/RobustnessSpin.scala`:
+-
+-- a `Kind` with `label` equal to the `ROBUSTNESS_TRANSFORM` name,
+-  `candidateCount` equal to `YourSites.collect(program).size`,
+-  `apply` equal to `YourRewriter[Pre]().dispatch(program)`
+-- `case YourRewriter => YourKind` in `kindOf`
+-
+-Default pool when `ROBUSTNESS_TRANSFORM` is **unset** and spin is on is
+-the `Seq` in `selectedBuilders` in `Robustness.scala` (currently four
+-builders; not `to-method`). Put the new builder in that `Seq` only if an
+-unset env var must include it. If the driver will list the name in
+-`TRANSFORM`, you do not add it to that default `Seq`.
+-
+-`RobustnessSpin.defaultPool` is used only when `kindOf` is given an empty
+-list. The mode does not pass an empty list when `selectedBuilders`
+-returns the four-builder `Seq`. Do not edit `defaultPool` instead of
+-`kindOf` and expect `MODE=mixed` with `TRANSFORM=my-transform` to work.
+-
+----
+-
+-## 6. Register the driver if `run-benchmark.sh` must accept the name
+-
+-`vercors --robustness` does not read the script. The script is required
+-only for folder runs.
+-
+-In `util/robustness/run-benchmark.sh`:
+-
+-- add `YOUR_SITE` to `ALL_SITE_VARS` (otherwise a leftover value in the
+-  shell is not cleared)
+-- add the name in `site_var_for` so it prints `YOUR_SITE`
+-- add the name on the `--transform` line in `usage`
+-
+-`preferred` calls `site_var_for` and stops with `unknown transform` if
+-that function returns empty.
+-
+-In `util/robustness/config.env`, set `TRANSFORM` to the new name when you
+-want that run. Mixed uses that list as the spin pool, so step 5 must
+-already be done.
+-
+----
+-
+-## 7. Check the dump
+-
+-```bash
+-./mill vercors.main.compile
+-
+-unset YOUR_SITE
+-ROBUSTNESS_TRANSFORM=my-transform \
+-  out/vercors/main/runScript.dest/vercors --robustness file.c
+-```
+-
+-The mode writes `robustness-transformed.c` in the current working
+-directory. Inspect that file. Site `0` is the first element of your
+-collector’s list for that program.
+-
+-A later index:
+-
+-```bash
+-YOUR_SITE=1 \
+-ROBUSTNESS_TRANSFORM=my-transform \
+-  out/vercors/main/runScript.dest/vercors --robustness file.c
+-```
+-
+-If the collector has fewer than two sites, `YOUR_SITE=1` throws
+-`Invalid YOUR_SITE index 1` with the valid range in the message.
+-
+-Verification of the dump is not `--robustness`:
+-
+-```bash
+-out/vercors/main/runScript.dest/vercors robustness-transformed.c
+-```
+-
+-There is no robustness test directory in this repository.
+-
+----
+-
+-## Do not
+-
+-- Do not put the rewriter on the Verify list in `Transformation.scala`.
+-- Do not add `--my-transform` in `Options.scala`.
+-- Do not reuse another transform’s collector unless the allowed nodes are
+-  the same set.
+-- Do not skip `kindOf` if the name will appear in a spin pool.
+-- Do not skip `ALL_SITE_VARS` if the driver will set `YOUR_SITE`.
+diff --git a/src/rewrite/vct/rewrite/RobustnessToMethod.scala b/src/rewrite/vct/rewrite/RobustnessToMethod.scala
+index 895caf579..d17ad3e91 100644
+--- a/src/rewrite/vct/rewrite/RobustnessToMethod.scala
++++ b/src/rewrite/vct/rewrite/RobustnessToMethod.scala
+@@ -15,13 +15,16 @@ case object RobustnessToMethod extends RewriterBuilder {
+   override def key: String = "robustnessToMethod"
+ 
+   override def desc: String =
+-    "Extract a compound statement into a new function, VerCors form: pointer args, \\pointer write, inline."
++    "Extract a compound statement into a new function with VerCors pointer contracts."
+ }
+ 
+ case class RobustnessToMethod[Pre <: Generation]() extends Rewriter[Pre] {
+   private var selected: Option[ToMethodSites.Site[Pre]] = None
+-  private var lifting: Seq[(Variable[Pre], Variable[Post])] = Nil
++  /** pre var -> (post param, derefInBody) */
++  private var lifting: Seq[(Variable[Pre], Variable[Post], Boolean)] = Nil
++  private var heapLifting: Seq[(LocalHeapVariable[Pre], Variable[Post])] = Nil
+   private var extracting: Boolean = false
++  private var enclosingLoopCond: Option[Expr[Pre]] = None
+ 
+   override def dispatch(program: Program[Pre]): Program[Post] = {
+     val candidates = ToMethodSites.collect(program)
+@@ -55,21 +58,72 @@ case class RobustnessToMethod[Pre <: Generation]() extends Rewriter[Pre] {
+     super.dispatch(program)
+   }
+ 
+-  private def lifted(v: Variable[Pre]): Option[Variable[Post]] =
+-    lifting.collectFirst { case (pre, post) if pre eq v => post }
++  private def lifted(v: Variable[Pre]): Option[(Variable[Post], Boolean)] =
++    lifting.collectFirst {
++      case (pre, post, deref) if pre eq v => (post, deref)
++    }
++
++  private def isPointerLike(t: Type[_]): Boolean =
++    t match {
++      case _: TPointer[_] | _: TNonNullPointer[_] | _: TPointerArray[_] |
++          _: TNonNullPointerArray[_] | _: TConstPointerArray[_] |
++          _: TNonNullConstPointerArray[_] | _: TArray[_] =>
++        true
++      case _ =>
++        false
++    }
++
++  /** Prefer `T*` over sized `T[n]` in extracted params so size names are not
++    * required before the array parameter (dependent type / scope crash).
++    */
++  private def decayToPointer(t: Type[Pre]): Type[Post] =
++    t match {
++      case TArray(el) => TPointer(dispatch(el), None)(t.o)
++      case TPointerArray(el, _, _) => TPointer(dispatch(el), None)(t.o)
++      case TNonNullPointerArray(el, _, unique) =>
++        TPointer(dispatch(el), unique)(t.o)
++      case TConstPointerArray(el, _) =>
++        TPointer(dispatch(el), None)(t.o)
++      case TNonNullConstPointerArray(el, _) =>
++        TNonNullPointer(dispatch(el), None)(t.o)
++      case other => dispatch(other)
++    }
++
++  private def paramType(t: Type[Pre], byRef: Boolean): Type[Post] =
++    if (byRef) TPointer(dispatch(t), None)(t.o)
++    else if (isPointerLike(t)) decayToPointer(t)
++    else dispatch(t)
++
++  /** A single written local can be returned to the caller. This also covers
++    * pointer locals, whose pointer value must change in the caller when the
++    * extracted block assigns them.
++    */
++  private def useReturnValue(
++      written: Set[Variable[Pre]],
++      captured: Seq[Variable[Pre]],
++  ): Boolean =
++    written.size == 1 &&
++      (written.exists(v => isPointerLike(v.t)) ||
++        captured.exists(v => isPointerLike(v.t)))
+ 
+   override def dispatch(e: Expr[Pre]): Expr[Post] =
+     e match {
+       case Local(Ref(v)) =>
+         lifted(v) match {
+-          case Some(param) =>
++          case Some((param, true)) =>
+             implicit val o: Origin = e.o
+             DerefPointer[Post](param.get)(PanicBlame(
+               "to-method pointer is the address of a live local"
+             ))
++          case Some((param, false)) =>
++            Local[Post](param.ref)(e.o)
+           case None =>
+             e.rewriteDefault()
+         }
++      case HeapLocal(Ref(v)) =>
++        heapLifting.collectFirst {
++          case (pre, param) if pre eq v => Local[Post](param.ref)(e.o)
++        }.getOrElse(e.rewriteDefault())
+       case _ =>
+         e.rewriteDefault()
+     }
+@@ -92,85 +146,315 @@ case class RobustnessToMethod[Pre <: Generation]() extends Rewriter[Pre] {
+       case other => other.subnodes.exists(containsStmt(_, target))
+     }
+ 
+-  /** AddrOf of a local makes Verify turn that local into a pointer. The
+-    * enclosing loop must frame `\pointer(&x, 1, write)` or the invariant
+-    * cannot mention `x`.
++  /** Assigned locals need `\pointer(&x)` when they are passed by reference.
++    * For-loops are turned into while so init runs before the framed while,
++    * matching the pattern that already works for `3_while_multip`.
+     */
+-  private def frameLoop(loop: Loop[Pre]): Loop[Post] = {
++  private def frameLoop(loop: Loop[Pre]): Statement[Post] = {
+     implicit val o: Origin = loop.o
+-    val captured = selected.map(s => ToMethodSites.capturedVars(s.target))
+-      .getOrElse(Nil)
+-    val extra = foldStar(captured.map { v =>
++    val siteStat = selected.map(_.target)
++    val captured = siteStat.map(ToMethodSites.capturedVars(_)).getOrElse(Nil)
++    val written = siteStat.map(assignedLocals(_)).getOrElse(Set.empty)
++    // A single written value is returned when pointer values participate in
++    // the extraction. This keeps pointer reassignment visible to the caller
++    // without adding an address-of frame.
++    val useReturn = useReturnValue(written, captured)
++    val byRef =
++      if (useReturn) Nil
++      else captured.filter(v => written.exists(_ eq v))
++    val extra = foldStar(byRef.map { v =>
+       PermPointer[Post](
+         AddrOf(Local[Post](succ(v)))(o),
+         const(1),
+         WritePerm(),
+       )(o)
+     })
+-    Loop[Post](
+-      dispatch(loop.init),
+-      dispatch(loop.cond),
+-      dispatch(loop.update),
+-      loop.contract match {
+-        case inv: LoopInvariant[Pre] =>
+-          LoopInvariant[Post](
+-            Star(extra, dispatch(inv.invariant)),
+-            inv.decreases.map(dispatch),
+-          )(inv.o)
+-        case other =>
+-          dispatch(other)
+-      },
+-      dispatch(loop.body),
+-    )
++
++    def framedWhile(
++        cond: Expr[Pre],
++        contract: LoopContract[Pre],
++        body: Statement[Pre],
++    ): Loop[Post] = {
++      enclosingLoopCond = Some(cond)
++      try {
++        Loop[Post](
++          Block[Post](Nil),
++          dispatch(cond),
++          Block[Post](Nil),
++          contract match {
++            case inv: LoopInvariant[Pre] =>
++              LoopInvariant[Post](
++                Star(extra, dispatch(inv.invariant)),
++                inv.decreases.map(dispatch),
++              )(inv.o)
++            case other =>
++              dispatch(other)
++          },
++          dispatch(body),
++        )
++      } finally {
++        enclosingLoopCond = None
++      }
++    }
++
++    def hasSendRecv(node: Node[Pre]): Boolean =
++      node match {
++        case _: Send[Pre] | _: Recv[Pre] => true
++        case _: Type[Pre] => false
++        case other => other.subnodes.exists(hasSendRecv)
++      }
++
++    def keepAsFor(
++        init: Statement[Pre],
++        cond: Expr[Pre],
++        update: Statement[Pre],
++        contract: LoopContract[Pre],
++        body: Statement[Pre],
++    ): Loop[Post] = {
++      enclosingLoopCond = Some(cond)
++      try {
++        Loop[Post](
++          dispatch(init),
++          dispatch(cond),
++          dispatch(update),
++          contract match {
++            case inv: LoopInvariant[Pre] =>
++              LoopInvariant[Post](
++                Star(extra, dispatch(inv.invariant)),
++                inv.decreases.map(dispatch),
++              )(inv.o)
++            case other =>
++              dispatch(other)
++          },
++          dispatch(body),
++        )
++      } finally {
++        enclosingLoopCond = None
++      }
++    }
++
++    loop match {
++      case Loop(Block(Nil), cond, Block(Nil), contract, body) =>
++        framedWhile(cond, contract, body)
++      // for→while only when we need AddrOf frames after init. Iteration
++      // contracts / send-recv break if the for header is dismantled.
++      case Loop(init, cond, update, contract, body)
++          if byRef.nonEmpty && !hasSendRecv(loop) &&
++            contract.isInstanceOf[LoopInvariant[Pre]] =>
++        Block[Post](Seq(
++          dispatch(init),
++          framedWhile(
++            cond,
++            contract,
++            Block[Pre](Seq(body, update))(o),
++          ),
++        ))
++      case Loop(init, cond, update, contract, body)
++          if hasSendRecv(loop) =>
++        sendDecls.scope {
++          keepAsFor(init, cond, update, contract, body)
++        }
++      case Loop(init, cond, update, contract, body) =>
++        keepAsFor(init, cond, update, contract, body)
++    }
+   }
+ 
+-  /** `{ S }` using locals/params `x` becomes `void f(T *x) { S[x := *x] }`
+-    * and the site becomes `f(&x)`. Each argument gets `\pointer(x, 1, write)`.
+-    * The procedure is `inline` so original loop contracts still prove after
+-    * dump and verify.
++  private def freeLocals(e: Expr[Pre]): Seq[Variable[Pre]] =
++    ToMethodSites.outwardVars(e)
++
++  /** One assigned scalar + pointer captures: return the new value instead of
++    * `T *` / AddrOf (avoids \\pointer(&local) next to array permissions).
+     */
+-  private def extract(stat: Statement[Pre]): Statement[Post] = {
++  private def extractReturn(
++      stat: Statement[Pre],
++      resultVar: Variable[Pre],
++      fromBody: Seq[Variable[Pre]],
++      fromGuard: Seq[Variable[Pre]],
++      heapFromBody: Seq[LocalHeapVariable[Pre]],
++      heapFromGuard: Seq[LocalHeapVariable[Pre]],
++  ): Statement[Post] = {
+     implicit val funcO: Origin = Origin(
+       Seq(RequiredName("func_to_method"), LabelContext("to-method"))
+     )
+-    val captured = ToMethodSites.capturedVars(stat)
++    val captured = fromBody ++ fromGuard
+     val params = captured.map { v =>
+-      new Variable[Post](TPointer(dispatch(v.t), None)(v.o))(v.o)
++      new Variable[Post](paramType(v.t, byRef = false))(v.o)
+     }
++    val capturedHeap = heapFromBody ++ heapFromGuard
++    val heapParams = capturedHeap.map { v =>
++      new Variable[Post](paramType(v.t, byRef = false))(v.o)
++    }
++    val resultParam = params(captured.indexWhere(_ eq resultVar))
+ 
+-    lifting = captured.zip(params)
++    lifting = captured.zip(params).map { case (v, p) => (v, p, false) }
++    heapLifting = capturedHeap.zip(heapParams)
++    extracting = true
++    val bodyCore = dispatch(stat)
++    val guard = enclosingLoopCond.map(dispatch).getOrElse(tt[Post])
++    extracting = false
++    lifting = Nil
++    heapLifting = Nil
++
++    val body = Block[Post](Seq(
++      bodyCore,
++      Return[Post](Local[Post](resultParam.ref)(funcO))(funcO),
++    ))(funcO)
++
++    val extracted: Procedure[Post] = globalDeclarations.declare(
++      procedure(
++        blame = PanicBlame("to-method extracted function"),
++        contractBlame = UnsafeDontCare.Satisfiability("to-method"),
++        returnType = dispatch(resultVar.t),
++        args = params ++ heapParams,
++        body = Some(body),
++        requires = UnitAccountedPredicate(guard)(funcO),
++        ensures = UnitAccountedPredicate(tt[Post])(funcO),
++        // Array perms stay with the caller; inline makes this sound.
++        contextEverywhere = tt[Post],
++        inline = true,
++      )
++    )
++
++    val call = Assign[Post](
++      Local[Post](succ(resultVar))(stat.o),
++      procedureInvocation(
++        blame = UnsafeDontCare.Invocation("to-method"),
++        ref = new DirectRef[Post, Procedure[Post]](extracted),
++        args = captured.map(v => Local[Post](succ(v))(stat.o)) ++
++          capturedHeap.map(v => HeapLocal[Post](succ(v))(stat.o)),
++      )(stat.o),
++    )(PanicBlame("to-method assign result"))(stat.o)
++
++    RobustnessStatementWrap.keepSurroundingBraces(stat, call)
++  }
++
++  private def extract(stat: Statement[Pre]): Statement[Post] = {
++    implicit val funcO: Origin = Origin(
++      Seq(RequiredName("func_to_method"), LabelContext("to-method"))
++    )
++    val fromBody = ToMethodSites.capturedVars(stat)
++    val heapFromBody = ToMethodSites.outwardHeapVars(stat)
++    val written = assignedLocals(stat)
++    val fromGuard =
++      enclosingLoopCond.map(freeLocals).getOrElse(Nil).filterNot(v =>
++        fromBody.exists(_ eq v)
++      )
++    val heapFromGuard =
++      enclosingLoopCond.map(ToMethodSites.outwardHeapVars).getOrElse(Nil)
++        .filterNot(v => heapFromBody.exists(_ eq v))
++    val useReturn = useReturnValue(written, fromBody)
++    if (useReturn)
++      return extractReturn(
++        stat,
++        written.head,
++        fromBody,
++        fromGuard,
++        heapFromBody,
++        heapFromGuard,
++      )
++
++    // Every assigned captured local is by reference unless the single-result
++    // return path above is used. This includes pointer locals: assigning the
++    // pointer value inside the extracted block must update the caller.
++    val bodyModes: Seq[(Variable[Pre], Boolean /*byRef*/)] =
++      fromBody.map { v =>
++        val byRef = written.exists(_ eq v)
++        (v, byRef)
++      }
++    val guardModes: Seq[(Variable[Pre], Boolean)] =
++      fromGuard.map(v => (v, false))
++    val capturedModes = bodyModes ++ guardModes
++
++    val params = capturedModes.map { case (v, byRef) =>
++      new Variable[Post](paramType(v.t, byRef))(v.o)
++    }
++    val capturedHeap = heapFromBody ++ heapFromGuard
++    val heapParams = capturedHeap.map { v =>
++      new Variable[Post](paramType(v.t, byRef = false))(v.o)
++    }
++
++    lifting = capturedModes.zip(params).map {
++      case ((v, byRef), p) => (v, p, byRef)
++    }
++    heapLifting = capturedHeap.zip(heapParams)
+     extracting = true
+     val body = dispatch(stat)
++    val guard = enclosingLoopCond.map(dispatch).getOrElse(tt[Post])
+     extracting = false
+     lifting = Nil
++    heapLifting = Nil
++
++    val byRefParams = capturedModes.zip(params).collect {
++      case ((_, true), p) => p
++    }
++    val ptrValueParams = capturedModes.zip(params).collect {
++      case ((v, false), p) if isPointerLike(v.t) => p
++    } ++ heapParams
++    val assignedRef = assignedByRefParams(body, byRefParams)
++    val writesPtr = ptrValueParams.filter(p => writesThroughPointer(body, p))
+ 
+-    def permStar: Expr[Post] =
+-      foldStar(params.map { p =>
+-        PermPointer[Post](p.get, const(1), WritePerm())(funcO)
+-      })(funcO)
++    def permForRef(p: Variable[Post]): Expr[Post] = {
++      val amount: Expr[Post] =
++        if (assignedRef.exists(_ eq p)) WritePerm()(funcO)
++        else ReadPerm()(funcO)
++      PermPointer[Post](p.get, const(1), amount)(funcO)
++    }
++    def permForPtr(p: Variable[Post]): Expr[Post] = {
++      val amount: Expr[Post] =
++        if (writesPtr.exists(_ eq p)) WritePerm()(funcO)
++        else ReadPerm()(funcO)
++      PermPointer[Post](p.get, const(1), amount)(funcO)
++    }
++
++    val stmts = statementsOf(body)
++    val assigns = stmts.flatMap(asPtrAssign(_, byRefParams))
++    val straightLine =
++      assigns.size == stmts.size &&
++        assigns.map(_._1).distinct.size == assigns.size &&
++        stmts.nonEmpty
++    val contractSafe =
++      straightLine && functionalContractSafe(assigns, byRefParams)
++    val functional =
++      if (contractSafe) functionalEnsures(body, byRefParams, assigns)(funcO)
++      else tt[Post]
++    // Array / iteration-contract contexts: inline and skip modular pointer
++    // contracts (\\pointer(p, 1, _) is the wrong length and fights iter contracts).
++    val arrayHeavy = ptrValueParams.nonEmpty
++    val doInline = !contractSafe || arrayHeavy
++    val contextPerms =
++      if (arrayHeavy)
++        tt[Post]
++      else
++        foldStar(
++          byRefParams.map(permForRef) ++ ptrValueParams.map(permForPtr)
++        )(funcO)
+ 
+     val extracted: Procedure[Post] = globalDeclarations.declare(
+       procedure(
+         blame = PanicBlame("to-method extracted function"),
+         contractBlame = UnsafeDontCare.Satisfiability("to-method"),
+         returnType = TVoid(),
+-        args = params,
++        args = params ++ heapParams,
+         body = Some(body),
+-        requires = UnitAccountedPredicate(permStar)(funcO),
+-        ensures = UnitAccountedPredicate(
+-          Star(permStar, functionalEnsures(body, params)(funcO))(funcO)
+-        )(funcO),
+-        inline = false,
++        requires = UnitAccountedPredicate(guard)(funcO),
++        ensures = UnitAccountedPredicate(functional)(funcO),
++        contextEverywhere = contextPerms,
++        inline = doInline,
+       )
+     )
+ 
++    val callArgs: Seq[Expr[Post]] = capturedModes.map {
++      case (v, true) =>
++        AddrOf(Local[Post](succ(v)))(stat.o)
++      case (v, false) =>
++        Local[Post](succ(v))(stat.o)
++    } ++ capturedHeap.map(v => HeapLocal[Post](succ(v))(stat.o))
++
+     val call = Eval[Post](
+       procedureInvocation(
+         blame = UnsafeDontCare.Invocation("to-method"),
+         ref = new DirectRef[Post, Procedure[Post]](extracted),
+-        args = captured.map { v =>
+-          AddrOf(Local[Post](succ(v)))(stat.o)
+-        },
++        args = callArgs,
+       )(stat.o)
+     )(stat.o)
+ 
+@@ -184,25 +468,120 @@ case class RobustnessToMethod[Pre <: Generation]() extends Rewriter[Pre] {
+       case other => Seq(other)
+     }
+ 
+-  /** Straight-line `*p = e` becomes `ensures *p == \old(e)`, plus
+-    * `*q == \old(*q)` for pointer args that are not assigned. Matches the
+-    * VerCors-adapted to_method contracts on 3_while_multip.
++  private def writesThroughPointer(
++      body: Statement[Post],
++      p: Variable[Post],
++  ): Boolean = {
++    def isPtrBase(e: Expr[Post]): Boolean =
++      e match {
++        case Local(Ref(v)) => v eq p
++        case DerefPointer(inner) => isPtrBase(inner)
++        case _ => false
++      }
++    def go(node: Node[Post]): Boolean =
++      node match {
++        case Assign(target, _) =>
++          target match {
++            case AmbiguousSubscript(base, _) if isPtrBase(base) => true
++            case PointerSubscript(base, _) if isPtrBase(base) => true
++            case DerefPointer(Local(Ref(v))) if v eq p => true
++            case _ => false
++          }
++        case Eval(PreAssignExpression(target, _)) =>
++          target match {
++            case AmbiguousSubscript(base, _) if isPtrBase(base) => true
++            case PointerSubscript(base, _) if isPtrBase(base) => true
++            case DerefPointer(Local(Ref(v))) if v eq p => true
++            case _ => false
++          }
++        case _: Type[Post] => false
++        case other => other.subnodes.exists(go)
++      }
++    go(body)
++  }
++
++  private def assignedByRefParams(
++      body: Statement[Post],
++      params: Seq[Variable[Post]],
++  ): Seq[Variable[Post]] = {
++    val out = scala.collection.mutable.LinkedHashSet.empty[Variable[Post]]
++    def go(node: Node[Post]): Unit =
++      node match {
++        case Assign(DerefPointer(Local(Ref(p))), _)
++            if params.exists(_ eq p) =>
++          out += p
++        case Eval(PreAssignExpression(DerefPointer(Local(Ref(p))), _))
++            if params.exists(_ eq p) =>
++          out += p
++        case Eval(PostAssignExpression(DerefPointer(Local(Ref(p))), _))
++            if params.exists(_ eq p) =>
++          out += p
++        case _: Type[Post] =>
++        case other => other.subnodes.foreach(go)
++      }
++    go(body)
++    out.toSeq
++  }
++
++  private def readsParam(
++      node: Node[Post],
++      param: Variable[Post],
++  ): Boolean =
++    node match {
++      case DerefPointer(Local(Ref(p))) if p eq param => true
++      case _: Type[Post] => false
++      case other => other.subnodes.exists(readsParam(_, param))
++    }
++
++  /** functionalEnsures oldifies only the expression forms listed here. A
++    * later assignment also cannot read a parameter changed by an earlier
++    * assignment, because that read is no longer a pre-state value.
+     */
++  private def functionalContractSafe(
++      assigns: Seq[(Variable[Post], Expr[Post])],
++      params: Seq[Variable[Post]],
++  ): Boolean = {
++    def oldifySupported(e: Expr[Post]): Boolean =
++      e match {
++        case DerefPointer(Local(Ref(p))) if params.exists(_ eq p) => true
++        case Plus(l, r) => oldifySupported(l) && oldifySupported(r)
++        case Minus(l, r) => oldifySupported(l) && oldifySupported(r)
++        case Mult(l, r) => oldifySupported(l) && oldifySupported(r)
++        case AmbiguousPlus(l, r) =>
++          oldifySupported(l) && oldifySupported(r)
++        case AmbiguousMinus(l, r) =>
++          oldifySupported(l) && oldifySupported(r)
++        case AmbiguousMult(l, r) =>
++          oldifySupported(l) && oldifySupported(r)
++        case other => !params.exists(readsParam(other, _))
++      }
++
++    val assignedEarlier =
++      scala.collection.mutable.LinkedHashSet.empty[Variable[Post]]
++    assigns.forall { case (target, rhs) =>
++      val safe =
++        oldifySupported(rhs) &&
++          !assignedEarlier.exists(readsParam(rhs, _))
++      assignedEarlier += target
++      safe
++    }
++  }
++
+   private def functionalEnsures(
+       body: Statement[Post],
+       params: Seq[Variable[Post]],
++      assigns: Seq[(Variable[Post], Expr[Post])],
+   )(implicit o: Origin): Expr[Post] = {
+     val oldBlame = PanicBlame("to-method \\old")
+     val derefBlame = PanicBlame("to-method pointer is the address of a live local")
+     val stmts = statementsOf(body)
+-    val assigns = stmts.flatMap(asPtrAssign(_, params))
+     if (assigns.size != stmts.size || assigns.map(_._1).distinct.size != assigns.size)
+       return tt
+ 
+     val assigned = assigns.map(_._1)
+     val fromAssigns = assigns.map { case (p, rhs) =>
+       DerefPointer[Post](p.get)(derefBlame) ===
+-        Old(rhs, None)(oldBlame)
++        oldifyParamReads(rhs, params)
+     }
+     val unchanged = params.filterNot(p => assigned.exists(_ eq p)).map { p =>
+       val deref = DerefPointer[Post](p.get)(derefBlame)
+@@ -211,6 +590,52 @@ case class RobustnessToMethod[Pre <: Generation]() extends Rewriter[Pre] {
+     foldStar(fromAssigns ++ unchanged)
+   }
+ 
++  private def oldifyParamReads(
++      e: Expr[Post],
++      params: Seq[Variable[Post]],
++  )(implicit o: Origin): Expr[Post] = {
++    val oldBlame = PanicBlame("to-method \\old")
++    val derefBlame = PanicBlame("to-method pointer is the address of a live local")
++    e match {
++      case DerefPointer(Local(Ref(p))) if params.exists(_ eq p) =>
++        Old(DerefPointer[Post](p.get)(derefBlame), None)(oldBlame)
++      case Plus(l, r) =>
++        Plus(oldifyParamReads(l, params), oldifyParamReads(r, params))
++      case Minus(l, r) =>
++        Minus(oldifyParamReads(l, params), oldifyParamReads(r, params))
++      case Mult(l, r) =>
++        Mult(oldifyParamReads(l, params), oldifyParamReads(r, params))
++      case AmbiguousPlus(l, r) =>
++        AmbiguousPlus(
++          oldifyParamReads(l, params),
++          oldifyParamReads(r, params),
++        )(e.asInstanceOf[AmbiguousPlus[Post]].blame)
++      case AmbiguousMinus(l, r) =>
++        AmbiguousMinus(
++          oldifyParamReads(l, params),
++          oldifyParamReads(r, params),
++        )(e.asInstanceOf[AmbiguousMinus[Post]].blame)
++      case AmbiguousMult(l, r) =>
++        AmbiguousMult(oldifyParamReads(l, params), oldifyParamReads(r, params))
++      case other =>
++        other
++    }
++  }
++
++  private def assignedLocals(stat: Statement[Pre]): Set[Variable[Pre]] = {
++    val out = scala.collection.mutable.LinkedHashSet.empty[Variable[Pre]]
++    def go(node: Node[Pre]): Unit =
++      node match {
++        case Assign(Local(Ref(v)), _) => out += v
++        case Eval(PreAssignExpression(Local(Ref(v)), _)) => out += v
++        case Eval(PostAssignExpression(Local(Ref(v)), _)) => out += v
++        case _: Type[Pre] =>
++        case other => other.subnodes.foreach(go)
++      }
++    go(stat)
++    out.toSet
++  }
++
+   private def asPtrAssign(
+       stat: Statement[Post],
+       params: Seq[Variable[Post]],
+diff --git a/src/rewrite/vct/rewrite/ToMethodSites.scala b/src/rewrite/vct/rewrite/ToMethodSites.scala
+index 163148931..6942b3ca8 100644
+--- a/src/rewrite/vct/rewrite/ToMethodSites.scala
++++ b/src/rewrite/vct/rewrite/ToMethodSites.scala
+@@ -40,6 +40,7 @@ object ToMethodSites {
+         true
+       case _: Loop[G] => true
+       case _: Switch[G] => true
++      case _: Send[G] | _: Recv[G] => true
+       case _: LocalDecl[G] | _: HeapLocalDecl[G] |
+           _: CDeclarationStatement[G] =>
+         true
+@@ -58,8 +59,12 @@ object ToMethodSites {
+       case _ => false
+     }
+ 
+-  def capturedVars[G](stat: Statement[G]): Seq[Variable[G]] = {
+-    val result = ArrayBuffer.empty[Variable[G]]
++  def capturedVars[G](stat: Statement[G]): Seq[Variable[G]] =
++    outwardVars(stat)
++
++  /** Address-taken C locals are represented separately from ordinary locals. */
++  def outwardHeapVars[G](root: Node[G]): Seq[LocalHeapVariable[G]] = {
++    val result = ArrayBuffer.empty[LocalHeapVariable[G]]
+     val seen = ArrayBuffer.empty[Node[G]]
+ 
+     def go(node: Node[G]): Unit = {
+@@ -68,16 +73,47 @@ object ToMethodSites {
+       seen += node
+ 
+       node match {
+-        case Local(Ref(v)) =>
++        case HeapLocal(Ref(v)) =>
+           if (!result.exists(_ eq v))
+             result += v
+         case _: Type[G] =>
+-        case _ =>
+-          node.subnodes.foreach(go)
++        case other => other.subnodes.foreach(go)
++      }
++    }
++
++    go(root)
++    result.toSeq
++  }
++
++  /** Names the extracted piece reads from outside itself.
++    * A `\forall` / `\let` name is born inside that piece. It is not a parameter.
++    */
++  def outwardVars[G](root: Node[G]): Seq[Variable[G]] = {
++    val result = ArrayBuffer.empty[Variable[G]]
++    val seen = ArrayBuffer.empty[Node[G]]
++
++    def go(node: Node[G], bound: List[Variable[G]]): Unit = {
++      if (seen.exists(_ eq node))
++        return
++      seen += node
++
++      node match {
++        case Local(Ref(v)) =>
++          if (!bound.exists(_ eq v) && !result.exists(_ eq v))
++            result += v
++        case _: Type[G] =>
++        case b: Binder[G] =>
++          val inner = b.bindings.toList ++ bound
++          b.subnodes.foreach(go(_, inner))
++        case ScopedExpr(declarations, _) =>
++          val inner = declarations.toList ++ bound
++          node.subnodes.foreach(go(_, inner))
++        case other =>
++          other.subnodes.foreach(go(_, bound))
+       }
+     }
+ 
+-    go(stat)
++    go(root, Nil)
+     result.toSeq
+   }
+ 
+diff --git a/src/rewrite/vct/rewrite/lang/LangCToCol.scala b/src/rewrite/vct/rewrite/lang/LangCToCol.scala
+index 5cd43e54a..18590da55 100644
+--- a/src/rewrite/vct/rewrite/lang/LangCToCol.scala
++++ b/src/rewrite/vct/rewrite/lang/LangCToCol.scala
+@@ -652,8 +652,63 @@ case class LangCToCol[Pre <: Generation](rw: LangSpecificToCol[Pre])
+         // We can convert between rationals, integers and floats
+         CastFloat[Post](rw.dispatch(c.expr), rw.dispatch(t))(c.o)
+ 
++      // Compound literal of a vector type: (__opencl_vector_type__(int,4)){...}
++      case CCast(CLiteralArray(exprs), t: CTVector[Pre]) =>
++        val size = t.intSize
++        if (exprs.size != size)
++          throw WrongVectorType(c)
++        LiteralVector[Post](
++          rw.dispatch(t.innerType),
++          exprs.map(rw.dispatch),
++        )(c.o)
++      case CCast(CLiteralArray(exprs), t: TOpenCLVector[Pre])
++          if exprs.size == t.size =>
++        LiteralVector[Post](rw.dispatch(t.innerType), exprs.map(rw.dispatch))(
++          c.o
++        )
++      case CCast(CLiteralArray(exprs), t: TVector[Pre])
++          if exprs.size == t.size =>
++        LiteralVector[Post](rw.dispatch(t.element), exprs.map(rw.dispatch))(c.o)
+       case cast @ CCast(_, TOpenCLVector(_, _)) =>
+         createOpenCLLiteralVector(cast)
++      case CCast(
++            inv @ CInvocation(
++              CLocal("vercorsMallocNonNull"),
++              Seq(arg),
++              Nil,
++              Nil,
++              false,
++            ),
++            tcast,
++          ) =>
++        val t2 =
++          tcast match {
++            case CTPointer(t2) => t2
++            case _ => throw UnsupportedMalloc(c)
++          }
++        val (t1, size) =
++          arg match {
++            case SizeOf(t1) if castIsId(t1, t2) => (t1, c_const[Post](1)(c.o))
++            case AmbiguousMult(l, SizeOf(t1)) if castIsId(t1, t2) =>
++              (t1, rw.dispatch(l))
++            case AmbiguousMult(SizeOf(t1), r) if castIsId(t1, t2) =>
++              (t1, rw.dispatch(r))
++            case _ =>
++              (
++                t2,
++                FloorDiv(rw.dispatch(arg), sizeOf(t2, c.o))(
++                  TypeSizeMayBeZeroBlame(c, inv.blame)
++                )(c.o),
++              )
++          }
++        NewNonNullPointer(rw.dispatch(t2), size, None)(ArrayMallocFailed(inv))(
++          c.o
++        )
++      case CCast(
++            CInvocation(CLocal("vercorsMallocNonNull"), _, _, _, _),
++            _,
++          ) =>
++        throw UnsupportedMalloc(c)
+       case CCast(
+             inv @ CInvocation(
+               CLocal("__vercors_malloc"),
+@@ -2226,23 +2281,19 @@ case class LangCToCol[Pre <: Generation](rw: LangSpecificToCol[Pre])
+     }
+   }
+ 
+-  private def createUpdateVectorFunction(size: Int): Function[Post] = {
++  private def createUpdateVectorFunction(
++      size: Int,
++      elementType: Type[Post],
++  ): Function[Post] = {
+     implicit val o: Origin = Origin(Seq(LabelContext("vector update method")))
+-    /* for instance for size 4:
++    /* Monomorphic (no typeArgs) so post-resolution C dump re-parses:
+     requires i >= 0 && i < 4;
+-    pure vector<T,4> updateVector(vector<T,4> x, int i, T v) =
+-        (i == 0) ? vector<T>{v, x[1], x[2], x[3]} :
+-        (i == 1) ? vector<T>{x[0], v, x[2], x[3]} :
+-        (i == 2) ? vector<T>{x[0], x[1], v, x[3]} :
+-        vector<T>{x[0], x[1], x[2], v};
++    pure vector<int,4> updateVector(vector<int,4> x, int i, int v) = ...
+      */
+     if (size <= 0)
+       ???
+ 
+     rw.globalDeclarations.declare({
+-      val elementTypeVar =
+-        new Variable[Post](TType(TAnyValue()))(o.where(name = "T"))
+-      val elementType = TVar[Post](elementTypeVar.ref)
+       val vectorT = TVector(size, elementType)
+ 
+       val x = new Variable[Post](vectorT)(o.where(name = "x"))
+@@ -2266,7 +2317,7 @@ case class LangCToCol[Pre <: Generation](rw: LangSpecificToCol[Pre])
+         contractBlame = PanicBlame("Can be satisfiable"),
+         returnType = vectorT,
+         args = Seq(x, i, v),
+-        typeArgs = Seq(elementTypeVar),
++        typeArgs = Nil,
+         body = Some(body),
+         requires = SplitAccountedPredicate(
+           UnitAccountedPredicate(req(0)),
+@@ -2276,7 +2327,15 @@ case class LangCToCol[Pre <: Generation](rw: LangSpecificToCol[Pre])
+     })
+   }
+ 
+-  val updateVectorFunction: mutable.Map[Int, Function[Post]] = mutable.Map()
++  private def updateVectorElementKey(t: Type[_]): String =
++    t match {
++      case _: TCInt[_] => "int"
++      case f: TCFloat[_] => s"float_${f.exponent}_${f.mantissa}"
++      case other => other.getClass.getName
++    }
++
++  val updateVectorFunction
++      : mutable.Map[(Int, String), Function[Post]] = mutable.Map()
+ 
+   def assignSubscriptVector(assign: PreAssignExpression[Pre]): Expr[Post] = {
+ 
+@@ -2289,17 +2348,19 @@ case class LangCToCol[Pre <: Generation](rw: LangSpecificToCol[Pre])
+ 
+     val size = t.intSize.toInt
+     val index = rw.dispatch(i)
+-    val innerType = t.innerType
++    val postInner = rw.dispatch(t.innerType)
+ 
+     val newV = rw.dispatch(v)
+-    val f = updateVectorFunction
+-      .getOrElseUpdate(size, createUpdateVectorFunction(size))
++    val f = updateVectorFunction.getOrElseUpdate(
++      (size, updateVectorElementKey(postInner)),
++      createUpdateVectorFunction(size, postInner),
++    )
+     val update =
+       functionInvocation[Post](
+         VectorBoundFailed(sub),
+         f.ref,
+         Seq(newV, index, rw.dispatch(assign.value)),
+-        Seq(rw.dispatch(innerType)),
++        Nil,
+       )(assign.o)
+ 
+     PreAssignExpression(newV, update)(assign.blame)(assign.o)
+diff --git a/util/robustness/config.env b/util/robustness/config.env
+index c22989e40..2e49eec4a 100644
+--- a/util/robustness/config.env
++++ b/util/robustness/config.env
+@@ -1,66 +1,20 @@
+-# Edit this file, then run:
++# One folder. All 19 .c files in it. No other directory.
++# From the repository root:
+ #   ./util/robustness/run-benchmark.sh
+-#
+-# Paths without a leading / are relative to the repository root.
+-# The script clears leftover ADD_IF_*_SITE and ROBUSTNESS_* variables
+-# from the terminal. You do not unset them by hand.
+ 
+-# How to transform.
+-#   preferred   = one TRANSFORM, a separate mutant for every site
+-#   multiple    = one TRANSFORM, applied REPEAT times on the same tree (one mutant)
+-#   mixed       = random TRANSFORM + random site each step (one mutant)
+-#   chain       = TRANSFORM as a fixed comma-separated order (one mutant)
+-#   verify-only = no transform, only verify the originals
+-MODE=mixed
+-
+-# Which rewrite(s). One name for preferred/multiple.
+-# For mixed or chain, a comma-separated list.
+-# Names: add-if-zero | add-if-one | for-to-while | deepen-while | to-method
+-# Mixed uses this list as the random pool. Omit a name to exclude it.
+-TRANSFORM=add-if-zero,add-if-one,for-to-while,deepen-while
++MODE=preferred
++TRANSFORM=add-if-zero
++SITES=all
+ 
+-# How many times to apply the rewrite on the same tree (multiple / mixed / chain).
+ REPEAT=10
+-
+-# Random seed for mixed. Same seed gives the same random sequence. Empty = VerCors picks one.
+ SEED=42
+ 
+-# Which sites. Used by preferred (every listed index, or all).
+-# multiple / chain: if not all, exported as the first transform's *_SITE list.
+-# mixed ignores this; each spin step picks a random site inside VerCors.
+-SITES=all
+-
+-# Folder of .c files (not subfolders).
+-INPUT=benchmark
+-
+-# Where results are written.
+-OUT=robustness-results/post-resolution
+-
+-# Empty = every .c file in INPUT. Or a subset: 1_absolute,2_swap
++INPUT=robustness-benchmarks/established-transformations/pilot/inputs
++OUT=robustness-results/post-resolution/c
+ PROGRAMS=
+ 
+-# Optional. Empty = find out/vercors/main/runScript.dest/vercors or bin/vct.
+-# VCT=
+-
+-# Optional Silicon time limit in seconds. Empty = VerCors default.
+-# TIMEOUT=
+-
+-# 1 = verify the original .c files first with ordinary vercors (no --robustness).
+-# 0 = skip that step. Verdict is then SKIP even if the mutant verifies.
+ VERIFY_ORIGINALS=1
+-
+-# 1 = verify each mutant with ordinary vercors (needed for ROBUST / NOT_ROBUST).
+-# 0 = only write the transformed .c files.
+ VERIFY_MUTANTS=1
+-
+-# 1 = verify originals again even if _original-verify/*.verify.log already exists.
+-# 0 = reuse those logs when present. With STAMP=1 the logs live in the new
+-# run folder, so reuse usually does not find the previous run.
+ FORCE_ORIGINAL=0
+-
+-# 1 = write this run into OUT/run-YYYYMMDD-HHMMSS so older results are not overwritten.
+-# 0 = write directly into OUT.
+-STAMP=1
+-
+-# 1 = print the plan only, do not run VerCors. 0 = actually run.
++STAMP=0
+ DRY_RUN=0
+diff --git a/util/robustness/run-benchmark.sh b/util/robustness/run-benchmark.sh
+index 606f70ebe..fcd434dc9 100755
+--- a/util/robustness/run-benchmark.sh
++++ b/util/robustness/run-benchmark.sh
+@@ -11,7 +11,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+ DUMP_NAME="robustness-transformed.c"
+ DEFAULT_VCT="$ROOT/out/vercors/main/runScript.dest/vercors"
+-DEFAULT_INPUT="$ROOT/benchmark"
++DEFAULT_INPUT="$ROOT/robustness-benchmarks/established-transformations/pilot/inputs"
+ DEFAULT_OUT="$ROOT/robustness-results/post-resolution"
+ ALL_SITE_VARS=(
+   ADD_IF_ZERO_SITE ADD_IF_ONE_SITE FOR_TO_WHILE_SITE
+@@ -35,9 +35,22 @@ STAMP=0
+ DRY_RUN=0
+ FORCE_ORIGINAL=0
+ CONFIG_FILE="$SCRIPT_DIR/config.env"
++STARTED=""
++FINISHED=""
++RUN_ID=""
++RUN_LOG=""
++RUN_DESC=""
++RUN_FILES=""
++OUT_REQUESTED=""
+ 
+ die() { echo "ERROR: $*" >&2; exit 1; }
+-log() { echo "[$(date +%H:%M:%S)] $*"; }
++log() {
++  local line="[$(date '+%Y-%m-%d %H:%M:%S')] $*"
++  echo "$line"
++  if [[ -n "$RUN_LOG" ]]; then
++    echo "$line" >> "$RUN_LOG"
++  fi
++}
+ 
+ resolve_path() {
+   local p="$1"
+@@ -119,6 +132,60 @@ clear_robustness_env() {
+   done
+ }
+ 
++# Full run descriptor. Always written under OUT/logs/run-YYYYMMDD-HHMMSS.env
++# even when STAMP=0 (output folder has no date in its name).
++write_run_env() {
++  local dest="$1" names="" f
++  for f in "${FILES[@]}"; do
++    [[ -n "$names" ]] && names+=","
++    names+="$(basename "$f" .c)"
++  done
++  cat > "$dest" <<EOF
++STARTED=$STARTED
++FINISHED=${FINISHED:-}
++RUN_ID=$RUN_ID
++CONFIG_FILE=$(resolve_path "$CONFIG_FILE")
++MODE=$MODE
++TRANSFORM=$TRANSFORM
++REPEAT=$REPEAT
++SEED=$SEED
++SITES=$SITES
++INPUT=$INPUT
++OUT_REQUESTED=$OUT_REQUESTED
++OUT=$OUT
++PROGRAMS=$PROGRAMS
++FILE_COUNT=${#FILES[@]}
++FILES=$names
++VCT=$VCT
++TIMEOUT=$TIMEOUT
++VERIFY_MUTANTS=$VERIFY_MUTANTS
++VERIFY_ORIGINALS=$VERIFY_ORIGINALS
++FORCE_ORIGINAL=$FORCE_ORIGINAL
++STAMP=$STAMP
++DRY_RUN=$DRY_RUN
++EOF
++  if [[ -n "$RUN_DESC" && "$dest" != "$RUN_DESC" ]]; then
++    cp -f "$dest" "$RUN_DESC"
++  fi
++  if [[ -n "$RUN_FILES" ]]; then
++    printf '%s\n' "${FILES[@]}" > "$RUN_FILES"
++  fi
++}
++
++finalize_run() {
++  local ec=$?
++  if [[ -z "$STARTED" || -z "${OUT:-}" || ! -d "${OUT:-}" ]]; then
++    return
++  fi
++  FINISHED="$(date -Iseconds)"
++  write_run_env "$OUT/run.env" || true
++  if [[ "$ec" -eq 0 ]]; then
++    log "done  $OUT" || true
++  else
++    log "failed  $OUT  exit=$ec" || true
++  fi
++}
++
+ verify_status() {
+   local logf="$1"
+   if [[ "$DRY_RUN" == "1" ]]; then echo DRY; return; fi
+@@ -153,11 +220,15 @@ spin_trace() {
+ }
+ 
+ verdict() {
+-  local original="$1" tstatus="$2" vstatus="$3" ncand="$4"
++  local original="$1" tstatus="$2" vstatus="$3" ncand="$4" vlog="${5:-}"
+   if [[ "$ncand" == "0" ]]; then echo NO_SITE
+   elif [[ "$tstatus" != "PASS" ]]; then echo TRANSFORM_FAIL
+   elif [[ "$original" != "PASS" ]]; then echo SKIP
+   elif [[ "$vstatus" == "PASS" ]]; then echo ROBUST
++  elif [[ -n "$vlog" ]] && grep -q "VerCors has crashed" "$vlog" 2>/dev/null; then echo VERIFY_CRASH
++  elif [[ -n "$vlog" ]] && grep -q "VERCORS_PROCESS_TIMEOUT" "$vlog" 2>/dev/null; then echo VERIFY_TIMEOUT
++  elif [[ -n "$vlog" ]] && grep -q "Parsing failed" "$vlog" 2>/dev/null; then echo VERIFY_PARSE_FAIL
++  elif [[ -n "$vlog" ]] && grep -Eq "Resolution failed|Type checking failed|typecheck" "$vlog" 2>/dev/null; then echo VERIFY_FRONTEND_FAIL
+   else echo NOT_ROBUST
+   fi
+ }
+@@ -204,10 +275,13 @@ run_verify() {
+     echo "DRY  $VCT ${extra[*]} $src"
+     return 0
+   fi
++  local verify_work
++  verify_work="$(mktemp -d)"
+   clear_robustness_env
+   set +e
+-  "$VCT" "${extra[@]}" "$src" > "$logf" 2>&1
++  (cd "$verify_work" && "$VCT" "${extra[@]}" "$src") > "$logf" 2>&1
+   set -e
++  rm -rf "$verify_work"
+ }
+ 
+ run_transform() {
+@@ -279,19 +353,35 @@ PROGRAMS="${PROGRAMS// /}"
+ TRANSFORM="${TRANSFORM// /}"
+ INPUT="$(resolve_path "$INPUT")"
+ OUT="$(resolve_path "$OUT")"
++OUT_REQUESTED="$OUT"
+ if [[ -n "$VCT" ]]; then VCT="$(resolve_path "$VCT")"; fi
++RUN_ID="$(date +%Y%m%d-%H%M%S)"
++STARTED="$(date -Iseconds)"
+ if [[ "$STAMP" == "1" ]]; then
+-  OUT="$OUT/run-$(date +%Y%m%d-%H%M%S)"
++  OUT="$OUT/run-$RUN_ID"
+ fi
+ 
+ find_vct
+ collect_files "$INPUT"
+-mkdir -p "$OUT"
++mkdir -p "$OUT/logs"
++if [[ -e "$OUT/logs/run-$RUN_ID.env" ]]; then
++  RUN_ID="${RUN_ID}-$$"
++fi
++RUN_LOG="$OUT/logs/run-$RUN_ID.log"
++RUN_DESC="$OUT/logs/run-$RUN_ID.env"
++RUN_FILES="$OUT/logs/run-$RUN_ID.files"
++trap finalize_run EXIT
++write_run_env "$OUT/run.env"
++if [[ -f "$CONFIG_FILE" ]]; then
++  cp -f "$CONFIG_FILE" "$OUT/config.env"
++fi
+ {
+-  echo "date=$(date -Iseconds)"
+-  echo "mode=$MODE transform=$TRANSFORM repeat=$REPEAT seed=${SEED:-}"
+-  echo "sites=$SITES input=$INPUT out=$OUT vct=$VCT files=${#FILES[@]}"
+-} > "$OUT/run.txt"
++  echo "---- run descriptor ----"
++  cat "$OUT/run.env"
++  echo "---- files ----"
++  cat "$RUN_FILES"
++  echo "---- log ----"
++} >> "$RUN_LOG"
+ 
+ log "mode=$MODE  transform=$TRANSFORM  files=${#FILES[@]}  out=$OUT"
+ 
+@@ -420,7 +510,7 @@ run_preferred() {
+         vst="$(verify_status "$vlog")"
+         if [[ "$vst" == "PASS" ]]; then vpass=$((vpass + 1)); else vfail=$((vfail + 1)); fi
+       fi
+-      vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "$n")"
++      vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "$n" "$vlog")"
+       echo "$base	$i	${ORIG_STATUS[$base]}	$tst	$vst	$vd" >> "$verdicts"
+       log "  $vd  $base site=$i"
+     done
+@@ -465,7 +555,7 @@ run_multiple() {
+       vst="$(verify_status "$vlog")"
+     else vst="FAIL"
+     fi
+-    vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "$n")"
++    vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "$n" "$vlog")"
+     echo "$first_tf	$REPEAT	$base	$tst	$vst	$n	$vd" >> "$summary"
+     log "  $vd  $base"
+   done
+@@ -503,7 +593,7 @@ run_mixed() {
+       vst="$(verify_status "$vlog")"
+     else vst="FAIL"
+     fi
+-    vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "1")"
++    vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "1" "$vlog")"
+     echo "$base	$tst	$vst	${SEED:-auto}	$REPEAT	$trace	$vd" >> "$summary"
+     log "  $vd  $base"
+   done
+@@ -548,7 +638,7 @@ run_chain() {
+       vst="$(verify_status "$vlog")"
+     else vst="FAIL"
+     fi
+-    vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "1")"
++    vd="$(verdict "${ORIG_STATUS[$base]}" "$tst" "$vst" "1" "$vlog")"
+     echo "$TRANSFORM	$REPEAT	$base	$tst	$vst	$n	$vd" >> "$summary"
+     log "  $vd  $base"
+   done
+@@ -562,5 +652,3 @@ case "$MODE" in
+   mixed)     run_mixed ;;
+   chain)     run_chain ;;
+ esac
+-
+-log "done  $OUT"

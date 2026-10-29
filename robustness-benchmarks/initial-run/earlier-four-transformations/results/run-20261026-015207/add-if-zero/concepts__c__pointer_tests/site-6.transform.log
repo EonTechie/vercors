@@ -1,0 +1,31 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 12
+[AddIfZero] candidate 0 | function=test | role=BLOCK_ITEM[2] | path=test.body.block[2] | kind=ExpressionStatement(expr=ProcedureInvocation) | ReturnPointer_1365704314(Y_1562960136);
+[AddIfZero] candidate 1 | function=set_one | role=BLOCK_ITEM[0] | path=set_one.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | *Location_2056089267 = 1;
+[AddIfZero] candidate 2 | function=returns_one | role=BLOCK_ITEM[1] | path=returns_one.body.block[1] | kind=ExpressionStatement(expr=ProcedureInvocation) | SetOne_2056411844(&Result_1355387800);
+[AddIfZero] candidate 3 | function=swap | role=BLOCK_ITEM[1] | path=swap.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | *A_1191238547 = *B_1443763289;
+[AddIfZero] candidate 4 | function=swap | role=BLOCK_ITEM[2] | path=swap.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | *B_1443763289 = Tmp_1364127684;
+[AddIfZero] candidate 5 | function=swap_same | role=BLOCK_ITEM[1] | path=swap_same.body.block[1] | kind=ExpressionStatement(expr=ProcedureInvocation) | Swap_1334085871(&A_723964553, &A_723964553);
+[AddIfZero] candidate 6 | function=swap_same | role=BLOCK_ITEM[2] | path=swap_same.body.block[2] | kind=Block | { /*@ assert A_723964553 == 1; @*/ }
+[AddIfZero] candidate 7 | function=sort | role=BLOCK_ITEM[0] | path=sort.body.block[0] | kind=IfStatement(arms=2) | if (Len_1892075175 <= 1) { return; } else { int Mid_1415784340; Mid_141578434...
+[AddIfZero] candidate 8 | function=sort | role=IF_ELSE[1] | path=sort.body.block[0].branch[1] | kind=CompoundStatement(locals=0, items=4) | { int Mid_1415784340; Mid_1415784340 = Len_1892075175 / 2; Sort_1187152896(Da...
+[AddIfZero] candidate 9 | function=sort | role=BLOCK_ITEM[1] | path=sort.body.block[0].branch[1].block[1] | kind=ExpressionStatement(expr=ProcedureInvocation) | Sort_1187152896(Data_1448156890, Mid_1415784340);
+[AddIfZero] candidate 10 | function=sort | role=BLOCK_ITEM[2] | path=sort.body.block[0].branch[1].block[2] | kind=ExpressionStatement(expr=ProcedureInvocation) | Sort_1187152896( Data_1448156890 + Mid_1415784340, Len_1892075175 - Mid_14157...
+[AddIfZero] candidate 11 | function=sort | role=BLOCK_ITEM[3] | path=sort.body.block[0].branch[1].block[3] | kind=ExpressionStatement(expr=ProcedureInvocation) | Merge_1443971913( Data_1448156890, Mid_1415784340, &Data_1448156890[Mid_14157...
+[ADD_IF_ZERO_SITE] application 1: selected 6 / 12
+[AddIfZero] SELECTED INDEX = 6
+[AddIfZero] SELECTED | function=swap_same | role=BLOCK_ITEM[2] | path=swap_same.body.block[2] | kind=Block | { /*@ assert A_723964553 == 1; @*/ }
+[AddIfZero] WRAP class=Block | Block | { /*@ assert A_723964553 == 1; @*/ }
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

@@ -1,0 +1,26 @@
+[INFO] Start: VerCors (at 01:35:30)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-2226763131628891712.i
+--------------------------------------
+   38  /*@
+   39  requires s != NULL;
+              [----
+   40  ensures s->a == 0;
+               ----]
+   41  @*/
+   42  void bar(BigStruct *s) {
+--------------------------------------
+At pallas_c_perm_fail_2.c
+--------------------------------------
+    9  /*@
+   10  requires s != NULL;
+      [--------------------
+   11  ensures s->a == 0;
+       --------------------]
+   12  @*/
+   13  void bar(BigStruct *s) {
+--------------------------------------
+There may be insufficient permission to access this field here. (https://utwente.nl/vercors#perm)
+======================================
+[INFO] Done: VerCors (at 01:37:07, duration: 00:01:36)

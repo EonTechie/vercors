@@ -131,8 +131,8 @@ case object Robustness extends LazyLogging {
 
     // Parse and resolve once, then apply the selected robustness rewrite(s)
     // `repeat` times so later applications see the already-mutated AST.
-    // Generated sizeof_* helpers stay in the resolved AST for pointer-size
-    // reasoning, but C layout omits them (see Function.isGeneratedSizeOfHelper).
+    // Generated sizeof_* helpers stay in the resolved AST and are printed in
+    // the C dump so annotation calls like sizeof_int() re-resolve.
     // Inter-pass typecheck is skipped for repeat > 1: 100 nested wraps would
     // otherwise re-check the same well-formedness 100 times.
     val stages = Parsing.ofOptions[InitialGeneration](options, blameProvider)

@@ -50,17 +50,29 @@ trait LoopImpl[G] extends LoopOps[G] {
       case _ => None
     }
 
+  private def isOne(e: Expr[G]): Boolean =
+    e match {
+      case IntegerValue(ONE) => true
+      case CIntegerValue(ONE, _) => true
+      case _ => false
+    }
+
+  private def isVarPlusOne(e: Expr[G], v: Variable[G]): Boolean =
+    e match {
+      case Plus(Local(Ref(`v`)), one) if isOne(one) => true
+      case AmbiguousPlus(Local(Ref(`v`)), one) if isOne(one) => true
+      case _ => false
+    }
+
   def doesIncrement(v: Variable[G], update: Statement[G] = update): Boolean =
     update match {
       case Block(Seq(s)) => doesIncrement(v, s)
-      case Assign(Local(Ref(`v`)), Plus(Local(Ref(`v`)), IntegerValue(ONE))) =>
+      case Assign(Local(Ref(`v`)), rhs) if isVarPlusOne(rhs, v) => true
+      case Eval(PostAssignExpression(Local(Ref(`v`)), rhs))
+          if isVarPlusOne(rhs, v) =>
         true
-      case Eval(
-            PostAssignExpression(
-              Local(Ref(`v`)),
-              Plus(Local(Ref(`v`)), IntegerValue(ONE)),
-            )
-          ) =>
+      case Eval(PreAssignExpression(Local(Ref(`v`)), rhs))
+          if isVarPlusOne(rhs, v) =>
         true
       case _ => false
     }

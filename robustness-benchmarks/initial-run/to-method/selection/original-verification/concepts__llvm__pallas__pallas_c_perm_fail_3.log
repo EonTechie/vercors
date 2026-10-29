@@ -1,0 +1,26 @@
+[INFO] Start: VerCors (at 01:35:43)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-4789621543030455259.i
+--------------------------------------
+    8  
+    9  /*@
+                               [-----
+   10  requires iPtr != NULL && _Perm(iPtr, _fracOf(1, 1));
+                                -----]
+   11  ensures _sep(_Perm(iPtr, _fracOf(2,3)), _Perm(iPtr, _fracOf(2,3)));
+   12  @*/
+--------------------------------------
+At pallas_c_perm_fail_3.c
+--------------------------------------
+    1  
+    2  /*@
+      [------------------------------------------------------
+    3  requires iPtr != NULL && _Perm(iPtr, _fracOf(1, 1));
+       ------------------------------------------------------]
+    4  ensures _sep(_Perm(iPtr, _fracOf(2,3)), _Perm(iPtr, _fracOf(2,3)));
+    5  @*/
+--------------------------------------
+Could not find local named _Perm.
+======================================
+[INFO] Done: VerCors (at 01:36:23, duration: 00:00:39)

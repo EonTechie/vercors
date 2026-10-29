@@ -25,12 +25,20 @@ trait ProcedureImpl[G] extends ProcedureOps[G] {
   def layoutC(implicit ctx: Ctx): Doc = {
     val (spec, decl) = returnType.layoutSplitDeclarator
     val prefix = if (inline) Text("inline") <> " " else Empty
+    // Emit /*@ pure @*/ for body-less stubs (e.g. math.h) so later contracts
+    // may call them. Skip for procedures with bodies: dumped locals often use
+    // decl+assign, which cannot be re-parsed as a pure function.
+    val pureMod =
+      if (pure && body.isEmpty)
+        Doc.inlineSpec(Text("pure")) <> " "
+      else
+        Empty
     Doc.stack(Seq(
       // Post-resolution C pretty-print: post-resolution Procedure nodes must keep
       // their function contracts when emitted as C mutants.
       contract,
       Group(
-        prefix <> spec <+> decl <> ctx.name(this) <> "(" <>
+        prefix <> pureMod <> spec <+> decl <> ctx.name(this) <> "(" <>
           Doc.args(args) <> ")"
       ) <>
         (if (body.nonEmpty)

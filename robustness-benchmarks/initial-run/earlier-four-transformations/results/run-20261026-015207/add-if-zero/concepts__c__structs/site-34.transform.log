@@ -1,0 +1,242 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 47
+[AddIfZero] candidate 0 | function=alter_struct | role=BLOCK_ITEM[0] | path=alter_struct.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P_1002172560).X_704136180 = 0;
+[AddIfZero] candidate 1 | function=alter_struct | role=BLOCK_ITEM[1] | path=alter_struct.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P_1002172560).Y_1696582497 = 0;
+[AddIfZero] candidate 2 | function=alter_struct_2 | role=BLOCK_ITEM[0] | path=alter_struct_2.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P_1546597819).X_704136180 = 0;
+[AddIfZero] candidate 3 | function=alter_struct_2 | role=BLOCK_ITEM[1] | path=alter_struct_2.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P_1546597819).Y_1696582497 = 0;
+[AddIfZero] candidate 4 | function=alter_struct_1 | role=BLOCK_ITEM[0] | path=alter_struct_1.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P_1641514309).X_704136180 = (*P_1641514309).X_704136180 + 1;
+[AddIfZero] candidate 5 | function=alter_struct_1 | role=BLOCK_ITEM[1] | path=alter_struct_1.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P_1641514309).Y_1696582497 = (*P_1641514309).Y_1696582497 + 1;
+[AddIfZero] candidate 6 | function=alter_copy_struct | role=BLOCK_ITEM[0] | path=alter_copy_struct.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | P_2014563619.X_704136180 = 0;
+[AddIfZero] candidate 7 | function=alter_copy_struct | role=BLOCK_ITEM[1] | path=alter_copy_struct.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | P_2014563619.Y_1696582497 = 0;
+[AddIfZero] candidate 8 | function=alter_copy_struct_2 | role=BLOCK_ITEM[0] | path=alter_copy_struct_2.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | P_953640514.X_704136180 = 0;
+[AddIfZero] candidate 9 | function=alter_copy_struct_2 | role=BLOCK_ITEM[1] | path=alter_copy_struct_2.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | P_953640514.Y_1696582497 = 0;
+[AddIfZero] candidate 10 | function=avr_x_pol | role=BLOCK_ITEM[1] | path=avr_x_pol.body.block[1] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ loop_invariant 0 <= I_1046255816; loop_invariant I_1046255816 <= Len_10...
+[AddIfZero] candidate 11 | function=avr_x_pol | role=LOOP_BODY | path=avr_x_pol.body.block[1].loop.body | kind=CompoundStatement(locals=0, items=1) | { Sum_217383093 = Sum_217383093 + (*P_1254539873).Ps_344836496[I_1046255816]....
+[AddIfZero] candidate 12 | function=avr_x_pol | role=BLOCK_ITEM[0] | path=avr_x_pol.body.block[1].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Sum_217383093 = Sum_217383093 + (*P_1254539873).Ps_344836496[I_1046255816].X_...
+[AddIfZero] candidate 13 | function=main | role=BLOCK_ITEM[2] | path=main.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | Pp_1169306696 = &*P_397580565;
+[AddIfZero] candidate 14 | function=main | role=BLOCK_ITEM[3] | path=main.body.block[3] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_211149158(Pp_1169306696 != NULL);
+[AddIfZero] candidate 15 | function=main | role=BLOCK_ITEM[4] | path=main.body.block[4] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P_397580565).X_704136180 = 1;
+[AddIfZero] candidate 16 | function=main | role=BLOCK_ITEM[5] | path=main.body.block[5] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P_397580565).Y_1696582497 = 2;
+[AddIfZero] candidate 17 | function=main | role=BLOCK_ITEM[6] | path=main.body.block[6] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_211149158((*Pp_1169306696).X_704136180 == 1);
+[AddIfZero] candidate 18 | function=main | role=BLOCK_ITEM[7] | path=main.body.block[7] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_211149158((*Pp_1169306696).Y_1696582497 == 2);
+[AddIfZero] candidate 19 | function=main | role=BLOCK_ITEM[8] | path=main.body.block[8] | kind=ExpressionStatement(expr=ProcedureInvocation) | AlterCopyStruct_153334108(*P_397580565);
+[AddIfZero] candidate 20 | function=main | role=BLOCK_ITEM[9] | path=main.body.block[9] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_211149158((*P_397580565).X_704136180 == 1);
+[AddIfZero] candidate 21 | function=main | role=BLOCK_ITEM[10] | path=main.body.block[10] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_211149158((*P_397580565).Y_1696582497 == 2);
+[AddIfZero] candidate 22 | function=main | role=BLOCK_ITEM[11] | path=main.body.block[11] | kind=ExpressionStatement(expr=ProcedureInvocation) | AlterStruct_2128104670(Pp_1169306696);
+[AddIfZero] candidate 23 | function=main | role=BLOCK_ITEM[12] | path=main.body.block[12] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_211149158((*Pp_1169306696).X_704136180 == 0);
+[AddIfZero] candidate 24 | function=main | role=BLOCK_ITEM[13] | path=main.body.block[13] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_211149158((*P_397580565).X_704136180 == 0);
+[AddIfZero] candidate 25 | function=main | role=BLOCK_ITEM[14] | path=main.body.block[14] | kind=ExpressionStatement(expr=ProcedureInvocation) | AlterStruct1_670918934(Pp_1169306696);
+[AddIfZero] candidate 26 | function=main | role=BLOCK_ITEM[15] | path=main.body.block[15] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_211149158( (*P_397580565).X_704136180 == 1 && (*P_397580565).Y_1696582...
+[AddIfZero] candidate 27 | function=main | role=BLOCK_ITEM[16] | path=main.body.block[16] | kind=Block | { struct Point_774632557 *P1_1131868127; struct Point_774632557 *P2_383830197...
+[AddIfZero] candidate 28 | function=main | role=BLOCK_ITEM[17] | path=main.body.block[17] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P1_1131868127).X_704136180 = 1;
+[AddIfZero] candidate 29 | function=main | role=BLOCK_ITEM[18] | path=main.body.block[18] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P1_1131868127).Y_1696582497 = 1;
+[AddIfZero] candidate 30 | function=main | role=BLOCK_ITEM[19] | path=main.body.block[19] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P2_383830197).X_704136180 = 2;
+[AddIfZero] candidate 31 | function=main | role=BLOCK_ITEM[20] | path=main.body.block[20] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P1_1131868127).Y_1696582497 = 2;
+[AddIfZero] candidate 32 | function=main | role=BLOCK_ITEM[21] | path=main.body.block[21] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P3_1500516996).X_704136180 = 3;
+[AddIfZero] candidate 33 | function=main | role=BLOCK_ITEM[22] | path=main.body.block[22] | kind=ExpressionStatement(expr=PreAssignExpression) | (*P1_1131868127).Y_1696582497 = 3;
+[AddIfZero] candidate 34 | function=main | role=BLOCK_ITEM[23] | path=main.body.block[23] | kind=Block | { struct Triangle_1962698520 *R_1510560398; struct Triangle_1962698520 *Rr_78...
+[AddIfZero] candidate 35 | function=main | role=BLOCK_ITEM[24] | path=main.body.block[24] | kind=ExpressionStatement(expr=PreAssignExpression) | Rr_787826183 = &*R_1510560398;
+[AddIfZero] candidate 36 | function=main | role=BLOCK_ITEM[25] | path=main.body.block[25] | kind=ExpressionStatement(expr=PreAssignExpression) | (*R_1510560398).P1_1133738295 = *P1_1131868127;
+[AddIfZero] candidate 37 | function=main | role=BLOCK_ITEM[26] | path=main.body.block[26] | kind=ExpressionStatement(expr=PreAssignExpression) | (*R_1510560398).P2_2102859413 = *P2_383830197;
+[AddIfZero] candidate 38 | function=main | role=BLOCK_ITEM[27] | path=main.body.block[27] | kind=ExpressionStatement(expr=PreAssignExpression) | (*R_1510560398).P3_1074852341 = *P3_1500516996;
+[AddIfZero] candidate 39 | function=main | role=BLOCK_ITEM[28] | path=main.body.block[28] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_211149158(AvrX_481827863(Rr_787826183) == 2);
+[AddIfZero] candidate 40 | function=main | role=BLOCK_ITEM[29] | path=main.body.block[29] | kind=Block | { struct Point_774632557 *Ps_1052808716; Ps_1052808716 = (struct Point_774632...
+[AddIfZero] candidate 41 | function=main | role=BLOCK_ITEM[0] | path=main.body.block[29].block[0] | kind=Block | { struct Point_774632557 *Ps_1052808716; Ps_1052808716 = (struct Point_774632...
+[AddIfZero] candidate 42 | function=main | role=BLOCK_ITEM[1] | path=main.body.block[29].block[0].block[1] | kind=AssignmentStatement | Ps_1052808716 = (struct Point_774632557*) vercorsMalloc(sizeof(struct Point_7...
+[AddIfZero] candidate 43 | function=main | role=BLOCK_ITEM[30] | path=main.body.block[30] | kind=Block | { struct Polygon_587861675 *Pol_1744652130; struct Polygon_587861675 *Ppols_2...
+[AddIfZero] candidate 44 | function=main | role=BLOCK_ITEM[31] | path=main.body.block[31] | kind=ExpressionStatement(expr=PreAssignExpression) | Ppols_2003887153 = &*Pol_1744652130;
+[AddIfZero] candidate 45 | function=main | role=BLOCK_ITEM[32] | path=main.body.block[32] | kind=ExpressionStatement(expr=PreAssignExpression) | (*Pol_1744652130).Ps_344836496 = Ps_1052808716;
+[AddIfZero] candidate 46 | function=main | role=BLOCK_ITEM[34] | path=main.body.block[34] | kind=ExpressionStatement(expr=ProcedureInvocation) | Assert_211149158(AvrPol_1940996518 == 2);
+[ADD_IF_ZERO_SITE] application 1: selected 34 / 47
+[AddIfZero] SELECTED INDEX = 34
+[AddIfZero] SELECTED | function=main | role=BLOCK_ITEM[23] | path=main.body.block[23] | kind=Block | { struct Triangle_1962698520 *R_1510560398; struct Triangle_1962698520 *Rr_78...
+[AddIfZero] WRAP class=Block | Block | { struct Triangle_1962698520 *R_1510560398; struct Triangle_1962698520 *Rr_78...
+vct.main.stages.Transformation$TransformationCheckError: The addIfZero rewrite caused the AST to no longer typecheck:
+======================================
+211         pointer<Triangle> rr;
+  212     }
+         [--
+  213     rr = &*R_980872061;
+          --]
+  214     (*R_980872061).p1 = *P1_1633026285;
+  215     (*R_980872061).p2 = *P2_860970945;
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+209     } else {
+  210         @heap NonNull<Triangle> R_980872061;
+             [--------------------
+  211         pointer<Triangle> rr;
+              --------------------]
+  212     }
+  213     rr = &*R_980872061;
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+======================================
+211         pointer<Triangle> rr;
+  212     }
+                [-----------
+  213     rr = &*R_980872061;
+                 -----------]
+  214     (*R_980872061).p1 = *P1_1633026285;
+  215     (*R_980872061).p2 = *P2_860970945;
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+208         assert false;
+  209     } else {
+             [-----------------------------------
+  210         @heap NonNull<Triangle> R_980872061;
+              -----------------------------------]
+  211         pointer<Triangle> rr;
+  212     }
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+======================================
+212     }
+  213     rr = &*R_980872061;
+           [-----------
+  214     (*R_980872061).p1 = *P1_1633026285;
+            -----------]
+  215     (*R_980872061).p2 = *P2_860970945;
+  216     (*R_980872061).p3 = *P3_677047404;
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+208         assert false;
+  209     } else {
+             [-----------------------------------
+  210         @heap NonNull<Triangle> R_980872061;
+              -----------------------------------]
+  211         pointer<Triangle> rr;
+  212     }
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+======================================
+213     rr = &*R_980872061;
+  214     (*R_980872061).p1 = *P1_1633026285;
+           [-----------
+  215     (*R_980872061).p2 = *P2_860970945;
+            -----------]
+  216     (*R_980872061).p3 = *P3_677047404;
+  217     assert1(avrX(rr) == 2);
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+208         assert false;
+  209     } else {
+             [-----------------------------------
+  210         @heap NonNull<Triangle> R_980872061;
+              -----------------------------------]
+  211         pointer<Triangle> rr;
+  212     }
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+======================================
+214     (*R_980872061).p1 = *P1_1633026285;
+  215     (*R_980872061).p2 = *P2_860970945;
+           [-----------
+  216     (*R_980872061).p3 = *P3_677047404;
+            -----------]
+  217     assert1(avrX(rr) == 2);
+  218     NonNull Point[3] ps;
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+208         assert false;
+  209     } else {
+             [-----------------------------------
+  210         @heap NonNull<Triangle> R_980872061;
+              -----------------------------------]
+  211         pointer<Triangle> rr;
+  212     }
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+======================================
+215     (*R_980872061).p2 = *P2_860970945;
+  216     (*R_980872061).p3 = *P3_677047404;
+                      [--
+  217     assert1(avrX(rr) == 2);
+                       --]
+  218     NonNull Point[3] ps;
+  219     ps = new Point[3];
+--------------------------------------
+[1/2] This usage is out of scope,
+--------------------------------------
+209     } else {
+  210         @heap NonNull<Triangle> R_980872061;
+             [--------------------
+  211         pointer<Triangle> rr;
+              --------------------]
+  212     }
+  213     rr = &*R_980872061;
+--------------------------------------
+[2/2] since it is declared here.
+======================================
+
+	at vct.main.stages.Transformation.$anonfun$run$4(Transformation.scala:303)
+	at vct.main.stages.Transformation.$anonfun$run$4$adapted(Transformation.scala:278)
+	at hre.progress.Progress$.$anonfun$foreach$2(Progress.scala:25)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at hre.progress.task.AbstractTask.frame(AbstractTask.scala:166)
+	at hre.progress.Progress$.$anonfun$foreach$1(Progress.scala:25)
+	at hre.progress.Progress$.$anonfun$foreach$1$adapted(Progress.scala:24)
+	at scala.collection.IterableOnceOps.foreach(IterableOnce.scala:576)
+	at scala.collection.IterableOnceOps.foreach$(IterableOnce.scala:574)
+	at scala.collection.AbstractIterator.foreach(Iterator.scala:1300)
+	at hre.progress.Progress$.foreach(Progress.scala:24)
+	at vct.main.stages.Transformation.$anonfun$run$2(Transformation.scala:278)
+	at hre.debug.TimeTravel$.safelyRepeatable(TimeTravel.scala:32)
+	at vct.main.stages.Transformation.run(Transformation.scala:272)
+	at vct.main.stages.Transformation.run(Transformation.scala:245)
+	at hre.stages.Stages.$anonfun$run$3(Stages.scala:104)
+	at hre.stages.Stages.$anonfun$run$3$adapted(Stages.scala:101)
+	at scala.collection.IterableOnceOps.foreach(IterableOnce.scala:576)
+	at scala.collection.IterableOnceOps.foreach$(IterableOnce.scala:574)
+	at scala.collection.AbstractIterable.foreach(Iterable.scala:933)
+	at scala.collection.IterableOps$WithFilter.foreach(Iterable.scala:903)
+	at hre.stages.Stages.$anonfun$run$1(Stages.scala:101)
+	at hre.progress.task.NameSequenceTask.scope(NameSequenceTask.scala:16)
+	at hre.progress.Progress$.stages(Progress.scala:47)
+	at hre.stages.Stages.run(Stages.scala:98)
+	at hre.stages.Stages.run$(Stages.scala:95)
+	at hre.stages.StagesPair.run(Stages.scala:145)
+	at vct.main.modes.Robustness$.runOptions(Robustness.scala:150)
+	at vct.main.Main$.runMode(Main.scala:109)
+	at vct.main.Main$.$anonfun$runOptions$3(Main.scala:101)
+	at scala.runtime.java8.JFunction0$mcI$sp.apply(JFunction0$mcI$sp.scala:17)
+	at hre.middleware.Middleware$.using(Middleware.scala:78)
+	at vct.main.Main$.$anonfun$runOptions$2(Main.scala:101)
+	at scala.runtime.java8.JFunction0$mcI$sp.apply(JFunction0$mcI$sp.scala:17)
+	at hre.io.Watch$.booleanWithWatch(Watch.scala:58)
+	at vct.main.Main$.$anonfun$runOptions$1(Main.scala:101)
+	at scala.runtime.java8.JFunction0$mcI$sp.apply(JFunction0$mcI$sp.scala:17)
+	at hre.middleware.Middleware$.using(Middleware.scala:78)
+	at vct.main.Main$.runOptions(Main.scala:96)
+	at vct.main.Main$.main(Main.scala:51)
+	at vct.main.Main.main(Main.scala)
+[ERROR] !*!*!*!*!*!*!*!*!*!*!*!
+[ERROR] ! VerCors has crashed !
+[ERROR] !*!*!*!*!*!*!*!*!*!*!*!
+[ERROR] Please report this as a bug here:
+[ERROR] https://github.com/utwente-fmt/vercors/issues/new?labels=A-Bug&title=Crash+report%3A+The+addIfZero+rewrite+caused+the+AST+to+no+longer+typecheck%3A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A&body=%23+Crash+Message%0A%60%60%60%0AThe+addIfZero+rewrite+caused+the+AST+to+no+longer+typecheck%3A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A211+++++++++pointer%3CTriangle%3E+rr%3B%0A++212+++++%7D%0A+++++++++%5B--%0A++213+++++rr+%3D+%26*R_980872061%3B%0A++++++++++--%5D%0A++214+++++%28*R_980872061%29.p1+%3D+*P1_1633026285%3B%0A++215+++++%28*R_980872061%29.p2+%3D+*P2_860970945%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A209+++++%7D+else+%7B%0A++210+++++++++%40heap+NonNull%3CTriangle%3E+R_980872061%3B%0A+++++++++++++%5B--------------------%0A++211+++++++++pointer%3CTriangle%3E+rr%3B%0A++++++++++++++--------------------%5D%0A++212+++++%7D%0A++213+++++rr+%3D+%26*R_980872061%3B%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A211+++++++++pointer%3CTriangle%3E+rr%3B%0A++212+++++%7D%0A++++++++++++++++%5B-----------%0A++213+++++rr+%3D+%26*R_980872061%3B%0A+++++++++++++++++-----------%5D%0A++214+++++%28*R_980872061%29.p1+%3D+*P1_1633026285%3B%0A++215+++++%28*R_980872061%29.p2+%3D+*P2_860970945%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A208+++++++++assert+false%3B%0A++209+++++%7D+else+%7B%0A+++++++++++++%5B-----------------------------------%0A++210+++++++++%40heap+NonNull%3CTriangle%3E+R_980872061%3B%0A++++++++++++++-----------------------------------%5D%0A++211+++++++++pointer%3CTriangle%3E+rr%3B%0A++212+++++%7D%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A212+++++%7D%0A++213+++++rr+%3D+%26*R_980872061%3B%0A+++++++++++%5B-----------%0A++214+++++%28*R_980872061%29.p1+%3D+*P1_1633026285%3B%0A++++++++++++-----------%5D%0A++215+++++%28*R_980872061%29.p2+%3D+*P2_860970945%3B%0A++216+++++%28*R_980872061%29.p3+%3D+*P3_677047404%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A208+++++++++assert+false%3B%0A++209+++++%7D+else+%7B%0A+++++++++++++%5B-----------------------------------%0A++210+++++++++%40heap+NonNull%3CTriangle%3E+R_980872061%3B%0A++++++++++++++-----------------------------------%5D%0A++211+++++++++pointer%3CTriangle%3E+rr%3B%0A++212+++++%7D%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A213+++++rr+%3D+%26*R_980872061%3B%0A++214+++++%28*R_980872061%29.p1+%3D+*P1_1633026285%3B%0A+++++++++++%5B-----------%0A++215+++++%28*R_980872061%29.p2+%3D+*P2_860970945%3B%0A++++++++++++-----------%5D%0A++216+++++%28*R_980872061%29.p3+%3D+*P3_677047404%3B%0A++217+++++assert1%28avrX%28rr%29+%3D%3D+2%29%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A208+++++++++assert+false%3B%0A++209+++++%7D+else+%7B%0A+++++++++++++%5B-----------------------------------%0A++210+++++++++%40heap+NonNull%3CTriangle%3E+R_980872061%3B%0A++++++++++++++-----------------------------------%5D%0A++211+++++++++pointer%3CTriangle%3E+rr%3B%0A++212+++++%7D%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A214+++++%28*R_980872061%29.p1+%3D+*P1_1633026285%3B%0A++215+++++%28*R_980872061%29.p2+%3D+*P2_860970945%3B%0A+++++++++++%5B-----------%0A++216+++++%28*R_980872061%29.p3+%3D+*P3_677047404%3B%0A++++++++++++-----------%5D%0A++217+++++assert1%28avrX%28rr%29+%3D%3D+2%29%3B%0A++218+++++NonNull+Point%5B3%5D+ps%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A208+++++++++assert+false%3B%0A++209+++++%7D+else+%7B%0A+++++++++++++%5B-----------------------------------%0A++210+++++++++%40heap+NonNull%3CTriangle%3E+R_980872061%3B%0A++++++++++++++-----------------------------------%5D%0A++211+++++++++pointer%3CTriangle%3E+rr%3B%0A++212+++++%7D%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A215+++++%28*R_980872061%29.p2+%3D+*P2_860970945%3B%0A++216+++++%28*R_980872061%29.p3+%3D+*P3_677047404%3B%0A++++++++++++++++++++++%5B--%0A++217+++++assert1%28avrX%28rr%29+%3D%3D+2%29%3B%0A+++++++++++++++++++++++--%5D%0A++218+++++NonNull+Point%5B3%5D+ps%3B%0A++219+++++ps+%3D+new+Point%5B3%5D%3B%0A--------------------------------------%0A%5B1%2F2%5D+This+usage+is+out+of+scope%2C%0A--------------------------------------%0A209+++++%7D+else+%7B%0A++210+++++++++%40heap+NonNull%3CTriangle%3E+R_980872061%3B%0A+++++++++++++%5B--------------------%0A++211+++++++++pointer%3CTriangle%3E+rr%3B%0A++++++++++++++--------------------%5D%0A++212+++++%7D%0A++213+++++rr+%3D+%26*R_980872061%3B%0A--------------------------------------%0A%5B2%2F2%5D+since+it+is+declared+here.%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%0A++at+vct.main.stages.Transformation.%24anonfun%24run%244%28Transformation.scala%3A303%29%0A++at+vct.main.stages.Transformation.%24anonfun%24run%244%24adapted%28Transformation.scala%3A278%29%0A++at+hre.progress.Progress%24.%24anonfun%24foreach%242%28Progress.scala%3A25%29%0A++at+scala.runtime.java8.JFunction0%24mcV%24sp.apply%28JFunction0%24mcV%24sp.scala%3A18%29%0A++at+hre.progress.task.AbstractTask.frame%28AbstractTask.scala%3A166%29%0A++at+hre.progress.Progress%24.%24anonfun%24foreach%241%28Progress.scala%3A25%29%0A++at+hre.progress.Progress%24.%24anonfun%24foreach%241%24adapted%28Progress.scala%3A24%29%0A++at+scala.collection.IterableOnceOps.foreach%28IterableOnce.scala%3A576%29%0A++at+scala.collection.IterableOnceOps.foreach%24%28IterableOnce.scala%3A574%29%0A++at+scala.collection.AbstractIterator.foreach%28Iterator.scala%3A1300%29%0A++at+hre.progress.Progress%24.foreach%28Progress.scala%3A24%29%0A++at+vct.main.stages.Transformation.%24anonfun%24run%242%28Transformation.scala%3A278%29%0A++...%0A++at+vct.main.Main%24.main%28Main.scala%3A51%29%0A++at+vct.main.Main.main%28Main.scala%29%0A%60%60%60%0A%0A%23+Version+Information%0A*+VerCors+version+%609999.9.9-SNAPSHOT%60%0A*+At+commit+3f9ae264fa53403e5edae579f993f1a892d0128c+from+branch+%60robustness-post-resolution%60+%28changes%3Dtrue%29%0A%0A%23+Arguments%0A%60--robustness%60+%60%2Fhome%2Ffilizyildizfi%2FVC%2Fvercors%2Fbroader-benchmark%2Fconcepts__c__structs.c%60%0A%0A%23+File+Inputs%0A%3Cdetails%3E%0A%3Csummary%3Econcepts__c__structs.c%3C%2Fsummary%3E%0A%0A%60%60%60c%0A%23include+%3Cassert.h%3E%0A

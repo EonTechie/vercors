@@ -1,0 +1,17 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 09:54:31)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[INFO] Printing verification results as a compressed table. Run with `--more` for verbose verification results.
+At                 Code    Description                                                                  
+------------------ ------- -----------------------------------------------------------------------------
+site-12.c:34-:34   ptrNull Pointer in `StructB_1746488484 > (*StructB_17 ... .integer = 5;` may be null.
+site-12.c:46-:46   ptrNull Pointer in `StructB_953954861 > (*StructB_95 ... integer = 10;` may be null.
+site-12.c:79-:79   ptrNull Pointer in `StructB_774673 > (*StructB_77 ... integer = 10;` may be null.
+site-12.c:107-:107 ptrNull Pointer in `StructB_1974321070 > (*StructB_19 ... integer = 15;` may be null.
+[INFO] Done: VerCors (at 09:54:59, duration: 00:00:27)

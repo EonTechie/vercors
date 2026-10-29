@@ -1,0 +1,20 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 1
+[AddIfOne] candidate count = 1
+[AddIfOne] candidate 0 | function=gt_1_0 | role=BLOCK_ITEM[0] | path=gt_1_0.body.block[0] | kind=IfStatement(arms=2) | if (IsFloat_1651647192) { float F_1694924176; F_1694924176 = *(float*)Ptr_108...
+[ADD_IF_ONE_SITE] application 1: selected 0 / 1
+[AddIfOne] SELECTED INDEX = 0
+[AddIfOne] SELECTED | function=gt_1_0 | role=BLOCK_ITEM[0] | path=gt_1_0.body.block[0] | kind=IfStatement(arms=2) | if (IsFloat_1651647192) { float F_1694924176; F_1694924176 = *(float*)Ptr_108...
+[AddIfOne] WRAP class=Branch | IfStatement(arms=2) | if (IsFloat_1651647192) { float F_1694924176; F_1694924176 = *(float*)Ptr_108...
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

@@ -1,0 +1,26 @@
+[INFO] Start: VerCors (at 01:03:33)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-12148122331451642670.i
+--------------------------------------
+   47      for(int jj=0;jj<N;jj++)
+   48        /*@
+                                                          [--------------------
+   49          requires (\forall* int k; 0 <= k && k < P ; Reducible(hist[k],+));
+                                                           --------------------]
+   50          context  Perm(matrix[ii][jj],p);
+   51          context 0 <= matrix[ii][jj] && matrix[ii][jj] < P ;
+--------------------------------------
+At histogram-submatrix.c
+--------------------------------------
+   40      for(int jj=0;jj<N;jj++)
+   41        /*@
+      [----------------------------------------------------------------------------
+   42          requires (\forall* int k; 0 <= k && k < P ; Reducible(hist[k],+));
+       ----------------------------------------------------------------------------]
+   43          context  Perm(matrix[ii][jj],p);
+   44          context 0 <= matrix[ii][jj] && matrix[ii][jj] < P ;
+--------------------------------------
+Parsing failed: This construct (ValReducibleContext) is syntactically valid, but not supported by VerCors.
+======================================
+[INFO] Done: VerCors (at 01:04:00, duration: 00:00:27)

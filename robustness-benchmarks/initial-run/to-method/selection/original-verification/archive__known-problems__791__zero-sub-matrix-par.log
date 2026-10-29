@@ -1,0 +1,45 @@
+[INFO] Start: VerCors (at 01:02:24)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier zero-sub-matrix-par.c:8-:8: '            (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+The quantifier zero-sub-matrix-par.c:7-:8: '  context (\forall* int i; 0 <= i && i < M;
+            (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+[WARN] The quantifier zero-sub-matrix-par.c:8-:8: '            (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+The quantifier zero-sub-matrix-par.c:7-:8: '  context (\forall* int i; 0 <= i && i < M;
+            (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+[WARN] The quantifier zero-sub-matrix-par.c:11-:11: '            (\forall int j; 0 <= j && j < N; matrix[i][j] == 0));' contains no triggers
+The quantifier zero-sub-matrix-par.c:10-:11: '  ensures (\forall int i; 0 <= i && i < M;
+            (\forall int j; 0 <= j && j < N; matrix[i][j] == 0));' contains no triggers
+[WARN] The quantifier zero-sub-matrix-par.c:17-:17: '                (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+The quantifier zero-sub-matrix-par.c:16-:17: '      loop_invariant (\forall* int i; 0 <= i && i < M;
+                (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+[WARN] The quantifier zero-sub-matrix-par.c:19-:19: '      loop_invariant (\forall int i2; 0 <= i2 && i2 < i; (\forall int j; 0 <= j && j < N;matrix[i2][j] == 0));' contains no triggers
+[WARN] The quantifier zero-sub-matrix-par.c:19-:19: '      loop_invariant (\forall int i2; 0 <= i2 && i2 < i; (\forall int j; 0 <= j && j < N;matrix[i2][j] == 0));' contains no triggers
+[WARN] The quantifier zero-sub-matrix-par.c:35-:35: '      context Perm(matrix[i][j], write);' contains no triggers
+[WARN] The quantifier zero-sub-matrix-par.c:35-:35: '      context Perm(matrix[i][j], write);' contains no triggers
+[WARN] The quantifier zero-sub-matrix-par.c:36-:36: '      ensures matrix[i][j] == 0;' contains no triggers
+[WARN] The quantifier zero-sub-matrix-par.c:42-:42: '    //@ assert (\forall* int i; 0 <= i && i < M; (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+[WARN] The quantifier zero-sub-matrix-par.c:42-:42: '    //@ assert (\forall* int i; 0 <= i && i < M; (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));' contains no triggers
+======================================
+At vercors-interpreted-16356544780331430135.i
+--------------------------------------
+   13    context \pointer(matrix, M, write);
+   14    context (\forall* int i; 0 <= i && i < M;
+                                                         [------------
+   15              (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));
+                                                          ------------]
+   16    context M > 0 && N > 0 && step >= N;
+   17    ensures (\forall int i; 0 <= i && i < M;
+--------------------------------------
+At zero-sub-matrix-par.c
+--------------------------------------
+    6    context \pointer(matrix, M, write);
+    7    context (\forall* int i; 0 <= i && i < M;
+      [----------------------------------------------------------------------------
+    8              (\forall* int j; 0 <= j && j < N; Perm(matrix[i][j], write)));
+       ----------------------------------------------------------------------------]
+    9    context M > 0 && N > 0 && step >= N;
+   10    ensures (\forall int i; 0 <= i && i < M;
+--------------------------------------
+The offset to the pointer may be outside the bounds of the allocated memory area that the pointer is in. (https://utwente.nl/vercors#ptrBlock)
+======================================
+[INFO] Done: VerCors (at 01:03:30, duration: 00:01:06)

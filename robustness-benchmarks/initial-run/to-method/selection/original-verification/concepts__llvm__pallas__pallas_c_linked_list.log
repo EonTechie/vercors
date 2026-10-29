@@ -1,0 +1,42 @@
+[INFO] Start: VerCors (at 01:33:17)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-18320305287376927697.i
+--------------------------------------
+   29  
+   30  /*@
+      [-------
+   31  declare DEF_RESULT_(List*, lPtr);
+       -------]
+   32  @*/
+   33
+--------------------------------------
+[1/3] Parsing failed: no viable alternative at input '/*@declare'
+--------------------------------------
+At vercors-interpreted-18320305287376927697.i
+--------------------------------------
+   29  
+   30  /*@
+                                 [----
+   31  declare DEF_RESULT_(List*, lPtr);
+                                  ----]
+   32  @*/
+   33
+--------------------------------------
+[2/3] Parsing failed: rule typedefName failed predicate: {isTypedefName($ctx)}?
+--------------------------------------
+At vercors-interpreted-18320305287376927697.i
+--------------------------------------
+   30  /*@
+   31  declare DEF_RESULT_(List*, lPtr);
+       [--
+   32  @*/
+        --]
+   33  
+   34  // Mock-function for allocating a list-node
+--------------------------------------
+[3/3] Parsing failed: mismatched input '*/' expecting {'(', '[', ';', ',', '__asm', '__attribute__'}
+======================================
+[INFO] Done: VerCors (at 01:34:02, duration: 00:00:45)
+[WARN] Non-daemon thread main.[VerCors] Block layout updates (#16) is still running
+[WARN] Due to this VerCors will not exit and sit idly until that thread is done. You may want to stop the program manually.

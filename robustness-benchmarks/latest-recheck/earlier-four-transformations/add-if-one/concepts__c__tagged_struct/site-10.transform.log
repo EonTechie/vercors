@@ -1,0 +1,31 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 1
+[AddIfOne] candidate count = 12
+[AddIfOne] candidate 0 | function=baz | role=BLOCK_ITEM[3] | path=baz.body.block[3] | kind=ExpressionStatement(expr=PreAssignExpression) | (*E1_2116948345).E_1088430396.Tag_265713738 = IntTag_235859134;
+[AddIfOne] candidate 1 | function=baz | role=BLOCK_ITEM[4] | path=baz.body.block[4] | kind=ExpressionStatement(expr=PreAssignExpression) | (*E1_2116948345).D_1216236294 = &A_750346989;
+[AddIfOne] candidate 2 | function=baz | role=BLOCK_ITEM[6] | path=baz.body.block[6] | kind=ExpressionStatement(expr=PreAssignExpression) | (*E2_434612827).E_909207165.Tag_265713738 = FloatTag_530913105;
+[AddIfOne] candidate 3 | function=baz | role=BLOCK_ITEM[7] | path=baz.body.block[7] | kind=ExpressionStatement(expr=PreAssignExpression) | (*E2_434612827).D_937330401 = &F_1460731048;
+[AddIfOne] candidate 4 | function=baz | role=BLOCK_ITEM[8] | path=baz.body.block[8] | kind=Block | { /*@ assert Perm(*(*E1_2116948345).D_1216236294, write); @*/ }
+[AddIfOne] candidate 5 | function=baz | role=BLOCK_ITEM[9] | path=baz.body.block[9] | kind=Block | { /*@ assert Perm(*(*E2_434612827).D_937330401, write); @*/ }
+[AddIfOne] candidate 6 | function=baz | role=BLOCK_ITEM[1] | path=baz.body.block[10].block[0].block[1] | kind=AssignmentStatement | Elems_862869926 = (struct Element_334004405**) vercorsMallocNonNull(sizeof(st...
+[AddIfOne] candidate 7 | function=baz | role=BLOCK_ITEM[11] | path=baz.body.block[11] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ loop_invariant 0 <= I_686691212; loop_invariant I_686691212 <= 2; loop_...
+[AddIfOne] candidate 8 | function=baz | role=LOOP_BODY | path=baz.body.block[11].loop.body | kind=CompoundStatement(locals=0, items=1) | { if ((*Elems_862869926[I_686691212]).Tag_265713738 == IntTag_235859134) { st...
+[AddIfOne] candidate 9 | function=baz | role=BLOCK_ITEM[0] | path=baz.body.block[11].loop.body.block[0] | kind=IfStatement(arms=1) | if ((*Elems_862869926[I_686691212]).Tag_265713738 == IntTag_235859134) { stru...
+[AddIfOne] candidate 10 | function=baz | role=IF_TRUE | path=baz.body.block[11].loop.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=3) | { struct IElement_1298670930 *Ie_914605183; Ie_914605183 = (struct IElement_1...
+[AddIfOne] candidate 11 | function=baz | role=BLOCK_ITEM[2] | path=baz.body.block[11].loop.body.block[0].branch[0].block[2] | kind=ExpressionStatement(expr=ProcedureInvocation) | PrintInt_801447344(*Ip_426605726);
+[ADD_IF_ONE_SITE] application 1: selected 10 / 12
+[AddIfOne] SELECTED INDEX = 10
+[AddIfOne] SELECTED | function=baz | role=IF_TRUE | path=baz.body.block[11].loop.body.block[0].branch[0] | kind=CompoundStatement(locals=0, items=3) | { struct IElement_1298670930 *Ie_914605183; Ie_914605183 = (struct IElement_1...
+[AddIfOne] WRAP class=Scope | CompoundStatement(locals=0, items=3) | { struct IElement_1298670930 *Ie_914605183; Ie_914605183 = (struct IElement_1...
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

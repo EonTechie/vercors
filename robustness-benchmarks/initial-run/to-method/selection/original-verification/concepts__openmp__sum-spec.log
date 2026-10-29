@@ -1,0 +1,38 @@
+[INFO] Start: VerCors (at 01:39:45)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-9083167657156656534.i
+--------------------------------------
+   49    int i;
+   50    int res=0;
+                  [--------------------------------------
+   51  #pragma omp parallel private(i) reduction(+:res)
+   52    {
+   53      int tmp=0;
+       ... (6 lines omitted)
+   60      printf("share is %d\n",tmp);
+   61      res+=tmp;
+   62    }
+       ---]
+   63    return res;
+   64  }
+--------------------------------------
+At sum-spec.c
+--------------------------------------
+   25    int i;
+   26    int res=0;
+      [----------------------------------------------------
+   27    #pragma omp parallel private(i) reduction(+:res)
+   28    {
+   29      int tmp=0;
+       ... (6 lines omitted)
+   36      printf("share is %d\n",tmp);
+   37      res+=tmp;
+   38    }
+       -----]
+   39    return res;
+   40  }
+--------------------------------------
+Parsing failed: This construct (CompoundStatement1Context) is syntactically valid, but not supported by VerCors.
+======================================
+[INFO] Done: VerCors (at 01:40:31, duration: 00:00:45)

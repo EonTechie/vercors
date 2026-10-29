@@ -948,8 +948,14 @@ case class CToCol[G](
         )(blame(expr))
       case PostfixExpression8(e, SpecPostfix0(postfix)) =>
         convert(expr, postfix, convert(e))
-      case PostfixExpression9(_, _, _, _, _, _) => ??(expr)
-      case PostfixExpression10(_, _, _, _, _, _, _) => ??(expr)
+      // GCC / C99 compound literal: (T){ e0, e1, ... }
+      // Needed so post-resolution C dumps of LiteralVector re-parse.
+      // Pattern: ( typeName ) { initList }
+      case PostfixExpression9(_, typeName, _, _, initList, _) =>
+        CCast(CLiteralArray(convert(initList)), convert(typeName))
+      // Pattern: ( typeName ) { initList , }
+      case PostfixExpression10(_, typeName, _, _, initList, _, _) =>
+        CCast(CLiteralArray(convert(initList)), convert(typeName))
       case PostfixExpression11(_, _, _, _, _, _, _) => ??(expr)
       case PostfixExpression12(_, _, _, _, _, _, _, _) => ??(expr)
       case PostfixExpression13(

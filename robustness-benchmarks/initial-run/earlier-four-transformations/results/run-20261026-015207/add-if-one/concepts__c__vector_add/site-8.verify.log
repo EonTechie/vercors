@@ -1,0 +1,81 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 11:08:01)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] The quantifier site-8.c:72-:72: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-8.c:83-:83: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-8.c:94-:94: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-8.c:103-:103: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-8.c:118-:118: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(((int*)P)[i], read));' contains no triggers
+[WARN] The quantifier site-8.c:127-:127: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(((int*)P)[i], read));' contains no triggers
+[WARN] The quantifier site-8.c:136-:136: 'requires (\forall* int i; 0 <= i && i < 8 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-8.c:151-:151: 'requires (\forall* int i; 0 <= i && i < 8 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-8.c:166-:166: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-8.c:177-:177: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], read));' contains no triggers
+[WARN] The quantifier site-8.c:188-:188: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(((int*)P)[i], read));' contains no triggers
+[WARN] The quantifier site-8.c:199-:199: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(((int*)P)[i], read));' contains no triggers
+[WARN] The quantifier site-8.c:210-:210: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:213-:213: 'ensures (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:224-:224: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:227-:227: 'ensures (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:238-:238: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:241-:241: 'ensures (\forall* int i; 0 <= i && i < 2 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:250-:250: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:253-:253: 'ensures (\forall* int i; 0 <= i && i < 2 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:262-:262: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:265-:265: 'ensures (\forall* int i; 0 <= i && i < 2 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:274-:274: 'requires (\forall* int i; 0 <= i && i < 2 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:277-:277: 'ensures (\forall* int i; 0 <= i && i < 2 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:286-:286: 'requires (\forall* int i; 0 <= i && i < 8 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:289-:289: 'ensures (\forall* int i; 0 <= i && i < 8 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:304-:304: 'requires (\forall* int i; 0 <= i && i < 8 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:307-:307: 'ensures (\forall* int i; 0 <= i && i < 8 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:322-:322: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:325-:325: 'ensures (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:336-:336: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:339-:339: 'ensures (\forall* int i; 0 <= i && i < 4 ==> Perm(P[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:350-:350: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:353-:353: 'ensures (\forall* int i; 0 <= i && i < 4 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:364-:364: 'requires (\forall* int i; 0 <= i && i < 4 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:367-:367: 'ensures (\forall* int i; 0 <= i && i < 4 ==> Perm(((int*)P)[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:490-:490: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(a[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-8.c:491-:491: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(b[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-8.c:492-:492: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(c[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:490-:490: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(a[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-8.c:491-:491: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(b[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-8.c:492-:492: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(c[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:490-:490: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(a[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-8.c:491-:491: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(b[i], 1 \ 2));' contains no triggers
+[WARN] The quantifier site-8.c:492-:492: 'context_everywhere (\forall* int i; 0 <= i && i < n ==> Perm(c[i], write));' contains no triggers
+[WARN] The quantifier site-8.c:526-:526: '    loop_invariant (\forall* int j; 0 <= j && j < 4 * 100 ==> Perm(a[j], write));' contains no triggers
+[WARN] The quantifier site-8.c:527-:527: '    loop_invariant (\forall* int j; 0 <= j && j < 4 * 100 ==> Perm(b[j], write));' contains no triggers
+[WARN] The quantifier site-8.c:546-:546: '    loop_invariant (\forall* int j; 0 <= j && j < 4 * 100 ==> Perm(c[j], write));' contains no triggers
+======================================
+At vercors-interpreted-3269932804333227064.i
+--------------------------------------
+  531      loop_invariant 0 <= i;
+  532      loop_invariant i <= 4 * 100;
+                                                                         [-
+  533      loop_invariant (\forall* int j; 0 <= j && j < 4 * 100 ==> Perm(a[j], write));
+                                                                          -]
+  534      loop_invariant (\forall* int j; 0 <= j && j < 4 * 100 ==> Perm(b[j], write));
+  535      loop_invariant (\forall int j; 0 <= j && j < i ==> {: a[j] :} == j);
+--------------------------------------
+At site-8.c
+--------------------------------------
+  524      loop_invariant 0 <= i;
+  525      loop_invariant i <= 4 * 100;
+      [-----------------------------------------------------------------------------------
+  526      loop_invariant (\forall* int j; 0 <= j && j < 4 * 100 ==> Perm(a[j], write));
+       -----------------------------------------------------------------------------------]
+  527      loop_invariant (\forall* int j; 0 <= j && j < 4 * 100 ==> Perm(b[j], write));
+  528      loop_invariant (\forall int j; 0 <= j && j < i ==> {: a[j] :} == j);
+--------------------------------------
+Pointer may be null. (https://utwente.nl/vercors#ptrNull)
+======================================
+[INFO] Done: VerCors (at 11:08:46, duration: 00:00:44)

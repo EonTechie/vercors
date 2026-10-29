@@ -1,0 +1,21 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 1
+[AddIfOne] candidate count = 2
+[AddIfOne] candidate 0 | function=bar | role=BLOCK_ITEM[1] | path=bar.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | Y_1265178129 = Y_1265178129 + X_376234567;
+[AddIfOne] candidate 1 | function=bar | role=BLOCK_ITEM[2] | path=bar.body.block[2] | kind=ExpressionStatement(expr=PreAssignExpression) | Y_1265178129 = Y_1265178129 * 42;
+[ADD_IF_ONE_SITE] application 1: selected 0 / 2
+[AddIfOne] SELECTED INDEX = 0
+[AddIfOne] SELECTED | function=bar | role=BLOCK_ITEM[1] | path=bar.body.block[1] | kind=ExpressionStatement(expr=PreAssignExpression) | Y_1265178129 = Y_1265178129 + X_376234567;
+[AddIfOne] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | Y_1265178129 = Y_1265178129 + X_376234567;
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

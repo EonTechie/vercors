@@ -16,14 +16,21 @@ trait TNonNullPointerImpl[G] extends TNonNullPointerOps[G] {
   }
 
   override def layout(implicit ctx: Ctx): Doc =
-    Group(
-      Text(
-        (if (unique.isDefined)
-           "unique<" + unique.get.toString + ">"
-         else
-           "") + "NonNull"
-      ) <> open <> element <> close
-    )
+    ctx.syntax match {
+      case Ctx.C | Ctx.CPP | Ctx.Cuda | Ctx.OpenCL =>
+        // Post-resolution C dump: non-null is a verifier property, not C syntax.
+        val (spec, decl) = layoutSplitDeclarator
+        Group(spec <> decl)
+      case _ =>
+        Group(
+          Text(
+            (if (unique.isDefined)
+               "unique<" + unique.get.toString + ">"
+             else
+               "") + "NonNull"
+          ) <> open <> element <> close
+        )
+    }
 
   override def asNullable: Type[G] = TPointer(element, unique)
 }

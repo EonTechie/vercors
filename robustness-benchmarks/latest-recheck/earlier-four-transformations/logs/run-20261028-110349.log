@@ -1,0 +1,180 @@
+---- run descriptor ----
+STARTED=2026-10-28T11:03:49+03:00
+FINISHED=
+RUN_ID=20261028-110349
+CONFIG_FILE=/home/filizyildizfi/VC/vercors/robustness-benchmarks/current-code-validation/config.env
+MODE=preferred
+TRANSFORM=for-to-while
+REPEAT=1
+SEED=
+SITES=all
+INPUT=/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs
+OUT_REQUESTED=/home/filizyildizfi/VC/vercors/robustness-benchmarks/current-code-validation/runs/current-20261028-010058/established-transformations
+OUT=/home/filizyildizfi/VC/vercors/robustness-benchmarks/current-code-validation/runs/current-20261028-010058/established-transformations
+PROGRAMS=
+FILE_COUNT=34
+FILES=archive__known-problems__853__floats,concepts__arrays__basic-examples,concepts__basic__par-pointer-simplification,concepts__basic__test-1,concepts__c__casts,concepts__c__floats,concepts__c__malloc_free,concepts__c__math,concepts__c__mod_div,concepts__c__pointer_casts,concepts__c__pointer_relations,concepts__c__pointer_tests,concepts__c__ptr_comparisons,concepts__c__structs,concepts__c__tagged_struct,concepts__c__vector_add,concepts__c__vector_type,concepts__c__void,concepts__clang__c-example-impl,concepts__clang__c-example-use,concepts__llvm__cantor,concepts__llvm__cubed,concepts__llvm__date,concepts__llvm__fib,concepts__llvm__pallas__pallas_c_loop_unused,concepts__llvm__pallas__pallas_function_contract,concepts__loopdeps__forward-loop,concepts__parallel__zero-loop,concepts__parallel__zero-sub-array,concepts__pointerArithmetic__pointerSubtract,concepts__unique__arrays,technical__keywords__allowed-c,technical__labeledEmbeddedStatement,verifythis__2025__Challenge2
+VCT=/home/filizyildizfi/VC/vercors/robustness-benchmarks/current-code-validation/vercors-with-timeout.sh
+TIMEOUT=3600
+VERIFY_MUTANTS=1
+VERIFY_ORIGINALS=1
+FORCE_ORIGINAL=0
+STAMP=0
+DRY_RUN=0
+---- files ----
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/archive__known-problems__853__floats.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__arrays__basic-examples.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__basic__par-pointer-simplification.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__basic__test-1.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__casts.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__floats.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__malloc_free.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__math.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__mod_div.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__pointer_casts.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__pointer_relations.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__pointer_tests.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__ptr_comparisons.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__structs.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__tagged_struct.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__vector_add.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__vector_type.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__c__void.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__clang__c-example-impl.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__clang__c-example-use.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__llvm__cantor.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__llvm__cubed.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__llvm__date.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__llvm__fib.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__llvm__pallas__pallas_c_loop_unused.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__llvm__pallas__pallas_function_contract.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__loopdeps__forward-loop.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__parallel__zero-loop.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__parallel__zero-sub-array.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__pointerArithmetic__pointerSubtract.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/concepts__unique__arrays.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/technical__keywords__allowed-c.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/technical__labeledEmbeddedStatement.c
+/home/filizyildizfi/VC/vercors/robustness-benchmarks/established-transformations/broader/inputs/verifythis__2025__Challenge2.c
+---- log ----
+[2026-10-28 11:03:49] mode=preferred  transform=for-to-while  files=34  out=/home/filizyildizfi/VC/vercors/robustness-benchmarks/current-code-validation/runs/current-20261028-010058/established-transformations
+[2026-10-28 11:03:49] original verify
+[2026-10-28 11:03:49]   reuse archive__known-problems__853__floats  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__arrays__basic-examples  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__basic__par-pointer-simplification  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__basic__test-1  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__casts  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__floats  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__malloc_free  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__math  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__mod_div  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__pointer_casts  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__pointer_relations  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__pointer_tests  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__ptr_comparisons  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__structs  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__tagged_struct  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__vector_add  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__vector_type  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__c__void  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__clang__c-example-impl  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__clang__c-example-use  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__llvm__cantor  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__llvm__cubed  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__llvm__date  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__llvm__fib  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__llvm__pallas__pallas_c_loop_unused  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__llvm__pallas__pallas_function_contract  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__loopdeps__forward-loop  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__parallel__zero-loop  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__parallel__zero-sub-array  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__pointerArithmetic__pointerSubtract  original=PASS
+[2026-10-28 11:03:49]   reuse concepts__unique__arrays  original=PASS
+[2026-10-28 11:03:49]   reuse technical__keywords__allowed-c  original=PASS
+[2026-10-28 11:03:49]   reuse technical__labeledEmbeddedStatement  original=PASS
+[2026-10-28 11:03:49]   reuse verifythis__2025__Challenge2  original=PASS
+[2026-10-28 11:03:49]   archive__known-problems__853__floats  discovery
+[2026-10-28 11:03:53]   concepts__arrays__basic-examples  discovery
+[2026-10-28 11:04:01]   concepts__arrays__basic-examples  verify site=0
+[2026-10-28 11:04:16]   NOT_ROBUST  concepts__arrays__basic-examples site=0
+[2026-10-28 11:04:16]   concepts__arrays__basic-examples  transform site=1
+[2026-10-28 11:04:23]   concepts__arrays__basic-examples  verify site=1
+[2026-10-28 11:04:38]   NOT_ROBUST  concepts__arrays__basic-examples site=1
+[2026-10-28 11:04:38]   concepts__arrays__basic-examples  transform site=2
+[2026-10-28 11:04:45]   concepts__arrays__basic-examples  verify site=2
+[2026-10-28 11:05:00]   NOT_ROBUST  concepts__arrays__basic-examples site=2
+[2026-10-28 11:05:00]   concepts__arrays__basic-examples  transform site=3
+[2026-10-28 11:05:08]   concepts__arrays__basic-examples  verify site=3
+[2026-10-28 11:05:22]   NOT_ROBUST  concepts__arrays__basic-examples site=3
+[2026-10-28 11:05:22]   concepts__arrays__basic-examples  transform site=4
+[2026-10-28 11:05:30]   TRANSFORM_FAIL  concepts__arrays__basic-examples site=4
+[2026-10-28 11:05:30]   concepts__arrays__basic-examples  transform site=5
+[2026-10-28 11:05:38]   TRANSFORM_FAIL  concepts__arrays__basic-examples site=5
+[2026-10-28 11:05:38]   concepts__arrays__basic-examples  transform site=6
+[2026-10-28 11:05:44]   TRANSFORM_FAIL  concepts__arrays__basic-examples site=6
+[2026-10-28 11:05:44]   concepts__arrays__basic-examples  transform site=7
+[2026-10-28 11:05:51]   TRANSFORM_FAIL  concepts__arrays__basic-examples site=7
+[2026-10-28 11:05:51]   concepts__basic__par-pointer-simplification  discovery
+[2026-10-28 11:05:55]   concepts__basic__par-pointer-simplification  verify site=0
+[2026-10-28 11:06:07]   NOT_ROBUST  concepts__basic__par-pointer-simplification site=0
+[2026-10-28 11:06:07]   concepts__basic__test-1  discovery
+[2026-10-28 11:06:12]   concepts__c__casts  discovery
+[2026-10-28 11:06:19]   concepts__c__floats  discovery
+[2026-10-28 11:06:24]   concepts__c__malloc_free  discovery
+[2026-10-28 11:06:30]   concepts__c__math  discovery
+[2026-10-28 11:06:35]   concepts__c__mod_div  discovery
+[2026-10-28 11:06:40]   concepts__c__pointer_casts  discovery
+[2026-10-28 11:06:46]   concepts__c__pointer_casts  verify site=0
+[2026-10-28 11:07:18]   ROBUST  concepts__c__pointer_casts site=0
+[2026-10-28 11:07:18]   concepts__c__pointer_casts  transform site=1
+[2026-10-28 11:07:24]   concepts__c__pointer_casts  verify site=1
+[2026-10-28 11:07:59]   ROBUST  concepts__c__pointer_casts site=1
+[2026-10-28 11:07:59]   concepts__c__pointer_casts  transform site=2
+[2026-10-28 11:08:05]   concepts__c__pointer_casts  verify site=2
+[2026-10-28 11:08:18]   NOT_ROBUST  concepts__c__pointer_casts site=2
+[2026-10-28 11:08:18]   concepts__c__pointer_relations  discovery
+[2026-10-28 11:08:23]   concepts__c__pointer_tests  discovery
+[2026-10-28 11:08:30]   concepts__c__ptr_comparisons  discovery
+[2026-10-28 11:08:35]   concepts__c__structs  discovery
+[2026-10-28 11:08:42]   concepts__c__structs  verify site=0
+[2026-10-28 11:09:35]   ROBUST  concepts__c__structs site=0
+[2026-10-28 11:09:35]   concepts__c__tagged_struct  discovery
+[2026-10-28 11:09:41]   concepts__c__tagged_struct  verify site=0
+[2026-10-28 11:10:16]   ROBUST  concepts__c__tagged_struct site=0
+[2026-10-28 11:10:16]   concepts__c__vector_add  discovery
+[2026-10-28 11:10:24]   concepts__c__vector_add  verify site=0
+[2026-10-28 11:11:13]   ROBUST  concepts__c__vector_add site=0
+[2026-10-28 11:11:13]   concepts__c__vector_add  transform site=1
+[2026-10-28 11:11:21]   concepts__c__vector_add  verify site=1
+[2026-10-28 11:12:09]   ROBUST  concepts__c__vector_add site=1
+[2026-10-28 11:12:09]   concepts__c__vector_add  transform site=2
+[2026-10-28 11:12:17]   concepts__c__vector_add  verify site=2
+[2026-10-28 11:13:06]   ROBUST  concepts__c__vector_add site=2
+[2026-10-28 11:13:06]   concepts__c__vector_type  discovery
+[2026-10-28 11:13:12]   concepts__c__void  discovery
+[2026-10-28 11:13:18]   concepts__clang__c-example-impl  discovery
+[2026-10-28 11:13:22]   concepts__clang__c-example-use  discovery
+[2026-10-28 11:13:26]   concepts__llvm__cantor  discovery
+[2026-10-28 11:13:30]   concepts__llvm__cubed  discovery
+[2026-10-28 11:13:36]   concepts__llvm__date  discovery
+[2026-10-28 11:13:40]   concepts__llvm__fib  discovery
+[2026-10-28 11:13:43]   concepts__llvm__pallas__pallas_c_loop_unused  discovery
+[2026-10-28 11:13:48]   concepts__llvm__pallas__pallas_c_loop_unused  verify site=0
+[2026-10-28 11:14:09]   ROBUST  concepts__llvm__pallas__pallas_c_loop_unused site=0
+[2026-10-28 11:14:09]   concepts__llvm__pallas__pallas_function_contract  discovery
+[2026-10-28 11:14:13]   concepts__loopdeps__forward-loop  discovery
+[2026-10-28 11:14:18]   TRANSFORM_FAIL  concepts__loopdeps__forward-loop site=0
+[2026-10-28 11:14:19]   concepts__parallel__zero-loop  discovery
+[2026-10-28 11:14:24]   concepts__parallel__zero-loop  verify site=0
+[2026-10-28 11:14:36]   NOT_ROBUST  concepts__parallel__zero-loop site=0
+[2026-10-28 11:14:36]   concepts__parallel__zero-sub-array  discovery
+[2026-10-28 11:14:41]   concepts__parallel__zero-sub-array  verify site=0
+[2026-10-28 11:14:52]   NOT_ROBUST  concepts__parallel__zero-sub-array site=0
+[2026-10-28 11:14:52]   concepts__pointerArithmetic__pointerSubtract  discovery
+[2026-10-28 11:14:56]   concepts__unique__arrays  discovery
+[2026-10-28 11:15:02]   concepts__unique__arrays  verify site=0
+[2026-10-28 11:15:30]   ROBUST  concepts__unique__arrays site=0
+[2026-10-28 11:15:30]   technical__keywords__allowed-c  discovery
+[2026-10-28 11:15:33]   technical__labeledEmbeddedStatement  discovery
+[2026-10-28 11:15:37]   verifythis__2025__Challenge2  discovery
+[2026-10-28 11:15:45] done  /home/filizyildizfi/VC/vercors/robustness-benchmarks/current-code-validation/runs/current-20261028-010058/established-transformations

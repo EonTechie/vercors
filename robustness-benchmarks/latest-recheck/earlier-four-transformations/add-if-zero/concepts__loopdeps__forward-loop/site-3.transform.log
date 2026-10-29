@@ -1,0 +1,23 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfZero
+[INFO] Robustness repeat: 1
+[AddIfZero] candidate count = 4
+[AddIfZero] candidate 0 | function=example | role=BLOCK_ITEM[0] | path=example.body.block[0] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ requires Perm(A_857245356[I_1412782126], write); requires Perm(B_171489...
+[AddIfZero] candidate 1 | function=example | role=BLOCK_ITEM[0] | path=example.body.block[0].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | A_857245356[I_1412782126] = B_1714896759[I_1412782126] + 1;
+[AddIfZero] candidate 2 | function=example | role=IF_TRUE | path=example.body.block[0].loop.body.block[3].labelBody.branch[0] | kind=CompoundStatement(locals=0, items=1) | { C_1400397082[I_1412782126] = A_857245356[I_1412782126 - 1] + 2; }
+[AddIfZero] candidate 3 | function=example | role=BLOCK_ITEM[0] | path=example.body.block[0].loop.body.block[3].labelBody.branch[0].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | C_1400397082[I_1412782126] = A_857245356[I_1412782126 - 1] + 2;
+[ADD_IF_ZERO_SITE] application 1: selected 3 / 4
+[AddIfZero] SELECTED INDEX = 3
+[AddIfZero] SELECTED | function=example | role=BLOCK_ITEM[0] | path=example.body.block[0].loop.body.block[3].labelBody.branch[0].block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | C_1400397082[I_1412782126] = A_857245356[I_1412782126 - 1] + 2;
+[AddIfZero] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | C_1400397082[I_1412782126] = A_857245356[I_1412782126 - 1] + 2;
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

@@ -1,0 +1,45 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Start: VerCors (at 11:04:46)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-638617217673386068.i
+--------------------------------------
+   67      int i;
+   68      i = 0;
+          [-----
+   69      /*@
+   70      requires a != NULL;
+   71      requires b != NULL;
+       ... (17 lines omitted)
+   89          a[i] = b[i] + c[i];
+   90          i = i + 1;
+   91      }
+       -----]
+   92  }
+   93
+--------------------------------------
+At site-2.c
+--------------------------------------
+   60      int i;
+   61      i = 0;
+      [---------
+   62      /*@
+   63      requires a != NULL;
+   64      requires b != NULL;
+       ... (17 lines omitted)
+   82          a[i] = b[i] + c[i];
+   83          i = i + 1;
+   84      }
+       -------]
+   85  }
+   86
+--------------------------------------
+This loop has an iteration contract, but we could not derive the iteration variable or its lower bound from the initialization portion of the loop.
+======================================
+[INFO] Done: VerCors (at 11:05:00, duration: 00:00:14)

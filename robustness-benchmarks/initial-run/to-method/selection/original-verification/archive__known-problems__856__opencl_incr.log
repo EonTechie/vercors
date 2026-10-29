@@ -1,0 +1,26 @@
+[INFO] Start: VerCors (at 01:13:48)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-14875477382944427460.i
+--------------------------------------
+  221    ensures  PointsTo(c[get_global_id(0)],write,\old(c[get_global_id(0)])+1);
+  222  @*/
+                                                   [-------
+  223  __opencl_kernel__ void simpleAdd(int veclen, int c[])
+                                                    -------]
+  224  {
+  225    // get the index of the test we are performing
+--------------------------------------
+At opencl_incr.c
+--------------------------------------
+   10    ensures  PointsTo(c[get_global_id(0)],write,\old(c[get_global_id(0)])+1);
+   11  @*/
+      [-----------------------------------------------
+   12  __kernel void simpleAdd(int veclen, int c[])
+       -----------------------------------------------]
+   13  {
+   14    // get the index of the test we are performing
+--------------------------------------
+This parameter has a type that is not allowed as parameter in a GPU kernel.
+======================================
+[INFO] Done: VerCors (at 01:15:19, duration: 00:01:31)

@@ -1,0 +1,19 @@
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: robustnessToMethod
+[INFO] Robustness repeat: 1
+[ToMethod] candidate count = 8
+[ToMethod] candidate 0 | function=test_1 | path=test_1.body.block[0] | kind=Compound(items=1)
+[ToMethod] candidate 1 | function=test_2 | path=test_2.body.block[0] | kind=Compound(items=1)
+[ToMethod] candidate 2 | function=test_3 | path=test_3.body.block[0] | kind=Compound(items=1)
+[ToMethod] candidate 3 | function=test_4 | path=test_4.body.block[0] | kind=Compound(items=1)
+[ToMethod] candidate 4 | function=test_5 | path=test_5.body.block[0] | kind=Compound(items=1)
+[ToMethod] candidate 5 | function=test_6 | path=test_6.body.block[0] | kind=Compound(items=1)
+[ToMethod] candidate 6 | function=test_7 | path=test_7.body.block[0] | kind=Compound(items=1)
+[ToMethod] candidate 7 | function=test_8 | path=test_8.body.block[0] | kind=Compound(items=1)
+[TO_METHOD_SITE] application 1: selected 5 / 8
+[ToMethod] SELECTED INDEX = 5
+[ToMethod] SELECTED | function=test_6 | path=test_6.body.block[0] | kind=Compound(items=1)
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

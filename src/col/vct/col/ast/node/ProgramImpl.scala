@@ -22,24 +22,40 @@ trait ProgramImpl[G]
     }
 
   override def layout(implicit ctx: Ctx): Doc = {
-    val decls =
+    val decls = declarations
+
+    val header: Doc =
       ctx.syntax match {
+        case Ctx.Java =>
+          Text("import java.util.concurrent.locks.Lock;") <+/>
+            "import java.util.concurrent.locks.ReentrantLock;" <+/>
+            "import java.util.concurrent.locks.Condition;" <> Line
         case Ctx.C | Ctx.Cuda | Ctx.OpenCL | Ctx.CPP =>
-          // Post-resolution C pretty-print: omit generated sizeof_* helpers.
-          // They stay in the AST for pointer-size encoding.
-          declarations.filterNot {
-            case f: vct.col.ast.Function[_] => f.isGeneratedSizeOfHelper
-            case _ => false
-          }
-        case _ =>
-          declarations
+          // Post-resolution C dump: NewPointer/FreePointer print these names.
+          // Emit stubs when the resolved program did not already carry them.
+          val names = decls.flatMap { d =>
+            try
+              Some(ctx.name(d))
+            catch { case _: Throwable => None }
+          }.toSet
+          val parts = Seq(
+            Option.when(!names.contains("vercorsMallocNonNull"))(
+              Text("void *vercorsMallocNonNull(int size);")
+            ),
+            Option.when(!names.contains("vercorsMalloc"))(
+              Text("void *vercorsMalloc(int size);")
+            ),
+            Option.when(!names.contains("vercorsFree"))(
+              Text("void vercorsFree(void *ptr);")
+            ),
+          ).flatten
+          if (parts.isEmpty)
+            Empty
+          else
+            Doc.stack(parts) <> Line <> Line
+        case _ => Empty
       }
 
-    (if (ctx.syntax == Ctx.Java)
-       (Text("import java.util.concurrent.locks.Lock;") <+/>
-         "import java.util.concurrent.locks.ReentrantLock;" <+/>
-         "import java.util.concurrent.locks.Condition;" <> Line)
-     else
-       Empty) <> Doc.stack2(decls)
+    header <> Doc.stack2(decls)
   }
 }

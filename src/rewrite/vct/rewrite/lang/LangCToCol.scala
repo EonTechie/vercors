@@ -652,8 +652,63 @@ case class LangCToCol[Pre <: Generation](rw: LangSpecificToCol[Pre])
         // We can convert between rationals, integers and floats
         CastFloat[Post](rw.dispatch(c.expr), rw.dispatch(t))(c.o)
 
+      // Compound literal of a vector type: (__opencl_vector_type__(int,4)){...}
+      case CCast(CLiteralArray(exprs), t: CTVector[Pre]) =>
+        val size = t.intSize
+        if (exprs.size != size)
+          throw WrongVectorType(c)
+        LiteralVector[Post](
+          rw.dispatch(t.innerType),
+          exprs.map(rw.dispatch),
+        )(c.o)
+      case CCast(CLiteralArray(exprs), t: TOpenCLVector[Pre])
+          if exprs.size == t.size =>
+        LiteralVector[Post](rw.dispatch(t.innerType), exprs.map(rw.dispatch))(
+          c.o
+        )
+      case CCast(CLiteralArray(exprs), t: TVector[Pre])
+          if exprs.size == t.size =>
+        LiteralVector[Post](rw.dispatch(t.element), exprs.map(rw.dispatch))(c.o)
       case cast @ CCast(_, TOpenCLVector(_, _)) =>
         createOpenCLLiteralVector(cast)
+      case CCast(
+            inv @ CInvocation(
+              CLocal("vercorsMallocNonNull"),
+              Seq(arg),
+              Nil,
+              Nil,
+              false,
+            ),
+            tcast,
+          ) =>
+        val t2 =
+          tcast match {
+            case CTPointer(t2) => t2
+            case _ => throw UnsupportedMalloc(c)
+          }
+        val (t1, size) =
+          arg match {
+            case SizeOf(t1) if castIsId(t1, t2) => (t1, c_const[Post](1)(c.o))
+            case AmbiguousMult(l, SizeOf(t1)) if castIsId(t1, t2) =>
+              (t1, rw.dispatch(l))
+            case AmbiguousMult(SizeOf(t1), r) if castIsId(t1, t2) =>
+              (t1, rw.dispatch(r))
+            case _ =>
+              (
+                t2,
+                FloorDiv(rw.dispatch(arg), sizeOf(t2, c.o))(
+                  TypeSizeMayBeZeroBlame(c, inv.blame)
+                )(c.o),
+              )
+          }
+        NewNonNullPointer(rw.dispatch(t2), size, None)(ArrayMallocFailed(inv))(
+          c.o
+        )
+      case CCast(
+            CInvocation(CLocal("vercorsMallocNonNull"), _, _, _, _),
+            _,
+          ) =>
+        throw UnsupportedMalloc(c)
       case CCast(
             inv @ CInvocation(
               CLocal("__vercors_malloc"),
@@ -2226,23 +2281,19 @@ case class LangCToCol[Pre <: Generation](rw: LangSpecificToCol[Pre])
     }
   }
 
-  private def createUpdateVectorFunction(size: Int): Function[Post] = {
+  private def createUpdateVectorFunction(
+      size: Int,
+      elementType: Type[Post],
+  ): Function[Post] = {
     implicit val o: Origin = Origin(Seq(LabelContext("vector update method")))
-    /* for instance for size 4:
+    /* Monomorphic (no typeArgs) so post-resolution C dump re-parses:
     requires i >= 0 && i < 4;
-    pure vector<T,4> updateVector(vector<T,4> x, int i, T v) =
-        (i == 0) ? vector<T>{v, x[1], x[2], x[3]} :
-        (i == 1) ? vector<T>{x[0], v, x[2], x[3]} :
-        (i == 2) ? vector<T>{x[0], x[1], v, x[3]} :
-        vector<T>{x[0], x[1], x[2], v};
+    pure vector<int,4> updateVector(vector<int,4> x, int i, int v) = ...
      */
     if (size <= 0)
       ???
 
     rw.globalDeclarations.declare({
-      val elementTypeVar =
-        new Variable[Post](TType(TAnyValue()))(o.where(name = "T"))
-      val elementType = TVar[Post](elementTypeVar.ref)
       val vectorT = TVector(size, elementType)
 
       val x = new Variable[Post](vectorT)(o.where(name = "x"))
@@ -2266,7 +2317,7 @@ case class LangCToCol[Pre <: Generation](rw: LangSpecificToCol[Pre])
         contractBlame = PanicBlame("Can be satisfiable"),
         returnType = vectorT,
         args = Seq(x, i, v),
-        typeArgs = Seq(elementTypeVar),
+        typeArgs = Nil,
         body = Some(body),
         requires = SplitAccountedPredicate(
           UnitAccountedPredicate(req(0)),
@@ -2276,7 +2327,15 @@ case class LangCToCol[Pre <: Generation](rw: LangSpecificToCol[Pre])
     })
   }
 
-  val updateVectorFunction: mutable.Map[Int, Function[Post]] = mutable.Map()
+  private def updateVectorElementKey(t: Type[_]): String =
+    t match {
+      case _: TCInt[_] => "int"
+      case f: TCFloat[_] => s"float_${f.exponent}_${f.mantissa}"
+      case other => other.getClass.getName
+    }
+
+  val updateVectorFunction
+      : mutable.Map[(Int, String), Function[Post]] = mutable.Map()
 
   def assignSubscriptVector(assign: PreAssignExpression[Pre]): Expr[Post] = {
 
@@ -2289,17 +2348,19 @@ case class LangCToCol[Pre <: Generation](rw: LangSpecificToCol[Pre])
 
     val size = t.intSize.toInt
     val index = rw.dispatch(i)
-    val innerType = t.innerType
+    val postInner = rw.dispatch(t.innerType)
 
     val newV = rw.dispatch(v)
-    val f = updateVectorFunction
-      .getOrElseUpdate(size, createUpdateVectorFunction(size))
+    val f = updateVectorFunction.getOrElseUpdate(
+      (size, updateVectorElementKey(postInner)),
+      createUpdateVectorFunction(size, postInner),
+    )
     val update =
       functionInvocation[Post](
         VectorBoundFailed(sub),
         f.ref,
         Seq(newV, index, rw.dispatch(assign.value)),
-        Seq(rw.dispatch(innerType)),
+        Nil,
       )(assign.o)
 
     PreAssignExpression(newV, update)(assign.blame)(assign.o)

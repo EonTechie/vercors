@@ -1,0 +1,157 @@
+[INFO] Start: VerCors (at 01:23:53)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+The quantifier access-sub-matrix-pass.c:15-:16: '  requires (\forall* int i1 ; 0 <= i1 && i1 < M ;
+               Perm(matrix[i1],read)); // End faulty but necessary requires clause' contains no triggers
+The quantifier access-sub-matrix-pass.c:19-:20: '             (\forall* int j1 ; 0 <= j1 && j1 < N ;
+               Perm(matrix[i1][j1],write)));' contains no triggers
+The quantifier access-sub-matrix-pass.c:18-:20: '  requires (\forall* int i1 ; 0 <= i1 && i1 < M ;
+             (\forall* int j1 ; 0 <= j1 && j1 < N ;
+               Perm(matrix[i1][j1],write)));' contains no triggers
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO]     At access-sub-matrix-pass.c:8-:24:
+[INFO] Current state of silicon worker:
+[INFO]       method good2
+[INFO]     At access-sub-matrix-pass.c:8-:24:
+[INFO]     At access-sub-matrix-pass.c:18-:20:
+[INFO]       method good1
+[INFO]       produce (forall i1: Int, j1: Int ::0 <= i1 && i1 < m && 0 <= j1 && j1 < n ==> acc(ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))).int, write))
+[INFO]     At access-sub-matrix-pass.c:18-:20:
+[INFO]       produce (forall i1: Int, j1: Int ::0 <= i1 && i1 < m && 0 <= j1 && j1 < n ==> acc(ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))).int, write))
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix))))
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix))))
+[INFO]       evaluate ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))
+[INFO]       evaluate ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       decider assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@4@13))) + j1@14@13 + i1@13@13 * get_dim_1_int[Int](optGet1(_, matrix@4@13)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@4@13))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@4@13))) + j1@14@13 + i1@13@13 * get_dim_1_int[Int](optGet1(_, matrix@4@13)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@4@13))))
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       decider assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@10@12))) + j1@18@12 + i1@17@12 * get_dim_1_int[Int](optGet1(_, matrix@10@12)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@10@12))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@10@12))) + j1@18@12 + i1@17@12 * get_dim_1_int[Int](optGet1(_, matrix@10@12)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@10@12))))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At access-sub-matrix-pass.c:8-:24:
+[INFO]       method good2
+[INFO]     At access-sub-matrix-pass.c:18-:20:
+[INFO]       produce (forall i1: Int, j1: Int ::0 <= i1 && i1 < m && 0 <= j1 && j1 < n ==> acc(ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))).int, write))
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix))))
+[INFO]       evaluate ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       decider assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@10@12))) + j1@18@12 + i1@17@12 * get_dim_1_int[Int](optGet1(_, matrix@10@12)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@10@12))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@10@12))) + j1@18@12 + i1@17@12 * get_dim_1_int[Int](optGet1(_, matrix@10@12)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@10@12))))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At access-sub-matrix-pass.c:8-:24:
+[INFO]       method good1
+[INFO]     At access-sub-matrix-pass.c:18-:20:
+[INFO]       produce (forall i1: Int, j1: Int ::0 <= i1 && i1 < m && 0 <= j1 && j1 < n ==> acc(ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))).int, write))
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix))))
+[INFO]       evaluate ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       decider assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@4@13))) + j1@14@13 + i1@13@13 * get_dim_1_int[Int](optGet1(_, matrix@4@13)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@4@13))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@4@13))) + j1@14@13 + i1@13@13 * get_dim_1_int[Int](optGet1(_, matrix@4@13)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@4@13))))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At access-sub-matrix-pass.c:8-:24:
+[INFO]       method good2
+[INFO]     At access-sub-matrix-pass.c:18-:20:
+[INFO]       produce (forall i1: Int, j1: Int ::0 <= i1 && i1 < m && 0 <= j1 && j1 < n ==> acc(ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))).int, write))
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix))))
+[INFO]       evaluate ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       decider assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@10@12))) + j1@18@12 + i1@17@12 * get_dim_1_int[Int](optGet1(_, matrix@10@12)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@10@12))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@10@12))) + j1@18@12 + i1@17@12 * get_dim_1_int[Int](optGet1(_, matrix@10@12)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@10@12))))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At access-sub-matrix-pass.c:8-:24:
+[INFO]       method good1
+[INFO]     At access-sub-matrix-pass.c:18-:20:
+[INFO]       produce (forall i1: Int, j1: Int ::0 <= i1 && i1 < m && 0 <= j1 && j1 < n ==> acc(ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))).int, write))
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix))))
+[INFO]       evaluate ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       decider assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@4@13))) + j1@14@13 + i1@13@13 * get_dim_1_int[Int](optGet1(_, matrix@4@13)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@4@13))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@4@13))) + j1@14@13 + i1@13@13 * get_dim_1_int[Int](optGet1(_, matrix@4@13)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@4@13))))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At access-sub-matrix-pass.c:8-:24:
+[INFO]       method good2
+[INFO]     At access-sub-matrix-pass.c:18-:20:
+[INFO]       produce (forall i1: Int, j1: Int ::0 <= i1 && i1 < m && 0 <= j1 && j1 < n ==> acc(ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))).int, write))
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix))))
+[INFO]       evaluate ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       decider assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@10@12))) + j1@18@12 + i1@17@12 * get_dim_1_int[Int](optGet1(_, matrix@10@12)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@10@12))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@10@12))) + j1@18@12 + i1@17@12 * get_dim_1_int[Int](optGet1(_, matrix@10@12)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@10@12))))
+[WARN] Silicon has been working on the same proof goal for over 10 seconds.
+[INFO] Current state of silicon worker:
+[INFO]     At access-sub-matrix-pass.c:8-:24:
+[INFO]       method good1
+[INFO]     At access-sub-matrix-pass.c:18-:20:
+[INFO]       produce (forall i1: Int, j1: Int ::0 <= i1 && i1 < m && 0 <= j1 && j1 < n ==> acc(ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))).int, write))
+[INFO]       evaluate ptrDeref(ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix))))
+[INFO]       evaluate ptrAdd(get_int_pointer(optGet1(matrix)), j1 + i1 * get_dim_1_int(optGet1(matrix)))
+[INFO]       joining null
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       comment Retry
+[INFO]     At pointer.pvl:56:10-:56:97:
+[INFO]       consume pointer_offset(p) + offset < block_length(pointer_block(p))
+[INFO]       comment Retry
+[INFO]       decider assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@4@13))) + j1@14@13 + i1@13@13 * get_dim_1_int[Int](optGet1(_, matrix@4@13)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@4@13))))
+[INFO]       prover assert pointer_offset[Int](get_int_pointer[Pointer](optGet1(_, matrix@4@13))) + j1@14@13 + i1@13@13 * get_dim_1_int[Int](optGet1(_, matrix@4@13)) < block_length[Int](pointer_block[Block](get_int_pointer[Pointer](optGet1(_, matrix@4@13))))
+======================================
+At vercors-interpreted-7998553501808571006.i
+--------------------------------------
+   25    requires (\forall* int i1 ; 0 <= i1 && i1 < M ;
+   26               (\forall* int j1 ; 0 <= j1 && j1 < N ;
+                          [--------------
+   27                 Perm(matrix[i1][j1],write)));
+                           --------------]
+   28  @*/
+   29  void good1(int M,int N,int step,int matrix[M][step]){
+--------------------------------------
+At access-sub-matrix-pass.c
+--------------------------------------
+   18    requires (\forall* int i1 ; 0 <= i1 && i1 < M ;
+   19               (\forall* int j1 ; 0 <= j1 && j1 < N ;
+      [----------------------------------------------
+   20                 Perm(matrix[i1][j1],write)));
+       ----------------------------------------------]
+   21  @*/
+   22  void good1(int M,int N,int step,int matrix[M][step]){
+--------------------------------------
+The offset to the pointer may be outside the bounds of the allocated memory area that the pointer is in. (https://utwente.nl/vercors#ptrBlock)
+======================================
+[INFO] Done: VerCors (at 01:28:57, duration: 00:05:03)

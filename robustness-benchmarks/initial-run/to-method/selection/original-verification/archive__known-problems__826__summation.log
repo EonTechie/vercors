@@ -1,0 +1,26 @@
+[INFO] Start: VerCors (at 01:13:48)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+======================================
+At vercors-interpreted-1121950525536841066.i
+--------------------------------------
+   32        context ar_values[i] == ar[i];
+   33  
+                     [-----------------
+   34        requires Reducible(res, +);
+                      -----------------]
+   35        ensures  Contribution(res, ar_values[i]);
+   36      */
+--------------------------------------
+At summation.c
+--------------------------------------
+   25        context ar_values[i] == ar[i];
+   26  
+      [-----------------------------------
+   27        requires Reducible(res, +);
+       -----------------------------------]
+   28        ensures  Contribution(res, ar_values[i]);
+   29      */
+--------------------------------------
+Parsing failed: This construct (ValReducibleContext) is syntactically valid, but not supported by VerCors.
+======================================
+[INFO] Done: VerCors (at 01:15:13, duration: 00:01:25)

@@ -1,0 +1,6 @@
+[INFO] Start: VerCors (at 01:40:37)
+[WARN] Caching is enabled, but results will be discarded, since there were uncommitted changes at compilation time.
+[WARN] Possible viper bug: silver AST does not reparse when printing as text
+[WARN] Parse error: Expected filter:97:13, found "refute: In". Occurred while parsing: annotated:51:1 / methodDecl:51:8 / stmtBlock:52:1 / braces:52:1 / delimitedTrailing:53:3 / stmt:53:3 / stmtBlock:53:3 / braces:53:3 / delimitedTrailing:54:5 / stmt:56:5 / stmtBlock:56:5 / braces:56:5 / delimitedTrailing:57:7 / stmt:58:7 / stmtBlock:58:7 / braces:58:7 / delimitedTrailing:59:9 / stmt:97:9 / localVars:97:13 / nonEmptyIdnTypeList:97:13 / delimited:97:13 (vercors-226183450635335775.sil@97.13--97.13)
+[INFO] Verification completed successfully.
+[INFO] Done: VerCors (at 01:41:46, duration: 00:01:09)

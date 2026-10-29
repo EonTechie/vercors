@@ -79,6 +79,27 @@ object CStatementSites {
       case _ => false
     }
 
+  // VerCors requires send/recv statements in iteration contracts to execute
+  // unconditionally. Wrapping either one, or a container that holds one, in
+  // an if creates an invalid annotated program rather than a robustness
+  // mutant.
+  private def containsSendRecv[G](stat: Statement[G]): Boolean =
+    stat match {
+      case _: Send[G] | _: Recv[G] => true
+      // A wrapper outside a complete loop does not make send/recv conditional
+      // within an iteration. Do not descend through that loop boundary.
+      case Scope(_, _: Loop[G]) => false
+      case _: Loop[G] => false
+      case Scope(_, body) => containsSendRecv(body)
+      case Block(statements) => statements.exists(containsSendRecv)
+      case Branch(branches) =>
+        branches.exists { case (_, body) => containsSendRecv(body) }
+      case IndetBranch(branches) => branches.exists(containsSendRecv)
+      case Switch(_, body) => containsSendRecv(body)
+      case Label(_, inner, _) => containsSendRecv(inner)
+      case _ => false
+    }
+
   private def declarationCluster[G](stat: Statement[G]): Boolean =
     stat match {
       case _: CDeclarationStatement[G] | _: LocalDecl[G] | _: HeapLocalDecl[G] =>
@@ -97,6 +118,55 @@ object CStatementSites {
       case _ => false
     }
 
+  /** True when this target declares a name that is used elsewhere in the
+    * program. Such a target is a parser-generated declaration cluster, not a
+    * source compound statement: an if wrapper would shorten the name's scope.
+    */
+  private def declarationsEscape[G](
+      program: Program[G],
+      target: Statement[G],
+  ): Boolean = {
+    val declarations = ArrayBuffer.empty[Node[G]]
+    val seenInside = ArrayBuffer.empty[Node[G]]
+
+    def collectDeclarations(node: Node[G]): Unit = {
+      if (seenInside.exists(_ eq node))
+        return
+      seenInside += node
+      node match {
+        case LocalDecl(v) => declarations += v
+        case HeapLocalDecl(v) => declarations += v
+        case _: Type[G] =>
+        case other => other.subnodes.foreach(collectDeclarations)
+      }
+    }
+
+    collectDeclarations(target)
+    if (declarations.isEmpty)
+      return false
+
+    val seenOutside = ArrayBuffer.empty[Node[G]]
+    var found = false
+
+    def isDeclared(value: AnyRef): Boolean =
+      declarations.exists(_ eq value)
+
+    def findOutsideUse(node: Node[G]): Unit = {
+      if (found || (node eq target) || seenOutside.exists(_ eq node))
+        return
+      seenOutside += node
+      node match {
+        case Local(Ref(v)) if isDeclared(v) => found = true
+        case HeapLocal(Ref(v)) if isDeclared(v) => found = true
+        case _: Type[G] =>
+        case other => other.subnodes.foreach(findOutsideUse)
+      }
+    }
+
+    findOutsideUse(program)
+    found
+  }
+
   private def selectableShape[G](
       stat: Statement[G],
       excludeContainedAbrupt: Boolean,
@@ -105,6 +175,7 @@ object CStatementSites {
       case _ if isAbruptStatement(stat) => false
       case _ if excludeContainedAbrupt && isForbiddenWrapTarget(stat) => false
       case _ if !excludeContainedAbrupt && containsDirectAbrupt(stat) => false
+      case _ if containsSendRecv(stat) => false
       case _ if declarationCluster(stat) => false
       case _: NonExecutableStatement[G] => false
 
@@ -180,7 +251,10 @@ object CStatementSites {
         role: Role,
         target: Statement[G],
     ): Unit =
-      if (selectable(role, target, excludeContainedAbrupt)) {
+      if (
+        selectable(role, target, excludeContainedAbrupt) &&
+        !declarationsEscape(program, target)
+      ) {
         result += Site(functionName, path, role, target)
       }
 

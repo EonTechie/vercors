@@ -9,5 +9,7 @@ trait SmtlibPowImpl[G] extends SmtlibPowOps[G] {
   override def precedence: Int = Precedence.PVL_POW
 
   override lazy val t: Type[G] = getNumericType
-  override def layout(implicit ctx: Ctx): Doc = rassoc(left, "^", right)
+  override def layout(implicit ctx: Ctx): Doc =
+    // Spec grammar uses \pow; bare ^ is bitwise xor in C.
+    Text("\\pow(") <> left <> Text(", ") <> right <> Text(")")
 }

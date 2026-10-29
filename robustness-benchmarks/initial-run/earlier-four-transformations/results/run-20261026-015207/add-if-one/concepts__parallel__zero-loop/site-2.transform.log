@@ -1,0 +1,22 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 1
+[AddIfOne] candidate count = 3
+[AddIfOne] candidate 0 | function=zero_array | role=BLOCK_ITEM[0] | path=zero_array.body.block[0] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ requires Ar_565678786 != NULL; requires Perm(Ar_565678786[I_137463816],...
+[AddIfOne] candidate 1 | function=zero_array | role=LOOP_BODY | path=zero_array.body.block[0].loop.body | kind=CompoundStatement(locals=0, items=1) | { Ar_565678786[I_137463816] = 0; }
+[AddIfOne] candidate 2 | function=zero_array | role=BLOCK_ITEM[0] | path=zero_array.body.block[0].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Ar_565678786[I_137463816] = 0;
+[ADD_IF_ONE_SITE] application 1: selected 2 / 3
+[AddIfOne] SELECTED INDEX = 2
+[AddIfOne] SELECTED | function=zero_array | role=BLOCK_ITEM[0] | path=zero_array.body.block[0].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | Ar_565678786[I_137463816] = 0;
+[AddIfOne] WRAP class=Eval | ExpressionStatement(expr=PreAssignExpression) | Ar_565678786[I_137463816] = 0;
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

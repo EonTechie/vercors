@@ -1,0 +1,22 @@
+Exception in thread "[VerCors] I/O transfer thread" java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:244)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:284)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at hre.io.InterruptibleInputStream$TransferThread.run(InterruptibleInputStream.scala:34)
+[INFO] Robustness mode started
+[INFO] Robustness mode: sequential
+[INFO] Robustness transforms: addIfOne
+[INFO] Robustness repeat: 1
+[AddIfOne] candidate count = 3
+[AddIfOne] candidate 0 | function=f | role=BLOCK_ITEM[0] | path=f.body.block[0] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ loop_invariant 0 <= J_101216381; loop_invariant J_101216381 <= N_166009...
+[AddIfOne] candidate 1 | function=f | role=LOOP_BODY | path=f.body.block[0].loop.body | kind=CompoundStatement(locals=0, items=1) | { X0_981019641[J_101216381] = X1_856241257[J_101216381] + X2_1231551166[J_101...
+[AddIfOne] candidate 2 | function=f | role=BLOCK_ITEM[0] | path=f.body.block[0].loop.body.block[0] | kind=ExpressionStatement(expr=PreAssignExpression) | X0_981019641[J_101216381] = X1_856241257[J_101216381] + X2_1231551166[J_10121...
+[ADD_IF_ONE_SITE] application 1: selected 0 / 3
+[AddIfOne] SELECTED INDEX = 0
+[AddIfOne] SELECTED | function=f | role=BLOCK_ITEM[0] | path=f.body.block[0] | kind=LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ loop_invariant 0 <= J_101216381; loop_invariant J_101216381 <= N_166009...
+[AddIfOne] WRAP class=Scope | LoopScope(init=Block, cond=AmbiguousLess, update=Eval, body=Scope) | { /*@ loop_invariant 0 <= J_101216381; loop_invariant J_101216381 <= N_166009...
+[INFO] Writing unknown.c to robustness-transformed.c
+[INFO] Robustness transformation completed
+[INFO] Output written to robustness-transformed.c

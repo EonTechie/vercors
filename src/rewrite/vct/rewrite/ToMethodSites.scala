@@ -40,6 +40,7 @@ object ToMethodSites {
         true
       case _: Loop[G] => true
       case _: Switch[G] => true
+      case _: Send[G] | _: Recv[G] => true
       case _: LocalDecl[G] | _: HeapLocalDecl[G] |
           _: CDeclarationStatement[G] =>
         true
@@ -58,8 +59,12 @@ object ToMethodSites {
       case _ => false
     }
 
-  def capturedVars[G](stat: Statement[G]): Seq[Variable[G]] = {
-    val result = ArrayBuffer.empty[Variable[G]]
+  def capturedVars[G](stat: Statement[G]): Seq[Variable[G]] =
+    outwardVars(stat)
+
+  /** Address-taken C locals are represented separately from ordinary locals. */
+  def outwardHeapVars[G](root: Node[G]): Seq[LocalHeapVariable[G]] = {
+    val result = ArrayBuffer.empty[LocalHeapVariable[G]]
     val seen = ArrayBuffer.empty[Node[G]]
 
     def go(node: Node[G]): Unit = {
@@ -68,16 +73,47 @@ object ToMethodSites {
       seen += node
 
       node match {
-        case Local(Ref(v)) =>
+        case HeapLocal(Ref(v)) =>
           if (!result.exists(_ eq v))
             result += v
         case _: Type[G] =>
-        case _ =>
-          node.subnodes.foreach(go)
+        case other => other.subnodes.foreach(go)
       }
     }
 
-    go(stat)
+    go(root)
+    result.toSeq
+  }
+
+  /** Names the extracted piece reads from outside itself.
+    * A `\forall` / `\let` name is born inside that piece. It is not a parameter.
+    */
+  def outwardVars[G](root: Node[G]): Seq[Variable[G]] = {
+    val result = ArrayBuffer.empty[Variable[G]]
+    val seen = ArrayBuffer.empty[Node[G]]
+
+    def go(node: Node[G], bound: List[Variable[G]]): Unit = {
+      if (seen.exists(_ eq node))
+        return
+      seen += node
+
+      node match {
+        case Local(Ref(v)) =>
+          if (!bound.exists(_ eq v) && !result.exists(_ eq v))
+            result += v
+        case _: Type[G] =>
+        case b: Binder[G] =>
+          val inner = b.bindings.toList ++ bound
+          b.subnodes.foreach(go(_, inner))
+        case ScopedExpr(declarations, _) =>
+          val inner = declarations.toList ++ bound
+          node.subnodes.foreach(go(_, inner))
+        case other =>
+          other.subnodes.foreach(go(_, bound))
+      }
+    }
+
+    go(root, Nil)
     result.toSeq
   }
 
